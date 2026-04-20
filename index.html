@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREX — 재난훈련 시뮬레이션 플랫폼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   DREX — 정부기관 UI 스타일 시스템
+   행정안전부 / NDMS 계열 UI 레퍼런스 기반
+═══════════════════════════════════════════════ */
+:root {
+  /* 정부기관 표준 컬러 팔레트 */
+  --gov-blue:      #003087;   /* 행안부 네이비 */
+  --gov-blue-mid:  #1351a8;   /* 메인 포인트 */
+  --gov-blue-lt:   #2e7dd1;   /* 호버/액센트 */
+  --gov-sky:       #e8f0fb;   /* 헤더 배경 */
+  --gov-line:      #c8d6e8;   /* 테두리 */
+  --gov-bg:        #f4f6fa;   /* 페이지 배경 */
+  --gov-white:     #ffffff;
+  --gov-text:      #1a2744;   /* 본문 */
+  --gov-text-mid:  #4a5568;   /* 보조 텍스트 */
+  --gov-text-lt:   #8a9ab8;   /* 힌트 */
+  --gov-red:       #c0392b;   /* 긴급/오류 */
+  --gov-orange:    #d35400;   /* 경고 */
+  --gov-green:     #1a7a4a;   /* 완료/성공 */
+  --gov-yellow:    #b8860b;   /* 주의 */
+  --shadow-sm: 0 1px 3px rgba(0,48,135,.10);
+  --shadow-md: 0 3px 10px rgba(0,48,135,.12);
+  --shadow-lg: 0 6px 24px rgba(0,48,135,.14);
+  --radius: 4px;
+  --font: 'Noto Sans KR', '맑은 고딕', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gov-bg);
+  color: var(--gov-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 최상단 기관 배너 ── */
+.top-banner {
+  background: var(--gov-blue);
+  color: #fff;
+  font-size: 11px;
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: .03em;
+}
+.top-banner-left { display: flex; align-items: center; gap: 16px; opacity: .85; }
+.top-banner-right { opacity: .75; font-size: 10px; }
+
+/* ── 헤더 ── */
+.header {
+  background: var(--gov-white);
+  border-bottom: 3px solid var(--gov-blue);
+  padding: 0 24px;
+  display: flex;
+  align-items: stretch;
+  box-shadow: var(--shadow-sm);
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-right: 1px solid var(--gov-line);
+  padding-right: 24px;
+  margin-right: 24px;
+}
+.logo-emblem {
+  width: 40px; height: 40px;
+  background: var(--gov-blue);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 700; letter-spacing: .04em;
+}
+.logo-text { line-height: 1.3; }
+.logo-text-main { font-size: 17px; font-weight: 700; color: var(--gov-blue); letter-spacing: -.01em; }
+.logo-text-sub { font-size: 10px; color: var(--gov-text-mid); letter-spacing: .02em; }
+.header-nav {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  gap: 0;
+}
+.header-nav-item {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 18px;
+  font-size: 13px; font-weight: 500;
+  color: var(--gov-text-mid);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all .15s;
+  white-space: nowrap;
+  gap: 6px;
+  user-select: none;
+}
+.header-nav-item:hover { color: var(--gov-blue-mid); background: var(--gov-sky); }
+.header-nav-item.active { color: var(--gov-blue-mid); border-bottom-color: var(--gov-blue-lt); font-weight: 700; }
+.header-nav-num {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--gov-line); color: var(--gov-text-mid);
+  font-size: 9px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.header-nav-item.active .header-nav-num { background: var(--gov-blue-mid); color: #fff; }
+.header-badge {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 10px;
+  padding-left: 16px;
+  border-left: 1px solid var(--gov-line);
+}
+.badge-item {
+  font-size: 11px; color: var(--gov-text-mid);
+  display: flex; align-items: center; gap: 4px;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gov-green); }
+
+/* ── 페이지 타이틀바 ── */
+.page-title-bar {
+  background: var(--gov-sky);
+  border-bottom: 1px solid var(--gov-line);
+  padding: 10px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.page-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--gov-text-mid);
+}
+.page-breadcrumb span { color: var(--gov-blue-mid); font-weight: 500; }
+.page-breadcrumb::before { content: '홈'; }
+.page-breadcrumb-sep { color: var(--gov-text-lt); }
+.page-title { font-size: 15px; font-weight: 700; color: var(--gov-blue); }
+
+/* ── 메인 레이아웃 ── */
+.main { padding: 20px 24px; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── 섹션 헤더 ── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--gov-blue);
+}
+.section-title-wrap { display: flex; align-items: center; gap: 10px; }
+.section-module {
+  font-size: 10px; font-weight: 700;
+  color: var(--gov-white);
+  background: var(--gov-blue-mid);
+  padding: 2px 8px; border-radius: 2px;
+  letter-spacing: .06em;
+}
+.section-title { font-size: 16px; font-weight: 700; color: var(--gov-blue); }
+.section-desc { font-size: 12px; color: var(--gov-text-mid); margin-top: 3px; }
+
+/* ── 카드 (정부기관 스타일) ── */
+.gov-card {
+  background: var(--gov-white);
+  border: 1px solid var(--gov-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.gov-card-header {
+  background: var(--gov-sky);
+  border-bottom: 1px solid var(--gov-line);
+  padding: 9px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 700; color: var(--gov-blue);
+}
+.gov-card-body { padding: 16px; }
+
+/* ── 폼 컨트롤 ── */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label {
+  font-size: 11px; font-weight: 700; color: var(--gov-text-mid);
+  letter-spacing: .02em;
+}
+.form-label .required { color: var(--gov-red); margin-left: 2px; }
+.form-select, .form-input {
+  height: 34px;
+  background: var(--gov-white);
+  border: 1px solid var(--gov-line);
+  border-radius: var(--radius);
+  padding: 0 10px;
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--gov-text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.form-select:focus, .form-input:focus {
+  border-color: var(--gov-blue-lt);
+  box-shadow: 0 0 0 3px rgba(46,125,209,.12);
+}
+.form-textarea {
+  background: var(--gov-white);
+  border: 1px solid var(--gov-line);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--gov-text);
+  outline: none;
+  resize: none;
+  line-height: 1.6;
+  width: 100%;
+  transition: border-color .15s;
+}
+.form-textarea:focus { border-color: var(--gov-blue-lt); box-shadow: 0 0 0 3px rgba(46,125,209,.12); }
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 5px;
+  height: 34px; padding: 0 16px;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid transparent;
+  transition: all .15s; white-space: nowrap;
+  letter-spacing: .01em;
+}
+.btn-primary { background: var(--gov-blue-mid); color: #fff; border-color: var(--gov-blue-mid); }
+.btn-primary:hover { background: var(--gov-blue); border-color: var(--gov-blue); }
+.btn-secondary { background: var(--gov-white); color: var(--gov-blue-mid); border-color: var(--gov-blue-lt); }
+.btn-secondary:hover { background: var(--gov-sky); }
+.btn-danger { background: var(--gov-red); color: #fff; border-color: var(--gov-red); }
+.btn-danger:hover { background: #a93226; }
+.btn-success { background: var(--gov-green); color: #fff; border-color: var(--gov-green); }
+.btn-sm { height: 28px; padding: 0 12px; font-size: 12px; }
+.btn-lg { height: 40px; padding: 0 22px; font-size: 14px; font-weight: 700; }
+.btn-full { width: 100%; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── 배지/태그 ── */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .04em;
+}
+.tag-blue { background: #dbe8f8; color: var(--gov-blue-mid); border: 1px solid #b0ccee; }
+.tag-red { background: #fde8e6; color: var(--gov-red); border: 1px solid #f5b8b3; }
+.tag-orange { background: #fde9d4; color: var(--gov-orange); border: 1px solid #f5c896; }
+.tag-green { background: #d4eddf; color: var(--gov-green); border: 1px solid #a3d4b5; }
+.tag-yellow { background: #fef7dc; color: var(--gov-yellow); border: 1px solid #f0d878; }
+.tag-gray { background: #edf0f5; color: var(--gov-text-mid); border: 1px solid var(--gov-line); }
+
+/* ── 정부기관 표 ── */
+.gov-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.gov-table th {
+  background: var(--gov-sky);
+  border: 1px solid var(--gov-line);
+  padding: 8px 12px;
+  font-weight: 700; color: var(--gov-blue);
+  text-align: center; white-space: nowrap;
+  font-size: 12px; letter-spacing: .01em;
+}
+.gov-table td {
+  border: 1px solid var(--gov-line);
+  padding: 8px 12px;
+  color: var(--gov-text); vertical-align: top; line-height: 1.6;
+}
+.gov-table tr:nth-child(even) td { background: #fafbfd; }
+.gov-table tr:hover td { background: var(--gov-sky); }
+.gov-table td.center { text-align: center; }
+.gov-table td.code { font-family: 'Courier New', monospace; font-size: 11px; color: var(--gov-blue-mid); }
+
+/* ── 단계 타임라인 ── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.timeline-row {
+  display: grid; grid-template-columns: 90px 24px 1fr 100px;
+  gap: 10px; align-items: start; padding: 10px 0;
+  border-bottom: 1px solid var(--gov-line); animation: slideIn .3s ease-out both;
+}
+.timeline-row:last-child { border-bottom: none; }
+@keyframes slideIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:none; } }
+.tl-time { font-size: 11px; color: var(--gov-text-mid); padding-top: 3px; font-weight: 500; }
+.tl-dot-col { display: flex; flex-direction: column; align-items: center; }
+.tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 2px solid; }
+.tl-line { width: 2px; flex: 1; min-height: 16px; background: var(--gov-line); margin: 3px 0; }
+.tl-title { font-size: 13px; font-weight: 700; color: var(--gov-text); margin-bottom: 3px; }
+.tl-desc { font-size: 11px; color: var(--gov-text-mid); line-height: 1.6; }
+.tl-phase { font-size: 10px; font-weight: 700; text-align: right; padding-top: 2px; }
+
+/* ── Table-Top 훈련 ── */
+.tt-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.tt-layer {
+  background: var(--gov-white);
+  border: 1px solid var(--gov-line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.tt-layer-header {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--gov-line);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tt-layer-title { font-size: 12px; font-weight: 700; }
+.tt-layer-body { padding: 12px 14px; }
+.tt-layer-directive {
+  font-size: 11px; color: var(--gov-text-mid); line-height: 1.6;
+  min-height: 44px; padding: 7px 10px;
+  background: var(--gov-bg); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); margin-bottom: 9px; border-left: 3px solid;
+}
+.input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.input-label { font-size: 10px; font-weight: 700; color: var(--gov-text-mid); margin-bottom: 3px; }
+.num-input {
+  height: 30px; width: 100%;
+  background: var(--gov-white); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); padding: 0 8px;
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  color: var(--gov-text); outline: none; text-align: center;
+  transition: border-color .15s;
+}
+.num-input:focus { border-color: var(--gov-blue-lt); }
+
+/* ── 불시메시지 배너 ── */
+.flash-banner {
+  display: none;
+  background: #fff5f5;
+  border: 2px solid var(--gov-red);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  animation: flashIn .3s ease-out;
+}
+.flash-banner.show { display: block; }
+@keyframes flashIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.flash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+.flash-badge { font-size: 10px; font-weight: 700; color: var(--gov-red); letter-spacing: .06em; display: flex; align-items: center; gap: 5px; }
+.flash-title { font-size: 14px; font-weight: 700; color: var(--gov-red); margin-bottom: 4px; }
+.flash-desc { font-size: 12px; color: var(--gov-text-mid); line-height: 1.6; margin-bottom: 6px; }
+.flash-constraint { font-size: 12px; font-weight: 700; color: var(--gov-red); padding: 5px 10px; background: #fde8e6; border-radius: 2px; }
+
+/* ── 자원 현황판 ── */
+.resource-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.resource-item {
+  background: var(--gov-white); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); padding: 8px;
+  text-align: center; transition: all .2s;
+}
+.resource-item.blocked { background: #fde8e6; border-color: #f5b8b3; }
+.resource-name { font-size: 10px; color: var(--gov-text-mid); margin-bottom: 4px; font-weight: 500; }
+.resource-val { font-size: 15px; font-weight: 700; }
+.resource-val.ok { color: var(--gov-green); }
+.resource-val.blocked { color: var(--gov-red); }
+
+/* ── 결과 / KPI 패널 ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+.kpi-item {
+  background: var(--gov-white); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); padding: 14px 16px;
+  text-align: center; box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--gov-blue-mid);
+}
+.kpi-label { font-size: 11px; color: var(--gov-text-mid); margin-bottom: 6px; font-weight: 500; }
+.kpi-value { font-size: 26px; font-weight: 700; color: var(--gov-blue); line-height: 1; }
+.kpi-unit { font-size: 11px; color: var(--gov-text-lt); margin-top: 3px; }
+
+/* ── RTO 패널 ── */
+.rto-panel {
+  background: var(--gov-white); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); padding: 16px;
+  text-align: center; box-shadow: var(--shadow-sm);
+}
+.rto-label { font-size: 11px; font-weight: 700; color: var(--gov-text-mid); letter-spacing: .06em; margin-bottom: 8px; }
+.rto-value { font-size: 44px; font-weight: 700; line-height: 1; transition: color .3s; }
+.rto-unit { font-size: 13px; color: var(--gov-text-mid); margin-top: 4px; }
+.rto-delta { font-size: 12px; margin-top: 8px; font-weight: 600; }
+
+/* ── 로그 ── */
+.log-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; }
+.log-item {
+  padding: 6px 10px; border-radius: var(--radius);
+  border-left: 3px solid var(--gov-line);
+  background: var(--gov-bg);
+  animation: slideIn .2s ease-out;
+}
+.log-item.jungdae { border-left-color: var(--gov-red); }
+.log-item.jidae { border-left-color: var(--gov-orange); }
+.log-item.tonghap { border-left-color: var(--gov-green); }
+.log-item.system { border-left-color: var(--gov-blue-mid); }
+.log-item.flash { border-left-color: var(--gov-red); background: #fff5f5; }
+.log-time { font-size: 10px; color: var(--gov-text-lt); margin-bottom: 2px; }
+.log-text { font-size: 11px; color: var(--gov-text); line-height: 1.5; }
+
+/* ── 로딩 애니메이션 ── */
+.loading-dots span {
+  display: inline-block; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--gov-blue-mid);
+  animation: dot 1.2s infinite; margin-right: 3px;
+}
+.loading-dots span:nth-child(2) { animation-delay: .2s; }
+.loading-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dot { 0%,100%{opacity:.2} 50%{opacity:1} }
+
+/* ── 상황판단회의 ── */
+.spm-agenda-item {
+  padding: 5px 10px; margin-bottom: 4px;
+  background: var(--gov-bg); border-left: 2px solid var(--gov-blue-mid);
+  font-size: 11px; color: var(--gov-text); border-radius: 0 2px 2px 0;
+  line-height: 1.5;
+}
+
+/* ── 시나리오 테이블 ── */
+.sc-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 860px; }
+.sc-table th {
+  background: var(--gov-blue);
+  border: 1px solid #1a4a9a; padding: 8px 10px;
+  color: #fff; text-align: center; font-size: 11px; font-weight: 700;
+  white-space: nowrap; letter-spacing: .02em;
+}
+.sc-table td {
+  border: 1px solid var(--gov-line); padding: 8px 10px;
+  color: var(--gov-text); vertical-align: top; line-height: 1.6; font-size: 12px;
+}
+.sc-table td.row-header {
+  background: var(--gov-sky); font-weight: 700; text-align: center;
+  font-size: 11px; color: var(--gov-blue); white-space: nowrap; width: 72px;
+}
+.sc-phase-p1 { border-top: 3px solid var(--gov-blue-lt) !important; }
+.sc-phase-p2 { border-top: 3px solid var(--gov-orange) !important; }
+.sc-phase-p3 { border-top: 3px solid var(--gov-red) !important; }
+.sc-phase-p4 { border-top: 3px solid var(--gov-yellow) !important; }
+.sc-phase-p5 { border-top: 3px solid var(--gov-green) !important; }
+.sc-code {
+  display: inline-block; font-family: monospace; font-size: 10px;
+  color: var(--gov-blue-mid); background: #dbe8f8; padding: 1px 4px;
+  border-radius: 2px; margin: 1px;
+}
+.damage-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 2px;
+  font-size: 10px; font-weight: 700; margin: 1px;
+}
+
+/* ── 정량평가 ── */
+.eval-check {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 6px 9px; border: 1px solid var(--gov-line);
+  border-radius: var(--radius); cursor: pointer; margin-bottom: 4px;
+  transition: all .1s; background: var(--gov-white);
+}
+.eval-check:hover { border-color: var(--gov-blue-lt); background: var(--gov-sky); }
+.eval-check.checked { border-color: var(--gov-green); background: #d4eddf; }
+.eval-checkbox {
+  width: 14px; height: 14px; border: 1px solid var(--gov-line);
+  border-radius: 2px; flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; transition: all .1s;
+}
+.eval-check.checked .eval-checkbox { background: var(--gov-green); border-color: var(--gov-green); color: #fff; }
+.eval-text { font-size: 12px; color: var(--gov-text); line-height: 1.5; }
+
+/* ── 점수 패널 ── */
+.score-big {
+  text-align: center; padding: 20px;
+  background: var(--gov-blue); color: #fff; border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+.score-big-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; opacity: .8; margin-bottom: 6px; }
+.score-big-val { font-size: 52px; font-weight: 700; line-height: 1; }
+.score-big-max { font-size: 14px; opacity: .7; margin-top: 4px; }
+.score-big-grade { font-size: 14px; font-weight: 700; margin-top: 8px; }
+.score-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0; border-bottom: 1px solid var(--gov-line); font-size: 12px;
+}
+.score-row:last-child { border-bottom: none; }
+.score-bar-wrap { height: 4px; background: var(--gov-line); border-radius: 2px; overflow: hidden; margin-top: 3px; }
+.score-bar { height: 100%; border-radius: 2px; transition: width .5s; }
+
+/* ── 상태바 ── */
+.status-bar {
+  background: var(--gov-white); border: 1px solid var(--gov-line);
+  border-radius: var(--radius); padding: 9px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; box-shadow: var(--shadow-sm); flex-wrap: wrap; gap: 8px;
+}
+.status-info { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.status-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--gov-text-mid); }
+.status-item strong { color: var(--gov-text); font-weight: 700; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--gov-red); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.4)} 50%{box-shadow:0 0 0 5px rgba(192,57,43,0)} }
+
+/* ── 반응형 ── */
+@media(max-width:900px){
+  .form-row { grid-template-columns: 1fr 1fr; }
+  .tt-layout { grid-template-columns: 1fr; }
+  .resource-grid { grid-template-columns: repeat(3,1fr); }
+  .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  .header-nav-item span { display: none; }
+}
+@media(max-width:600px){
+  .form-row { grid-template-columns: 1fr; }
+  .main { padding: 12px; }
+}
+
+/* ── 알림 토스트 ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--gov-blue); color: #fff;
+  padding: 10px 18px; border-radius: var(--radius);
+  font-size: 13px; box-shadow: var(--shadow-lg);
+  opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999;
+}
+.toast.show { opacity: 1; }
+
+/* ── Supabase 저장 버튼 스피너 ── */
+.btn-save-anim { animation: savePulse .6s ease-in-out; }
+@keyframes savePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(.97)} }
+</style>
+</head>
+<body>
+
+<!-- 최상단 기관 배너 -->
+<div class="top-banner">
+  <div class="top-banner-left">
+    <span>행정안전부 재난안전관리본부</span>
+    <span>|</span>
+    <span>(사)한국재난안전관리연구소</span>
+  </div>
+  <div class="top-banner-right">DREX v3.0 MVP · 2026</div>
+</div>
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-emblem">DREX</div>
+    <div class="logo-text">
+      <div class="logo-text-main">재난훈련 시뮬레이션 플랫폼</div>
+      <div class="logo-text-sub">AI 기반 시나리오 생성 · SOP · 정량평가 · Table-Top 훈련</div>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <div class="header-nav-item active" onclick="switchTab(0)"><div class="header-nav-num">1</div><span>AI 시나리오</span></div>
+    <div class="header-nav-item" onclick="switchTab(1)"><div class="header-nav-num">2</div><span>SOP 실행</span></div>
+    <div class="header-nav-item" onclick="switchTab(2)"><div class="header-nav-num">3</div><span>RTO 산출</span></div>
+    <div class="header-nav-item" onclick="switchTab(3)"><div class="header-nav-num">4</div><span>정량평가</span></div>
+    <div class="header-nav-item" onclick="switchTab(4)"><div class="header-nav-num">5</div><span>Table-Top</span></div>
+    <div class="header-nav-item" onclick="switchTab(5)"><div class="header-nav-num">6</div><span>KPI 현황</span></div>
+  </nav>
+  <div class="header-badge">
+    <div class="badge-item"><div class="badge-dot"></div>Claude AI 연결</div>
+    <div class="badge-item" id="supabase-badge" style="color:var(--gov-text-lt)">● DB 연결 대기</div>
+  </div>
+</div>
+
+<!-- 페이지 타이틀바 -->
+<div class="page-title-bar">
+  <div class="page-breadcrumb">
+    <span class="page-breadcrumb-sep"> &gt; </span>
+    <span id="breadcrumb-cur">AI 통합훈련 시나리오 자동 생성</span>
+  </div>
+  <div class="page-title" id="page-title-text">MODULE 01 · 행안부 통합훈련 시나리오 표준 양식</div>
+</div>
+
+<!-- ═══ 메인 콘텐츠 ═══ -->
+<div class="main">
+
+<!-- ═══ TAB 1: AI 시나리오 ═══ -->
+<div class="page active" id="page-0">
+  <div class="gov-card">
+    <div class="gov-card-header">
+      훈련 조건 설정
+      <div id="ai-status" class="tag tag-gray">생성 대기</div>
+    </div>
+    <div class="gov-card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">재난 유형<span class="required">*</span></label>
+          <select class="form-select" id="sc-type">
+            <option value="flood">풍수해 (태풍·호우)</option>
+            <option value="earthquake">지진</option>
+            <option value="fire">대형화재</option>
+            <option value="chemical">화학사고</option>
+            <option value="complex">복합재난</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">피해 규모<span class="required">*</span></label>
+          <select class="form-select" id="sc-scale">
+            <option value="small">소규모 (~50명)</option>
+            <option value="medium" selected>중규모 (50~500명)</option>
+            <option value="large">대규모 (500명 이상)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">훈련 지역<span class="required">*</span></label>
+          <select class="form-select" id="sc-region">
+            <option value="충북 괴산군">충북 괴산군</option>
+            <option value="서울 강남구">서울 강남구</option>
+            <option value="경기 하남시">경기 하남시</option>
+            <option value="부산 해운대구">부산 해운대구</option>
+            <option value="대구 달서구">대구 달서구</option>
+            <option value="인천 서구">인천 서구</option>
+          </select>
+        </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <label class="form-label">&nbsp;</label>
+          <button class="btn btn-primary btn-lg" onclick="generateScenario()">
+            ▶ 통합 시나리오 생성
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gov-card" id="sc-result-card">
+    <div class="gov-card-header">
+      통합훈련 시나리오 — 행안부 5단계 표준 양식
+      <div style="display:flex;gap:8px;align-items:center;" id="sc-meta-tags"></div>
+    </div>
+    <div class="gov-card-body" id="sc-body">
+      <div style="text-align:center;padding:32px;color:var(--gov-text-lt);font-size:13px;">
+        위 조건을 선택 후 [통합 시나리오 생성] 버튼을 클릭하세요.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 2: SOP ═══ -->
+<div class="page" id="page-1">
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:14px;">
+    <div>
+      <div class="gov-card">
+        <div class="gov-card-header">협업기능 (13개)</div>
+        <div style="padding:8px;" id="sop-list"></div>
+      </div>
+    </div>
+    <div class="gov-card">
+      <div class="gov-card-header">
+        <span id="sop-panel-title">① 상황관리 — 안전정책과</span>
+        <button class="btn btn-success btn-sm" onclick="completeStep()">✓ 다음 단계 완료</button>
+      </div>
+      <div class="gov-card-body">
+        <div id="sop-steps"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 3: RTO ═══ -->
+<div class="page" id="page-2">
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:14px;">
+    <div id="rto-decisions"></div>
+    <div class="rto-panel">
+      <div class="rto-label">RECOVERY TIME OBJECTIVE</div>
+      <div class="rto-value" id="rto-val" style="color:var(--gov-orange);">—</div>
+      <div class="rto-unit">분</div>
+      <div class="rto-delta" id="rto-delta" style="color:var(--gov-text-lt);">기준: 100분</div>
+      <hr style="border:none;border-top:1px solid var(--gov-line);margin:12px 0;">
+      <div id="rto-breakdown" style="font-size:12px;"></div>
+      <button class="btn btn-secondary btn-full" style="margin-top:12px;" onclick="calcRTO()">↻ RTO 재계산</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 4: 정량평가 ═══ -->
+<div class="page" id="page-3">
+  <div style="display:grid;grid-template-columns:1fr 260px;gap:14px;">
+    <div id="eval-content"></div>
+    <div>
+      <div class="score-big">
+        <div class="score-big-label">총 점수</div>
+        <div class="score-big-val" id="score-total">0</div>
+        <div class="score-big-max">/ 90점</div>
+        <div class="score-big-grade" id="score-grade">평가 진행 중</div>
+      </div>
+      <div class="gov-card">
+        <div class="gov-card-header">단계별 점수</div>
+        <div class="gov-card-body" id="score-breakdown"></div>
+      </div>
+      <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="saveEvalToSupabase()">
+        💾 평가 결과 저장 (Supabase)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 5: TABLE-TOP ═══ -->
+<div class="page" id="page-4">
+
+  <!-- 설정 -->
+  <div class="gov-card" id="tt-setup-card">
+    <div class="gov-card-header">훈련 설정</div>
+    <div class="gov-card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">재난 유형</label>
+          <select class="form-select" id="tt-type">
+            <option value="flood">풍수해</option>
+            <option value="earthquake">지진</option>
+            <option value="fire">대형화재</option>
+            <option value="chemical">화학사고</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">훈련 지역</label>
+          <select class="form-select" id="tt-region">
+            <option value="충북 괴산군">충북 괴산군</option>
+            <option value="서울 강남구">서울 강남구</option>
+            <option value="경기 하남시">경기 하남시</option>
+            <option value="부산 해운대구">부산 해운대구</option>
+          </select>
+        </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <label class="form-label">&nbsp;</label>
+          <button class="btn btn-primary btn-lg" onclick="startTT()">▶ 훈련 시작</button>
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:var(--gov-sky);border:1px solid var(--gov-line);border-radius:var(--radius);font-size:12px;color:var(--gov-text-mid);line-height:1.8;">
+        <strong style="color:var(--gov-blue);">훈련 진행 순서:</strong>
+        ① 상황카드 수신 → ② 기관별 행동시간·자원 입력 → ③ 상황판단회의 → ④ 불시메시지 대응 → ⑤ RTO 반영 → ⑥ 다음 단계
+      </div>
+    </div>
+  </div>
+
+  <!-- 훈련 진행 -->
+  <div id="tt-main" style="display:none;">
+    <!-- 상태바 -->
+    <div class="status-bar">
+      <div class="status-info">
+        <div class="status-item"><div class="pulse"></div><strong style="color:var(--gov-red);">훈련 진행중</strong></div>
+        <div class="status-item">단계: <strong id="tt-phase">—</strong></div>
+        <div class="status-item">위기경보: <strong id="tt-alert">관심</strong></div>
+        <div class="status-item">경과: <strong id="tt-timer">00:00</strong></div>
+        <div class="status-item">카드: <strong id="tt-cardnum">—</strong></div>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
+        <button class="btn btn-danger btn-sm" onclick="triggerFlash()">⚡ 불시메시지</button>
+        <button class="btn btn-secondary btn-sm" onclick="openSPM()">🗣 상황판단회의</button>
+        <button class="btn btn-primary btn-sm" onclick="nextCard()">다음 카드 →</button>
+        <button class="btn btn-sm" style="border:1px solid var(--gov-line);" onclick="endTT()">훈련 종료</button>
+      </div>
+    </div>
+
+    <!-- 불시메시지 배너 -->
+    <div class="flash-banner" id="flash-banner">
+      <div class="flash-header">
+        <div class="flash-badge">⚡ 불시메시지 발동</div>
+        <div id="flash-type" class="tag tag-red"></div>
+      </div>
+      <div class="flash-title" id="flash-title"></div>
+      <div class="flash-desc" id="flash-desc"></div>
+      <div class="flash-constraint" id="flash-constraint"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start;">
+        <textarea class="form-textarea" id="flash-resolve" placeholder="이 제한 조건에 대한 해결 결정을 입력하세요..." style="height:44px;flex:1;"></textarea>
+        <button class="btn btn-danger" onclick="resolveFlash()">해결 결정 제출</button>
+      </div>
+    </div>
+
+    <!-- 현재 상황카드 -->
+    <div class="gov-card" id="tt-card-panel" style="border-left:4px solid var(--gov-red);">
+      <div class="gov-card-header">
+        현재 상황카드
+        <div class="tag tag-red" id="tt-urgency">CRITICAL</div>
+      </div>
+      <div class="gov-card-body">
+        <div style="font-size:15px;font-weight:700;color:var(--gov-text);margin-bottom:6px;" id="tt-card-title">훈련 시작 대기 중</div>
+        <div style="font-size:12px;color:var(--gov-text-mid);line-height:1.7;margin-bottom:8px;" id="tt-card-desc"></div>
+        <div style="padding:8px 12px;background:var(--gov-sky);border-left:3px solid var(--gov-blue-mid);border-radius:0 var(--radius) var(--radius) 0;font-size:12px;font-weight:700;color:var(--gov-blue);" id="tt-card-q"></div>
+      </div>
+    </div>
+
+    <!-- 3계층 패널 -->
+    <div class="tt-layout">
+      <!-- 중대본 -->
+      <div class="tt-layer">
+        <div class="tt-layer-header" style="background:#fff0f0;border-bottom-color:#f5b8b3;">
+          <div>
+            <div style="font-size:10px;color:var(--gov-red);font-weight:700;">중앙재난안전대책본부</div>
+            <div class="tt-layer-title" style="color:var(--gov-red);">중대본</div>
+          </div>
+          <div class="tag tag-red" id="jd-status">비상1단계</div>
+        </div>
+        <div class="tt-layer-body">
+          <div class="input-label">지시사항</div>
+          <div class="tt-layer-directive" style="border-left-color:var(--gov-red);" id="jd-dir">—</div>
+          <div class="input-group">
+            <div><div class="input-label">행동시간(분)</div><input type="number" class="num-input" id="jd-time" min="0" value="0"></div>
+            <div><div class="input-label">투입인력(명)</div><input type="number" class="num-input" id="jd-staff" min="0" value="0"></div>
+          </div>
+          <textarea class="form-textarea" id="jd-input" placeholder="중대본 결정사항 입력..." style="height:48px;"></textarea>
+          <button class="btn btn-sm btn-full" style="margin-top:6px;border:1px solid var(--gov-red);color:var(--gov-red);background:var(--gov-white);" onclick="submitTT('jd')">중대본 제출</button>
+        </div>
+      </div>
+
+      <!-- 지대본 -->
+      <div class="tt-layer">
+        <div class="tt-layer-header" style="background:#fff8f0;border-bottom-color:#f5c896;">
+          <div>
+            <div style="font-size:10px;color:var(--gov-orange);font-weight:700;">시·군·구 재난안전대책본부</div>
+            <div class="tt-layer-title" style="color:var(--gov-orange);">지대본</div>
+          </div>
+          <div class="tag tag-orange" id="jb-status">비상1단계</div>
+        </div>
+        <div class="tt-layer-body">
+          <div class="input-label">의사결정 요구</div>
+          <div class="tt-layer-directive" style="border-left-color:var(--gov-orange);" id="jb-dir">—</div>
+          <div class="input-group">
+            <div>
+              <div class="input-label" style="color:var(--gov-orange);font-weight:700;">결정시간(분) ★RTO</div>
+              <input type="number" class="num-input" id="jb-delay" min="0" value="0" style="border-color:var(--gov-orange);">
+            </div>
+            <div><div class="input-label">동원자원</div><input type="text" class="num-input" id="jb-res" placeholder="소방차3·인력50" style="font-size:11px;text-align:left;padding:0 8px;"></div>
+          </div>
+          <textarea class="form-textarea" id="jb-input" placeholder="지대본 결정사항 입력..." style="height:48px;"></textarea>
+          <button class="btn btn-sm btn-full" style="margin-top:6px;background:var(--gov-orange);color:#fff;border-color:var(--gov-orange);font-weight:700;" onclick="submitTT('jb')">지대본 제출 ★RTO반영</button>
+        </div>
+      </div>
+
+      <!-- 통합지원본부 -->
+      <div class="tt-layer">
+        <div class="tt-layer-header" style="background:#f0faf5;border-bottom-color:#a3d4b5;">
+          <div>
+            <div style="font-size:10px;color:var(--gov-green);font-weight:700;">재난현장 통합지원본부</div>
+            <div class="tt-layer-title" style="color:var(--gov-green);">통합지원본부</div>
+          </div>
+          <div class="tag tag-green" id="th-status">대기중</div>
+        </div>
+        <div class="tt-layer-body">
+          <div class="input-label">현장 조치요구</div>
+          <div class="tt-layer-directive" style="border-left-color:var(--gov-green);" id="th-dir">—</div>
+          <div class="input-group" style="grid-template-columns:1fr 1fr 1fr;">
+            <div><div class="input-label" style="color:var(--gov-orange);">소방(분)</div><input type="number" class="num-input" id="ag-fire" min="0" value="0"></div>
+            <div><div class="input-label" style="color:var(--gov-blue-mid);">경찰(분)</div><input type="number" class="num-input" id="ag-police" min="0" value="0"></div>
+            <div><div class="input-label" style="color:var(--gov-green);">보건소(분)</div><input type="number" class="num-input" id="ag-med" min="0" value="0"></div>
+          </div>
+          <textarea class="form-textarea" id="th-input" placeholder="현장 조치사항 입력..." style="height:48px;"></textarea>
+          <button class="btn btn-sm btn-full" style="margin-top:6px;border:1px solid var(--gov-green);color:var(--gov-green);background:var(--gov-white);" onclick="submitTT('th')">통합지원 제출</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 자원 현황판 -->
+    <div class="gov-card" style="margin-bottom:12px;">
+      <div class="gov-card-header">현재 가용 자원 현황</div>
+      <div class="gov-card-body">
+        <div class="resource-grid" id="resource-grid"></div>
+      </div>
+    </div>
+
+    <!-- 로그 + 상황판단회의 + RTO -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 180px;gap:12px;">
+      <div class="gov-card">
+        <div class="gov-card-header">의사결정 로그</div>
+        <div class="gov-card-body"><div class="log-list" id="tt-log">
+          <div style="font-size:12px;color:var(--gov-text-lt);">훈련 시작 후 기록됩니다.</div>
+        </div></div>
+      </div>
+      <div class="gov-card">
+        <div class="gov-card-header">
+          상황판단회의
+          <div class="tag tag-blue" id="spm-status">대기중</div>
+        </div>
+        <div class="gov-card-body">
+          <div style="font-size:11px;color:var(--gov-text-mid);line-height:1.6;padding:6px 9px;background:var(--gov-bg);border-left:2px solid var(--gov-blue-mid);border-radius:0 2px 2px 0;margin-bottom:8px;min-height:44px;" id="spm-summary">
+            "상황판단회의" 버튼 클릭 시 현재까지의 행동시간·자원·결정을 종합한 안건이 생성됩니다.
+          </div>
+          <div id="spm-agenda"></div>
+        </div>
+      </div>
+      <div class="rto-panel">
+        <div class="rto-label">추정 RTO</div>
+        <div class="rto-value" id="tt-rto" style="color:var(--gov-blue);">100</div>
+        <div class="rto-unit">분</div>
+        <div class="rto-delta" id="tt-rto-d" style="color:var(--gov-text-lt);">기준값 유지</div>
+        <div style="margin-top:10px;" id="tt-rto-bars"></div>
+      </div>
+    </div>
+
+    <!-- 훈련 결과 -->
+    <div class="gov-card" id="tt-result" style="display:none;margin-top:12px;border-top:3px solid var(--gov-green);">
+      <div class="gov-card-header" style="color:var(--gov-green);">훈련 종료 — 종합 결과 분석</div>
+      <div class="gov-card-body" id="tt-result-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 6: KPI 현황 ═══ -->
+<div class="page" id="page-5">
+  <div class="gov-card">
+    <div class="gov-card-header">
+      KPI 현황 대시보드 — Supabase 연동
+      <button class="btn btn-primary btn-sm" onclick="loadKPI()">↻ 새로고침</button>
+    </div>
+    <div class="gov-card-body">
+      <div class="kpi-grid" id="kpi-summary">
+        <div class="kpi-item"><div class="kpi-label">총 훈련 횟수</div><div class="kpi-value" id="k-count">—</div><div class="kpi-unit">회</div></div>
+        <div class="kpi-item" style="border-top-color:var(--gov-orange);"><div class="kpi-label">평균 RTO</div><div class="kpi-value" id="k-rto" style="color:var(--gov-orange);">—</div><div class="kpi-unit">분</div></div>
+        <div class="kpi-item" style="border-top-color:var(--gov-red);"><div class="kpi-label">평균 의사결정 지연</div><div class="kpi-value" id="k-delay" style="color:var(--gov-red);">—</div><div class="kpi-unit">분</div></div>
+        <div class="kpi-item" style="border-top-color:var(--gov-green);"><div class="kpi-label">평균 평가점수</div><div class="kpi-value" id="k-score" style="color:var(--gov-green);">—</div><div class="kpi-unit">점</div></div>
+      </div>
+      <div class="gov-card">
+        <div class="gov-card-header">훈련 이력</div>
+        <div class="gov-card-body" style="overflow-x:auto;">
+          <table class="gov-table" id="kpi-table">
+            <thead>
+              <tr>
+                <th>훈련일시</th><th>재난유형</th><th>지역</th><th>총소요시간</th>
+                <th>의사결정지연</th><th>불시패널티</th><th>최종RTO</th><th>평가점수</th><th>등급</th>
+              </tr>
+            </thead>
+            <tbody id="kpi-tbody">
+              <tr><td colspan="9" style="text-align:center;color:var(--gov-text-lt);padding:24px;">훈련을 실시하면 결과가 자동 저장됩니다.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px 14px;background:var(--gov-sky);border:1px solid var(--gov-line);border-radius:var(--radius);font-size:12px;color:var(--gov-text-mid);">
+        <strong style="color:var(--gov-blue);">Supabase 연동 설정:</strong> 아래 SUPABASE_URL과 SUPABASE_KEY를 실제 값으로 교체하세요.
+        <br>테이블명: <code style="background:#fff;padding:1px 5px;border-radius:2px;font-size:11px;">drex_sessions</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- 토스트 알림 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DREX v3.0 MVP — 정부기관 UI
+//  Supabase KPI 연동 포함
+// ═══════════════════════════════════════════════
+
+// ── Supabase 설정 (실제 배포 시 환경변수로 교체) ──
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+async function supabaseInsert(table, data) {
+  if(SUPABASE_URL === 'YOUR_SUPABASE_URL') { toast('Supabase 키를 설정하세요.'); return null; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  } catch(e) { return null; }
+}
+
+async function supabaseSelect(table) {
+  if(SUPABASE_URL === 'YOUR_SUPABASE_URL') return [];
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*&order=created_at.desc&limit=20`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return await res.json();
+  } catch(e) { return []; }
+}
+
+// ── 탭 전환 ──
+const TABS = [
+  { bc: 'AI 통합훈련 시나리오 자동 생성', title: 'MODULE 01 · 행안부 통합훈련 시나리오 표준 양식' },
+  { bc: 'SOP 실행구조', title: 'MODULE 02 · 재난현장조치 행동매뉴얼 13개 협업기능' },
+  { bc: 'RTO 정량 산출', title: 'MODULE 03 · BIA-AHP 가중치 기반 RTO 산출' },
+  { bc: '정량평가 엔진', title: 'MODULE 04 · 2025 안전한국훈련 평가지표 (90점)' },
+  { bc: 'Table-Top 훈련 모드', title: 'MODULE 05 · 중대본·지대본·통합지원본부 계층 훈련' },
+  { bc: 'KPI 현황', title: 'MODULE 06 · 훈련 결과 KPI 대시보드 (Supabase)' },
+];
+function switchTab(i) {
+  document.querySelectorAll('.page').forEach((p,j) => p.classList.toggle('active', i===j));
+  document.querySelectorAll('.header-nav-item').forEach((t,j) => t.classList.toggle('active', i===j));
+  document.getElementById('breadcrumb-cur').textContent = TABS[i].bc;
+  document.getElementById('page-title-text').textContent = TABS[i].title;
+  if(i===2) calcRTO();
+  if(i===5) loadKPI();
+}
+
+function toast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ══════════════════════════════
+//  TAB 1: AI 시나리오 생성
+// ══════════════════════════════
+const TYPE_NAMES = {flood:'풍수해(태풍·호우)',earthquake:'지진',fire:'대형화재',chemical:'화학사고',complex:'복합재난'};
+const SCALE_NAMES = {small:'소규모(~50명)',medium:'중규모(50~500명)',large:'대규모(500명 이상)'};
+
+const SC_REF = `
+[행안부 통합훈련 시나리오 표준 양식]
+5단계: 평시·초기대응→비상대응1~3단계→주요사고→수습→복구
+목표대응시간: [1단계]상황전파10분·회의20분 [2단계]2차회의20분 [3단계]현장연락관파견 [4단계]수색완료 [5단계]특재건의
+협업기능: ①-1-2상황접수 ①-1-5상황판단회의 ①-2-1CBS발령 ①-3-4재대본운영 ①-3-6현장관리관파견
+②-1-1이재민파악 ⑤-1-2응급복구 ⑨-1-2교통통제 ⑫-2-1출입통제 ⑬-1-1수색구조 ③-1-1폐기물수거
+피해예시(중규모풍수해): 사망2·부상4·이재민167명·피해120억
+`;
+
+function renderScenario(sc) {
+  const phCls = ['sc-phase-p1','sc-phase-p2','sc-phase-p3','sc-phase-p4','sc-phase-p5'];
+  const phColors = ['#2e7dd1','#d35400','#c0392b','#b8860b','#1a7a4a'];
+
+  // 메타 태그
+  document.getElementById('sc-meta-tags').innerHTML = `
+    <span class="tag tag-blue">${sc.name||''}</span>
+    <span class="tag tag-red">최고경보: ${sc.max_alert||'심각'}</span>
+    <span class="tag tag-gray">${sc.agencies||11}개 기관</span>
+  `;
+
+  // 개요
+  const phaseRows = (sc.phases||[]).map((p,i) => `
+    <td class="${phCls[i]}" style="min-width:140px;">
+      <div style="font-size:10px;font-weight:700;color:${phColors[i]};margin-bottom:3px;">${p.name||''}</div>
+      <div style="font-size:10px;color:var(--gov-text-lt);">${p.time_real||''}</div>
+    </td>`).join('');
+
+  const rows = [
+    { label:'목표\n대응시간', fn: p => `<div style="font-size:10px;color:var(--gov-blue-mid);font-weight:700;">${p.target_time||''}</div>` },
+    { label:'재난\n상황', fn: p => p.situation||'' },
+    { label:'피해\n상황', fn: p => {
+      const d = p.damage||{};
+      return [
+        d.dead!==undefined ? `<span class="damage-tag" style="background:#fde8e6;color:var(--gov-red);border:1px solid #f5b8b3;">사망 ${d.dead}명</span>` : '',
+        d.injury!==undefined ? `<span class="damage-tag" style="background:#fde9d4;color:var(--gov-orange);border:1px solid #f5c896;">부상 ${d.injury}명</span>` : '',
+        d.evac!==undefined ? `<span class="damage-tag" style="background:#dbe8f8;color:var(--gov-blue-mid);border:1px solid #b0ccee;">이재민 ${d.evac}명</span>` : '',
+        d.property ? `<span class="damage-tag" style="background:#fef7dc;color:var(--gov-yellow);border:1px solid #f0d878;">${d.property}</span>` : '',
+        (!d.dead&&!d.injury&&!d.evac&&!d.property) ? '<span style="color:var(--gov-text-lt);font-size:11px;">없음</span>' : ''
+      ].join('');
+    }},
+    { label:'주요쟁점\n의사결정', fn: p => (p.decisions||[]).map(d=>`<div style="font-size:11px;line-height:1.6;">○ ${d}</div>`).join('') },
+    { label:'대응\n조치', fn: p => (p.actions||[]).map(a=>{
+      return `<div style="font-size:11px;line-height:1.6;">${a.replace(/\[([^\]]+)\]/g,'<span class="sc-code">[$1]</span>')}</div>`;
+    }).join('') },
+    { label:'소요\n자원', fn: p => `<div style="font-size:11px;">${p.resources||''}</div>` },
+  ];
+
+  document.getElementById('sc-body').innerHTML = `
+    <div style="padding:10px 0 14px;">
+      <div style="font-size:12px;color:var(--gov-text-mid);line-height:1.7;padding:9px 12px;background:var(--gov-sky);border-left:3px solid var(--gov-blue);border-radius:0 2px 2px 0;margin-bottom:14px;">
+        <strong style="color:var(--gov-blue);">재난상황 설정:</strong> ${sc.situation||''}
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="sc-table">
+          <thead>
+            <tr>
+              <th style="width:72px;">구분</th>
+              ${(sc.phases||[]).map((p,i)=>`<th style="color:#fff;min-width:140px;">${p.name||''}<br><span style="font-size:9px;opacity:.7;">${p.time_real||''}</span></th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r=>`
+              <tr>
+                <td class="row-header" style="white-space:pre-line;">${r.label}</td>
+                ${(sc.phases||[]).map((p,i)=>`<td class="${phCls[i]}">${r.fn(p)}</td>`).join('')}
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--gov-blue);margin-bottom:8px;">협업기능 코드 연계</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        ${(sc.collab_codes||[]).map(c=>`
+          <div style="background:var(--gov-white);border:1px solid var(--gov-line);border-radius:var(--radius);padding:8px 10px;">
+            <div style="font-family:monospace;font-size:10px;color:var(--gov-blue-mid);margin-bottom:2px;">${c.code||''}</div>
+            <div style="font-size:12px;font-weight:600;color:var(--gov-text);">${c.name||''}</div>
+            <div style="font-size:10px;color:var(--gov-text-lt);">${c.dept||''}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+async function generateScenario() {
+  const type = document.getElementById('sc-type').value;
+  const scale = document.getElementById('sc-scale').value;
+  const region = document.getElementById('sc-region').value;
+  const status = document.getElementById('ai-status');
+  status.className = 'tag tag-yellow'; status.textContent = '생성 중...';
+  document.getElementById('sc-body').innerHTML = `
+    <div style="text-align:center;padding:32px;">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--gov-text-mid);">행안부 통합훈련 시나리오 표준 양식으로 생성 중...</div>
+    </div>`;
+
+  const prompt = `한국 재난관리 전문가로서 통합훈련 시나리오를 JSON으로 생성하세요.
+참조: ${SC_REF}
+조건: 재난유형=${TYPE_NAMES[type]}, 피해규모=${SCALE_NAMES[scale]}, 훈련지역=${region}
+JSON 구조: id, name, location(${region}내 장소), date, agencies(숫자), max_alert, situation(2문장),
+phases(5개: name/time_real/target_time/situation/decisions(2개배열)/actions(3개배열)/resources/damage{dead?/injury?/evac?/property?}),
+collab_codes(12개: code/name/dept)
+각 phase situation은 1~2줄로 간결하게. JSON만 출력.`;
+
+  async function callAPI(retry=0) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:4000,
+        system:'한국 재난관리 박사. JSON만 출력.',
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    if(data.type==='error') {
+      if(retry<2){ status.textContent=`재시도 (${retry+1}/2)...`; await new Promise(r=>setTimeout(r,2000)); return callAPI(retry+1); }
+      throw new Error(data.error?.message||'API 오류');
+    }
+    return data;
+  }
+
+  try {
+    const data = await callAPI();
+    const raw = data.content?.find(b=>b.type==='text')?.text||'';
+    let js = raw.replace(/```json|```/g,'').trim();
+    const lb = js.lastIndexOf('}');
+    if(lb !== -1 && lb < js.length-1) js = js.substring(0,lb+1);
+    const sc = JSON.parse(js);
+    status.className = 'tag tag-green'; status.textContent = '✓ 생성 완료';
+    renderScenario(sc);
+  } catch(e) {
+    status.className = 'tag tag-red'; status.textContent = '오류 발생';
+    document.getElementById('sc-body').innerHTML = `<div style="padding:20px;color:var(--gov-red);font-size:12px;">⚠ ${e.message}</div>`;
+  }
+}
+
+// ══════════════════════════════
+//  TAB 2: SOP
+// ══════════════════════════════
+const SOP_AGENCIES = [
+  { name:'① 상황관리', role:'안전정책과', color:'var(--gov-blue-mid)',
+    steps:[
+      {code:'①-1-5',title:'초기 상황판단회의',detail:'호우예비특보 발령 후 20분 이내 개최',time:'완료',status:'done'},
+      {code:'①-2-1',title:'재난문자(CBS) 발령',detail:'주민대피 권고 및 위험지역 재난문자 송출',time:'완료',status:'done'},
+      {code:'①-3-4',title:'재대본 가동',detail:'군수 주재 재난안전대책본부 운영 개시',time:'+8분',status:'active'},
+      {code:'①-3-6',title:'현장상황관리관 파견',detail:'안전총괄팀장 현장 파견 및 실시간 보고',time:'대기',status:'pending'},
+      {code:'①-4-1',title:'피해현황 종합 집계',detail:'부서별 피해 취합 후 상급기관 보고',time:'대기',status:'pending'},
+    ]},
+  { name:'② 긴급생활안정', role:'주민복지과', color:'var(--gov-green)',
+    steps:[
+      {code:'②-1-1',title:'임시대피소 개방',detail:'지정 대피소 3개소 개방, 관리요원 배치',time:'완료',status:'done'},
+      {code:'②-1-2',title:'구호물자 배급',detail:'응급구호세트 176개, 담요 156개, 텐트 46동',time:'+12분',status:'active'},
+      {code:'②-1-5',title:'심리지원 연계',detail:'이재민 정신건강 회복 지원',time:'대기',status:'pending'},
+    ]},
+  { name:'③ 재난환경정비', role:'환경과', color:'var(--gov-yellow)',
+    steps:[
+      {code:'③-1-1',title:'임시적환장 지정',detail:'재난폐기물 수거·처리 임시적환장 운영',time:'대기',status:'pending'},
+    ]},
+  { name:'④ 긴급통신지원', role:'KT청주법인', color:'var(--gov-blue-lt)',
+    steps:[
+      {code:'④-1-2',title:'대체통신 운영',detail:'PS-LTE 재난안전통신망 / 불시 무전기 대체',time:'+15분',status:'active'},
+    ]},
+  { name:'⑤ 시설응급복구', role:'건설교통과', color:'var(--gov-orange)',
+    steps:[
+      {code:'⑤-1-1',title:'도로·교량 점검',detail:'주요도로 25개소 안전점검 완료',time:'완료',status:'done'},
+      {code:'⑤-1-2',title:'응급복구반 가동',detail:'도로보수원 동원, 진공흡입청소차 임차',time:'+10분',status:'active'},
+    ]},
+  { name:'⑥ 에너지복구', role:'경제과', color:'var(--gov-blue)',
+    steps:[
+      {code:'⑥-1-2',title:'이동발전차 대기',detail:'장기정전 대비 이동발전차·이동변전차',time:'대기',status:'pending'},
+    ]},
+  { name:'⑦ 교통대책', role:'건설교통과+경찰', color:'var(--gov-red)',
+    steps:[
+      {code:'⑦-1-1',title:'하상주차장 통제',detail:'하천변 주차장 진입통제 및 차량 견인',time:'완료',status:'done'},
+      {code:'⑦-1-2',title:'우회로 확보',detail:'침수도로 우회노선 마련 및 비상수송',time:'+5분',status:'active'},
+    ]},
+  { name:'⑧ 의료방역', role:'보건소', color:'var(--gov-green)',
+    steps:[
+      {code:'⑧-1-1',title:'구급차 대기 총괄',detail:'구급차 7대(보건소1+소방3+병원3) 대기',time:'완료',status:'done'},
+      {code:'⑧-2-1',title:'현장응급의료소 운영',detail:'다수사상자 분류·처치, 트리아지 실시',time:'+8분',status:'active'},
+    ]},
+  { name:'⑨ 수색구조', role:'소방서', color:'var(--gov-orange)',
+    steps:[
+      {code:'⑨-1-1',title:'긴급구조통제단 가동',detail:'소방서장 주재, 구조대 출동 지령',time:'완료',status:'done'},
+      {code:'⑨-2-1',title:'실종자 수색',detail:'실종자 수색, 군부대 협조 요청',time:'+22분',status:'active'},
+    ]},
+  { name:'⑩ 사회질서', role:'행정과+경찰', color:'#7f8c8d',
+    steps:[
+      {code:'⑩-1-2',title:'빈집 범죄예방',detail:'이재민 대피 후 빈집털이 방지 순찰',time:'대기',status:'pending'},
+    ]},
+  { name:'⑪ 자원봉사', role:'사회단체', color:'var(--gov-yellow)',
+    steps:[
+      {code:'⑪-1-1',title:'자율방재단 가동',detail:'자율방재단·의용소방대 배수로 점검',time:'완료',status:'done'},
+    ]},
+  { name:'⑫ 수습홍보', role:'기획홍보과', color:'var(--gov-blue-mid)',
+    steps:[
+      {code:'⑫-1-1',title:'재난방송 요청',detail:'지역방송사 재난방송 요청, SNS 실시간',time:'완료',status:'done'},
+      {code:'⑫-1-2',title:'언론 브리핑',detail:'사상자·피해 현황 브리핑',time:'+30분',status:'active'},
+    ]},
+  { name:'⑬ 농축산시설', role:'농업정책과', color:'var(--gov-green)',
+    steps:[
+      {code:'⑬-1-1',title:'저수지 사전방류',detail:'198개소 취약지역 사전점검, 저수지 방류',time:'완료',status:'done'},
+    ]},
+];
+let currentSOP = 0;
+
+function renderSOP() {
+  document.getElementById('sop-list').innerHTML = SOP_AGENCIES.map((a,i)=>`
+    <div onclick="selectSOP(${i})" style="padding:7px 10px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;
+      border:1px solid ${i===currentSOP?'var(--gov-blue-lt)':'var(--gov-line)'};
+      background:${i===currentSOP?'var(--gov-sky)':'var(--gov-white)'};
+      transition:all .15s;display:flex;align-items:center;gap:8px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:${i===currentSOP?'var(--gov-blue)':'var(--gov-text)'};">${a.name}</div>
+        <div style="font-size:10px;color:var(--gov-text-lt);">${a.role}</div>
+      </div>
+    </div>`).join('');
+
+  const ag = SOP_AGENCIES[currentSOP];
+  document.getElementById('sop-panel-title').textContent = `${ag.name} — ${ag.role}`;
+  document.getElementById('sop-steps').innerHTML = ag.steps.map((s,i)=>`
+    <div style="display:grid;grid-template-columns:32px 1fr 90px;gap:10px;padding:10px 0;border-bottom:1px solid var(--gov-line);align-items:start;${s.status==='done'?'opacity:.6':''}">
+      <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;
+        background:${s.status==='done'?'var(--gov-green)':s.status==='active'?'var(--gov-blue-mid)':'var(--gov-line)'};
+        color:${s.status==='pending'?'var(--gov-text-mid)':'#fff'};
+        ${s.status==='active'?'animation:pulse 1.5s infinite;':''}">${s.status==='done'?'✓':s.status==='active'?'▶':(i+1)}</div>
+      <div>
+        <div style="font-family:monospace;font-size:10px;color:var(--gov-blue-mid);margin-bottom:2px;">${s.code}</div>
+        <div style="font-size:13px;font-weight:${s.status==='done'?'400':'700'};color:var(--gov-text);${s.status==='done'?'text-decoration:line-through;':''}">${s.title}</div>
+        <div style="font-size:11px;color:var(--gov-text-mid);margin-top:2px;">${s.detail}</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;text-align:right;color:${s.time.includes('분')&&s.status==='active'?'var(--gov-red)':s.status==='done'?'var(--gov-green)':'var(--gov-text-lt)'};">${s.time}</div>
+    </div>`).join('');
+}
+function selectSOP(i) { currentSOP=i; renderSOP(); }
+function completeStep() {
+  const ag = SOP_AGENCIES[currentSOP];
+  const ai = ag.steps.findIndex(s=>s.status==='active');
+  const pi = ag.steps.findIndex(s=>s.status==='pending');
+  if(ai>=0){ag.steps[ai].status='done';ag.steps[ai].time='완료';}
+  if(pi>=0){ag.steps[pi].status='active';ag.steps[pi].time='진행중';}
+  renderSOP(); toast('단계 완료 처리되었습니다.');
+}
+
+// ══════════════════════════════
+//  TAB 3: RTO
+// ══════════════════════════════
+const DECISIONS = [
+  {label:'재대본 가동 결정',delay:8,weight:.18,baseline:5,desc:'①-2-1 위기경보 발령 연계'},
+  {label:'사전대피 권고 발령',delay:22,weight:.22,baseline:10,desc:'①-3-1 상황판단회의 결과'},
+  {label:'통합지원본부 설치',delay:18,weight:.20,baseline:8,desc:'현장상황관리관 파견 포함'},
+  {label:'소방헬기 요청',delay:25,weight:.16,baseline:5,desc:'⑨-2-1 실종자 수색 연계'},
+  {label:'기관 간 협업통신',delay:15,weight:.14,baseline:5,desc:'PS-LTE 채널 개설'},
+  {label:'강제대피 명령',delay:30,weight:.10,baseline:10,desc:'불응 주민 강제대피'},
+];
+function calcRTO() {
+  const delay = DECISIONS.reduce((s,d)=>s+Math.max(0,d.delay-d.baseline)*d.weight*2.2,0);
+  const rto = Math.round(100+delay);
+  const delta = rto-100;
+  const color = delta>60?'var(--gov-red)':delta>20?'var(--gov-orange)':'var(--gov-green)';
+  document.getElementById('rto-val').textContent = rto;
+  document.getElementById('rto-val').style.color = color;
+  document.getElementById('rto-delta').textContent = `기준 대비 +${delta}분 (+${Math.round(delta)}%)`;
+  document.getElementById('rto-delta').style.color = color;
+  document.getElementById('rto-breakdown').innerHTML = `
+    <table class="gov-table">
+      <thead><tr><th>의사결정 항목</th><th>기준(분)</th><th>실제(분)</th><th>가중치</th><th>RTO 기여</th></tr></thead>
+      <tbody>${DECISIONS.map(d=>{
+        const c = Math.round(Math.max(0,d.delay-d.baseline)*d.weight*2.2);
+        return `<tr><td>${d.label}</td><td class="center">${d.baseline}</td>
+          <td class="center" style="color:${d.delay>d.baseline?'var(--gov-red)':'var(--gov-green)';font-weight:700;">${d.delay}</td>
+          <td class="center">${d.weight.toFixed(2)}</td>
+          <td class="center" style="color:${c>0?'var(--gov-orange)':'var(--gov-green)'};font-weight:700;">${c>0?'+'+c:0}분</td></tr>`;
+      }).join('')}
+      <tr style="background:var(--gov-sky);font-weight:700;">
+        <td colspan="4" style="text-align:right;color:var(--gov-blue);">통합 RTO</td>
+        <td class="center" style="color:${color};font-size:16px;">${rto}분</td>
+      </tr></tbody>
+    </table>`;
+  document.getElementById('rto-decisions').innerHTML = DECISIONS.map((d,i)=>`
+    <div class="gov-card" style="margin-bottom:10px;">
+      <div class="gov-card-header">
+        DEC-${String(i+1).padStart(3,'0')} · w=${d.weight.toFixed(2)}
+        <span class="tag ${d.delay>d.baseline*2?'tag-red':d.delay>d.baseline?'tag-orange':'tag-green'}">${d.delay>d.baseline?'기준 초과':'기준 이내'}</span>
+      </div>
+      <div class="gov-card-body">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px;">${d.label}</div>
+        <div style="font-size:11px;color:var(--gov-text-mid);margin-bottom:10px;">${d.desc}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:12px;color:var(--gov-text-mid);">실제 결정시간 [기준: ${d.baseline}분]</span>
+          <input type="number" style="width:80px;height:32px;text-align:center;background:var(--gov-white);border:1px solid var(--gov-line);border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:700;outline:none;"
+            value="${d.delay}" min="0" max="120"
+            oninput="DECISIONS[${i}].delay=+this.value;calcRTO()">
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════
+//  TAB 4: 정량평가
+// ══════════════════════════════
+const EVAL_DATA = [
+  { phase:'1. 훈련 기획·설계', max:18, color:'var(--gov-blue)',
+    inds:[
+      { id:'1-1', title:'1-1. 훈련 목표 설정의 적절성', max:4, items:[
+        {t:'훈련기획팀에 재난유형별 실무자 포함',pt:.5},{t:'훈련기획팀 업무 분장 있음',pt:.5},
+        {t:'과거 재난사례 기반 목표 설정',pt:1},{t:'훈련 목표 정량적 설정',pt:1},{t:'기관장 별도 훈련 지시사항',pt:1},
+      ]},
+      { id:'1-2', title:'1-2. 훈련 시나리오의 적절성', max:6, items:[
+        {t:'과거 재난사례 참고, 타임라인 포함',pt:1},{t:'인적·물적 피해 구분 작성',pt:1},
+        {t:'2차 피해 상황 포함',pt:1},{t:'기상조건 등 배경정보 포함',pt:1},
+        {t:'협업기관 대응활동 구체적 작성',pt:1},{t:'시나리오 충실성 우수',pt:1},
+      ]},
+      { id:'1-3', title:'1-3. 부서 임무카드 및 실행계획의 적절성', max:8, items:[
+        {t:'훈련 목표·중점사항 포함',pt:2},{t:'일정표 포함',pt:2},
+        {t:'방재자원 소요계획 포함',pt:2},{t:'홍보·안전 세부사항 포함',pt:2},
+      ]},
+    ]},
+  { phase:'2. 훈련 실시', max:63, color:'var(--gov-orange)',
+    inds:[
+      { id:'2-1', title:'2-1. 상황접수 및 보고·전파의 적절성', max:4, items:[
+        {t:'전파 대상 적정',pt:1},{t:'내용 육하원칙 준수',pt:1},
+        {t:'절차 신속(10분 이내)',pt:1},{t:'비상연락망 현행화',pt:1},
+      ]},
+      { id:'2-2', title:'2-2. 상황판단회의 충실성', max:6, items:[
+        {t:'피해확인 자료 준비',pt:1},{t:'적절한 회의 주재자',pt:1},
+        {t:'긴급조치사항 논의',pt:1},{t:'재난위기 단계 결정',pt:1},
+        {t:'비상기구 가동 시기 적당',pt:1},{t:'20~30분 내 진행',pt:1},
+      ]},
+      { id:'2-3', title:'2-3. 재난상황 문제해결 과정의 적절성', max:5, items:[
+        {t:'단계별 훈련 메시지 전달',pt:1},{t:'충분한 의사진행',pt:1},
+        {t:'재난단계별 문제점 토의',pt:1},{t:'부서별 협업기능 토의',pt:1},{t:'참여자 적극 토론',pt:1},
+      ]},
+      { id:'2-4', title:'2-4. 실질적 현장훈련 수행 적절성', max:8, items:[
+        {t:'불시훈련 정의 부합',pt:2},{t:'평소 대기장소에서 출동',pt:1.5},
+        {t:'목표시간 내 도착',pt:1.5},{t:'위험지역 현장통제',pt:1.5},{t:'주민 대피훈련 실시',pt:1.5},
+      ]},
+      { id:'2-5', title:'2-5. PS-LTE 재난안전통신망 활용도', max:6, items:[
+        {t:'PS-LTE 채널 개설',pt:1.5},{t:'참여기관 전체 입장',pt:1.5},
+        {t:'불시상황 대체통신 전환',pt:1.5},{t:'훈련 종료까지 운용',pt:1.5},
+      ]},
+      { id:'2-6', title:'2-6. 기관장의 관심도 및 역할', max:9, items:[
+        {t:'기관장 직접 참여',pt:5},{t:'긴급조치 사항 지시',pt:1},
+        {t:'문제점 해결방안 마련',pt:1},{t:'핵심 이슈 규명',pt:1},{t:'이슈 조정 역량',pt:1},
+      ]},
+      { id:'2-7', title:'2-7. 대국민 훈련 홍보 실적', max:5, items:[
+        {t:'오프라인 매체 활용',pt:1},{t:'온라인 매체 활용',pt:1},
+        {t:'홍보 기간 적절(~15일)',pt:1},{t:'인구이동 많은 곳 설치',pt:1},{t:'QR코드·이벤트 참여유도',pt:1},
+      ]},
+      { id:'2-8', title:'2-8. 국민체험단 훈련 평가 결과', max:5, items:[
+        {t:'90점 이상(우수)',pt:5},{t:'85~90점(보통)',pt:3},{t:'80~85점(미흡)',pt:1},
+      ]},
+      { id:'2-9', title:'2-9. 실행기반 훈련 목표 달성도', max:5, items:[
+        {t:'목표 달성 95% 이상',pt:5},{t:'목표 달성 80~95%',pt:3},{t:'목표 달성 60~80%',pt:1},
+      ]},
+    ]},
+  { phase:'3. 훈련 환류', max:9, color:'var(--gov-green)',
+    inds:[
+      { id:'3-1', title:'3-1. 개선계획 수립의 적절성', max:9, items:[
+        {t:'훈련결과 점검·개선회의 실시',pt:1},{t:'개선계획 수립',pt:1},
+        {t:'위기관리 매뉴얼 개정사항 포함',pt:1},{t:'기관장 결재',pt:1},
+        {t:'전년도 개선계획 반영',pt:1},{t:'담당자 지정',pt:1},
+        {t:'예산·일정 포함',pt:1},{t:'추적관리 절차 마련',pt:1},{t:'발견된 문제점 포함',pt:1},
+      ]},
+    ]},
+];
+const evalState = {};
+function calcEvalTotal() {
+  let total = EVAL_DATA.reduce((s,ph)=>{
+    return s + ph.inds.reduce((ss,ind)=>{
+      return ss + (ind.items||[]).reduce((sss,item,i)=>{
+        return sss + ((evalState[ind.id+'_'+i])?item.pt:0);
+      },0);
+    },0);
+  },0);
+  return Math.min(90, Math.round(total*10)/10);
+}
+function renderEval() {
+  document.getElementById('eval-content').innerHTML = EVAL_DATA.map(ph=>`
+    <div class="gov-card" style="margin-bottom:12px;">
+      <div class="gov-card-header" style="border-left:4px solid ${ph.color};">
+        ${ph.phase} <span class="tag tag-blue">${ph.max}점</span>
+      </div>
+      <div class="gov-card-body">
+        ${ph.inds.map(ind=>`
+          <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--gov-line);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div style="font-size:13px;font-weight:700;color:var(--gov-text);">${ind.title}</div>
+              <span class="tag tag-blue" id="ind-s-${ind.id}">0점</span>
+            </div>
+            ${(ind.items||[]).map((item,i)=>`
+              <div class="eval-check ${evalState[ind.id+'_'+i]?'checked':''}" id="ec-${ind.id}-${i}" onclick="toggleEval('${ind.id}',${i},${item.pt})">
+                <div class="eval-checkbox" id="ecb-${ind.id}-${i}">${evalState[ind.id+'_'+i]?'✓':''}</div>
+                <div class="eval-text">${item.t} <span style="color:var(--gov-text-lt);font-size:10px;">(+${item.pt}점)</span></div>
+              </div>`).join('')}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+  updateScorePanel();
+}
+function toggleEval(indId, idx, pt) {
+  const key = indId+'_'+idx;
+  evalState[key] = !evalState[key];
+  const el = document.getElementById('ec-'+indId+'-'+idx);
+  const box = document.getElementById('ecb-'+indId+'-'+idx);
+  if(el) el.classList.toggle('checked', evalState[key]);
+  if(box) box.textContent = evalState[key]?'✓':'';
+  updateIndScore(indId);
+  updateScorePanel();
+}
+function updateIndScore(indId) {
+  const ind = EVAL_DATA.flatMap(p=>p.inds).find(i=>i.id===indId);
+  if(!ind) return;
+  const sc = Math.min(ind.max, Math.round((ind.items||[]).reduce((s,item,i)=>s+(evalState[indId+'_'+i]?item.pt:0),0)*10)/10);
+  const el = document.getElementById('ind-s-'+indId);
+  if(el) el.textContent = sc.toFixed(1)+'점';
+}
+function updateScorePanel() {
+  const total = calcEvalTotal();
+  const grade = total>=80?'우수':total>=60?'보통':'미흡';
+  const gc = total>=80?'var(--gov-green)':total>=60?'var(--gov-orange)':'var(--gov-red)';
+  document.getElementById('score-total').textContent = total.toFixed(1);
+  document.getElementById('score-grade').textContent = grade;
+  document.getElementById('score-grade').style.color = gc;
+  document.getElementById('score-breakdown').innerHTML = EVAL_DATA.map(ph=>{
+    const sc = ph.inds.reduce((s,ind)=>s+(ind.items||[]).reduce((ss,item,i)=>ss+(evalState[ind.id+'_'+i]?item.pt:0),0),0);
+    const pct = Math.min(100,sc/ph.max*100);
+    const c = pct>=80?'var(--gov-green)':pct>=50?'var(--gov-orange)':'var(--gov-red)';
+    return `<div class="score-row">
+      <div><div style="font-size:11px;">${ph.phase.substring(0,8)}…</div>
+      <div class="score-bar-wrap" style="width:120px;"><div class="score-bar" style="width:${pct}%;background:${c};"></div></div></div>
+      <div style="font-family:monospace;font-size:13px;font-weight:700;color:${c};">${Math.round(sc*10)/10}/${ph.max}</div>
+    </div>`;
+  }).join('');
+}
+async function saveEvalToSupabase() {
+  const total = calcEvalTotal();
+  const ok = await supabaseInsert('drex_evaluations', { score: total, grade: total>=80?'우수':total>=60?'보통':'미흡', created_at: new Date().toISOString() });
+  if(ok!==null) toast(ok ? `✓ 평가결과(${total}점) 저장 완료` : '저장 실패');
+}
+
+// ══════════════════════════════
+//  TAB 5: TABLE-TOP 훈련
+// ══════════════════════════════
+const FLASH_LIST = [
+  {id:'comm', type:'통신망 마비', title:'PS-LTE 재난안전통신망 장애', desc:'행정망 이상으로 단말기 오류. 참여기관 간 실시간 통신 불가.', constraint:'⛔ PS-LTE 차단 — 유선·무전기 대체 필요', rto:15, block:'통신'},
+  {id:'heli', type:'자원 제한', title:'소방헬기 기상악화 운항 취소', desc:'강풍(15m/s 이상)으로 헬기 파견 취소. 중상자 이송 수단 부재.', constraint:'⛔ 소방헬기 차단 — 구급차 대체 이송 계획 수립', rto:20, block:'소방헬기'},
+  {id:'hosp', type:'병원 수용 한계', title:'인근 병원 수용 한계 도달', desc:'반경 20km 내 병원 3개소 수용 한계. 광역 이송 체계 필요.', constraint:'⛔ 의료 자원 포화 — 광역 병원 연계 필요', rto:18, block:'병원'},
+  {id:'army', type:'기관 협조 지연', title:'군부대 지원 협조 지연', desc:'부대장 외출로 결재 지연. 굴삭기·덤프트럭 출동 보류.', constraint:'⛔ 군부대 지연 — 민간 건설장비 긴급 임차 검토', rto:12, block:'군부대'},
+  {id:'gas', type:'2차 사고', title:'가스관 파열 — 폭발 위험', desc:'침수로 가스관 파열. 반경 200m 접근 통제 필요.', constraint:'⛔ 현장 접근 제한 — 가스 차단 우선 후 구조 재개', rto:25, block:null},
+  {id:'wind', type:'기상 악화', title:'강풍·폭우 심화 — 작업 중단', desc:'순간풍속 20m/s. 드론 운용 불가, 구조 일시 중단.', constraint:'⛔ 드론·헬기 중단 — 인력 구조만 가능', rto:22, block:'드론'},
+];
+const TT_CARDS = {
+  flood:[
+    {phase:'평시·초기대응',alert:'관심',urg:'HIGH',title:'호우예비특보 발령',desc:'시간당 20mm 이상 집중호우 예상. 누적 100mm 초과 가능.',q:'지대본: 비상근무 발령 및 취약시설 예찰 여부 결정.',jd:'행안부 모니터링 강화. 지대본 대비태세 확립 요청.',jb:'재대본 가동 및 초기 상황판단회의 개최 결정.',th:'취약시설 예찰반 편성. 하상주차장 통제 검토.',flash:'comm'},
+    {phase:'비상대응 1단계',alert:'주의',urg:'HIGH',title:'호우주의보 — 비상1단계',desc:'11:30 호우주의보. 배수로 막힘 3건. 하천 주의단계.',q:'지대본: 재대본 가동 및 사전대피 권고 발령 결정.',jd:'비상1단계 모니터링. 재대본 가동 권고.',jb:'재대본 가동. 사전대피 권고 발령 판단.',th:'임시대피소 개방 준비. 구호물자 확인.',flash:'heli'},
+    {phase:'비상대응 2단계',alert:'경계',urg:'CRITICAL',title:'호우경보 — 비상2단계',desc:'14:00 호우경보. 시간당 80mm. 저지대 침수.',q:'지대본: 주민대피 명령 및 통합지원본부 설치 결정.',jd:'비상2단계 지원 준비. 특수구조대 대기.',jb:'주민대피 명령. 통합지원본부 설치.',th:'통합지원본부 설치. 긴급구조통제단 연계.',flash:'gas'},
+    {phase:'주요사고',alert:'심각',urg:'CRITICAL',title:'동진천 범람 — 차량 전복·다수 사상자',desc:'17:05 극한호우. 차량 전복 17명. 실종자 3명.',q:'지대본: 긴급구조통제단 전면 가동 및 소방헬기 요청.',jd:'소방헬기 파견. 국군 의무대 지원. 특재 검토.',jb:'긴급구조통제단 가동. 현장상황관리관 파견.',th:'다수사상자 응급의료소. 병원 이송 체계.',flash:'hosp'},
+    {phase:'수습',alert:'경계',urg:'HIGH',title:'구조 완료 — 수습 전환',desc:'호우경보 해제. 사망2·중상3·경상1·이재민167명.',q:'지대본: 특별재난지역 선포 건의 결정.',jd:'특재 검토. 복구 예산 편성.',jb:'피해 종합 보고. 특재 건의.',th:'이재민 임시거주. 재난폐기물 수거.',flash:'army'},
+    {phase:'복구',alert:'관심',urg:'NORMAL',title:'복구 착수 — 훈련 종료',desc:'응급복구 시작. 이재민 입소. 심리지원 파견.',q:'훈련 종료 — 결과를 평가합니다.',jd:'복구 지원 유지.',jb:'복구계획 완료.',th:'지휘권 이양.',flash:null},
+  ],
+  earthquake:[
+    {phase:'초기대응',alert:'경계',urg:'CRITICAL',title:'규모 6.2 지진 발생',desc:'진앙 반경 20km 피해 예상. 건물 흔들림 신고 다수.',q:'지대본: 즉시 재대본 가동 및 피해 현황 파악.',jd:'행안부 긴급 점검.',jb:'재대본 즉시 가동.',th:'구조대 출동 준비.',flash:'comm'},
+    {phase:'비상대응',alert:'심각',urg:'CRITICAL',title:'건물 붕괴 — 30명 고립',desc:'5층 건물 부분 붕괴. 30명 고립. 병원 수용 한계.',q:'지대본: 특수구조대 투입 및 광역 의료 지원 요청.',jd:'특수구조대 파견.',jb:'소방헬기 및 광역 의료 지원 요청.',th:'현장응급의료소 설치.',flash:'hosp'},
+    {phase:'수습',alert:'주의',urg:'HIGH',title:'구조 완료 — 수습',desc:'사망2·부상15·이재민200세대.',q:'이재민 지원 및 2차 피해 방지.',jd:'특재 검토.',jb:'이재민 임시거주.',th:'구호물자 배급.',flash:null},
+  ],
+};
+
+let tt = { running:false, idx:0, cards:[], name:'', region:'', start:null, timer:null, delay:0, penalty:0, log:[], resources:{}, blocked:[], flashActive:false, curFlash:null, spmCount:0, agencyT:{f:[],p:[],m:[]}, cardDelays:{} };
+
+function initResources() {
+  tt.resources = { '소방차':{v:5,u:'대'}, '구급차':{v:7,u:'대'}, '소방헬기':{v:1,u:'대'}, '드론':{v:2,u:'대'}, '군부대':{v:50,u:'명'}, '통신':{v:6,u:'대'}, '병원':{v:3,u:'개소'} };
+  renderResources();
+}
+function renderResources() {
+  document.getElementById('resource-grid').innerHTML = Object.entries(tt.resources).map(([k,r])=>{
+    const bl = tt.blocked.includes(k);
+    return `<div class="resource-item ${bl?'blocked':''}">
+      <div class="resource-name">${k}</div>
+      <div class="resource-val ${bl?'blocked':'ok'}">${bl?'차단':r.v+r.u}</div>
+    </div>`;
+  }).join('');
+}
+function startTT() {
+  const type = document.getElementById('tt-type').value;
+  tt.cards = TT_CARDS[type]||TT_CARDS.flood;
+  tt.name = type; tt.region = document.getElementById('tt-region').value;
+  tt.running=true; tt.idx=0; tt.delay=0; tt.penalty=0; tt.log=[]; tt.blocked=[]; tt.flashActive=false; tt.spmCount=0; tt.agencyT={f:[],p:[],m:[]}; tt.cardDelays={};
+  tt.start = Date.now();
+  document.getElementById('tt-main').style.display='block';
+  document.getElementById('tt-result').style.display='none';
+  document.getElementById('flash-banner').classList.remove('show');
+  document.getElementById('tt-log').innerHTML='';
+  document.getElementById('spm-agenda').innerHTML='';
+  initResources();
+  clearInterval(tt.timer);
+  tt.timer = setInterval(()=>{ if(!tt.running) return; const e=Math.floor((Date.now()-tt.start)/1000); document.getElementById('tt-timer').textContent=String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0'); },1000);
+  addLog('system','훈련 시작',`${tt.name} · ${tt.region}`);
+  renderCard(0);
+  document.getElementById('tt-rto').textContent='100';
+  document.getElementById('tt-rto').style.color='var(--gov-blue)';
+}
+function renderCard(i) {
+  const c = tt.cards[i]; if(!c) return;
+  document.getElementById('tt-cardnum').textContent=`${i+1}/${tt.cards.length}`;
+  document.getElementById('tt-phase').textContent=c.phase;
+  document.getElementById('tt-alert').textContent=c.alert;
+  const uc = {CRITICAL:'var(--gov-red)',HIGH:'var(--gov-orange)',NORMAL:'var(--gov-green)'}[c.urg]||'var(--gov-blue)';
+  document.getElementById('tt-card-panel').style.borderLeftColor=uc;
+  document.getElementById('tt-urgency').textContent=c.urg;
+  document.getElementById('tt-urgency').className=`tag ${c.urg==='CRITICAL'?'tag-red':c.urg==='HIGH'?'tag-orange':'tag-green'}`;
+  document.getElementById('tt-card-title').textContent=c.title;
+  document.getElementById('tt-card-desc').textContent=c.desc;
+  document.getElementById('tt-card-q').textContent='▶ '+c.q;
+  document.getElementById('jd-dir').textContent=c.jd;
+  document.getElementById('jb-dir').textContent=c.jb;
+  document.getElementById('th-dir').textContent=c.th;
+  ['jd','jb','th'].forEach(id=>{ document.getElementById(id+'-input').value=''; });
+  ['jd-time','jd-staff','jb-delay','ag-fire','ag-police','ag-med'].forEach(id=>{ document.getElementById(id).value=0; });
+  document.getElementById('jb-res').value='';
+  const ac = {관심:'tag-blue',주의:'tag-yellow',경계:'tag-orange',심각:'tag-red'}[c.alert]||'tag-blue';
+  ['jd-status','jb-status'].forEach(id=>{ document.getElementById(id).className=`tag ${ac}`; document.getElementById(id).textContent=c.alert+' 단계'; });
+  document.getElementById('th-status').textContent=i===0?'대기중':'가동중';
+  if(c.flash) { setTimeout(()=>{ if(tt.running&&tt.idx===i&&!tt.flashActive) showFlash(c.flash,true); }, 8000+Math.random()*7000); }
+  addLog('system',`카드 ${i+1}`,c.title);
+}
+function showFlash(fid, auto) {
+  const f = FLASH_LIST.find(x=>x.id===fid); if(!f) return;
+  tt.flashActive=true; tt.curFlash=f;
+  document.getElementById('flash-type').textContent=f.type;
+  document.getElementById('flash-title').textContent=f.title;
+  document.getElementById('flash-desc').textContent=f.desc;
+  document.getElementById('flash-constraint').textContent=f.constraint;
+  document.getElementById('flash-resolve').value='';
+  document.getElementById('flash-banner').classList.add('show');
+  if(f.block && tt.resources[f.block]) { tt.resources[f.block].blocked=true; renderResources(); }
+  addLog('flash',(auto?'[자동] ':'[수동] ')+'불시메시지',f.title+' — '+f.type);
+}
+function triggerFlash() {
+  const avail = FLASH_LIST.filter(f=>!tt.blocked.includes(f.id));
+  if(!avail.length){ toast('더 이상 발동 가능한 불시메시지가 없습니다.'); return; }
+  showFlash(avail[Math.floor(Math.random()*avail.length)].id, false);
+}
+function resolveFlash() {
+  const text = document.getElementById('flash-resolve').value.trim();
+  if(!text){ document.getElementById('flash-resolve').style.borderColor='var(--gov-red)'; setTimeout(()=>document.getElementById('flash-resolve').style.borderColor='',1000); return; }
+  if(tt.curFlash){ tt.penalty+=tt.curFlash.rto; tt.blocked.push(tt.curFlash.id); addLog('flash','불시 해결',`[${tt.curFlash.type}] ${text} (RTO +${tt.curFlash.rto}분)`); updateTTRTO(); }
+  document.getElementById('flash-banner').classList.remove('show');
+  tt.flashActive=false; tt.curFlash=null;
+}
+function submitTT(who) {
+  const input = document.getElementById(who+'-input');
+  const text = input.value.trim();
+  if(!text){ input.style.borderColor='var(--gov-red)'; setTimeout(()=>input.style.borderColor='',1000); return; }
+  let extra='';
+  if(who==='jb'){
+    const d=+document.getElementById('jb-delay').value||0;
+    const res=document.getElementById('jb-res').value||'';
+    if(d>0){ tt.delay+=d; tt.cardDelays[tt.idx]=(tt.cardDelays[tt.idx]||0)+d; updateTTRTO(); }
+    extra=d>0?` (결정${d}분${res?' | '+res:''})`:(res?` (${res})`:'');
+    const ft=+document.getElementById('ag-fire').value||0;
+    const pt=+document.getElementById('ag-police').value||0;
+    const mt=+document.getElementById('ag-med').value||0;
+    if(ft>0) tt.agencyT.f.push(ft); if(pt>0) tt.agencyT.p.push(pt); if(mt>0) tt.agencyT.m.push(mt);
+  } else if(who==='jd'){
+    const t=+document.getElementById('jd-time').value||0, s=+document.getElementById('jd-staff').value||0;
+    extra=[t>0?`행동${t}분`:'',s>0?`인력${s}명`:''].filter(Boolean).map(x=>`(${x})`).join(' ');
+  }
+  addLog(who, {jd:'중대본',jb:'지대본',th:'통합지원본부'}[who], text+extra);
+  input.value='';
+}
+function openSPM() {
+  tt.spmCount++;
+  const c=tt.cards[tt.idx]||{};
+  const agenda=[
+    `단계: ${c.phase||'—'} / 위기경보: ${c.alert||'—'}`,
+    `지대본 결정 소요: ${document.getElementById('jb-delay').value||0}분 / 자원: ${document.getElementById('jb-res').value||'미입력'}`,
+    `소방 행동시간: ${document.getElementById('ag-fire').value||0}분 / 경찰: ${document.getElementById('ag-police').value||0}분 / 보건소: ${document.getElementById('ag-med').value||0}분`,
+    `현재 추정 RTO: ${document.getElementById('tt-rto').textContent}분`,
+    tt.flashActive?`⛔ 불시메시지 미해결: ${tt.curFlash?.title}`:'불시메시지: 없음',
+  ];
+  document.getElementById('spm-status').textContent=`제${tt.spmCount}차 회의`;
+  document.getElementById('spm-summary').textContent=`제${tt.spmCount}차 상황판단회의 — ${c.phase||''}`;
+  document.getElementById('spm-agenda').innerHTML=agenda.map(a=>`<div class="spm-agenda-item">${a}</div>`).join('');
+  addLog('system',`제${tt.spmCount}차 상황판단회의`,agenda[0]);
+}
+function nextCard() {
+  if(!tt.running) return;
+  if(tt.idx<tt.cards.length-1){ tt.idx++; renderCard(tt.idx); }
+  else endTT();
+}
+function updateTTRTO() {
+  const rto=Math.round(100+tt.delay*.8+tt.penalty*.6);
+  const d=rto-100;
+  const color=d>40?'var(--gov-red)':d>15?'var(--gov-orange)':'var(--gov-green)';
+  document.getElementById('tt-rto').textContent=rto;
+  document.getElementById('tt-rto').style.color=color;
+  document.getElementById('tt-rto-d').textContent=d>0?`기준 대비 +${d}분`:'기준값 유지';
+  document.getElementById('tt-rto-d').style.color=color;
+  const bars=[{l:'의사결정 지연',v:tt.delay,c:'var(--gov-orange)'},{l:'불시 패널티',v:tt.penalty,c:'var(--gov-red)'}].filter(x=>x.v>0);
+  document.getElementById('tt-rto-bars').innerHTML=bars.map(b=>`
+    <div style="font-size:10px;color:var(--gov-text-mid);margin-bottom:1px;">${b.l}: +${b.v}분</div>
+    <div class="score-bar-wrap"><div class="score-bar" style="width:${Math.min(100,b.v/60*100)}%;background:${b.c};"></div></div>`).join('');
+}
+function addLog(type, label, text) {
+  const log=document.getElementById('tt-log'); if(!log) return;
+  const e=tt.start?Math.floor((Date.now()-tt.start)/1000):0;
+  const item=document.createElement('div');
+  item.className='log-item '+type;
+  item.innerHTML=`<div class="log-time">${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')} · ${label}</div><div class="log-text">${text}</div>`;
+  log.insertBefore(item,log.firstChild);
+}
+async function endTT() {
+  tt.running=false; clearInterval(tt.timer);
+  const e=tt.start?Math.floor((Date.now()-tt.start)/1000):0;
+  const rto=Math.round(100+tt.delay*.8+tt.penalty*.6);
+  const delta=rto-100;
+  const grade=delta<=10?'우수':delta<=30?'보통':'개선필요';
+  const gc=delta<=10?'var(--gov-green)':delta<=30?'var(--gov-orange)':'var(--gov-red)';
+  const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):'-';
+  const evalScore = calcEvalTotal();
+
+  document.getElementById('tt-result').style.display='block';
+  document.getElementById('tt-result-body').innerHTML=`
+    <div class="kpi-grid">
+      <div class="kpi-item"><div class="kpi-label">훈련 소요시간</div><div class="kpi-value" style="font-size:22px;color:var(--gov-blue);">${Math.floor(e/60)}분${e%60}초</div></div>
+      <div class="kpi-item" style="border-top-color:var(--gov-orange);"><div class="kpi-label">의사결정 지연</div><div class="kpi-value" style="color:var(--gov-orange);">${tt.delay}분</div></div>
+      <div class="kpi-item" style="border-top-color:var(--gov-red);"><div class="kpi-label">불시 패널티</div><div class="kpi-value" style="color:var(--gov-red);">${tt.penalty}분</div></div>
+      <div class="kpi-item" style="border-top-color:${gc};"><div class="kpi-label">최종 RTO</div><div class="kpi-value" style="color:${gc};">${rto}</div><div class="kpi-unit">분</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div style="padding:12px 14px;background:var(--gov-sky);border-left:3px solid ${gc};border-radius:var(--radius);">
+        <div style="font-size:14px;font-weight:700;color:${gc};margin-bottom:5px;">종합평가: ${grade}</div>
+        <div style="font-size:12px;color:var(--gov-text-mid);line-height:1.7;">${tt.name} · ${tt.region}<br>RTO 기준 대비 <strong style="color:${gc};">+${delta}분</strong> ${delta>30?'— 의사결정 속도·협업 개선 필요':delta>10?'— 일부 개선 필요':'— 우수한 대응 속도'}</div>
+      </div>
+      <div style="padding:12px 14px;background:var(--gov-sky);border-left:3px solid var(--gov-blue-mid);border-radius:var(--radius);">
+        <div style="font-size:12px;font-weight:700;color:var(--gov-blue);margin-bottom:6px;">협업기관 평균 행동시간</div>
+        <div style="font-size:12px;color:var(--gov-text-mid);line-height:1.9;">
+          소방서: <strong style="color:var(--gov-orange);">${avg(tt.agencyT.f)}분</strong> &nbsp;|&nbsp;
+          경찰서: <strong style="color:var(--gov-blue-mid);">${avg(tt.agencyT.p)}분</strong> &nbsp;|&nbsp;
+          보건소: <strong style="color:var(--gov-green);">${avg(tt.agencyT.m)}분</strong><br>
+          상황판단회의: <strong>${tt.spmCount}회</strong> 개최
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="startTT()">↺ 훈련 재시작</button>
+      <button class="btn btn-success" onclick="saveTTResult(${rto},${tt.delay},${tt.penalty},'${grade}')">💾 결과 저장 (Supabase)</button>
+    </div>`;
+  document.getElementById('tt-result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+async function saveTTResult(rto, delay, penalty, grade) {
+  const e=tt.start?Math.floor((Date.now()-tt.start)/1000):0;
+  const ok = await supabaseInsert('drex_sessions', {
+    disaster_type: tt.name, region: tt.region,
+    elapsed_sec: e, decision_delay: delay,
+    flash_penalty: penalty, final_rto: rto,
+    grade, spm_count: tt.spmCount,
+    avg_fire: tt.agencyT.f.length?Math.round(tt.agencyT.f.reduce((a,b)=>a+b,0)/tt.agencyT.f.length):null,
+    avg_police: tt.agencyT.p.length?Math.round(tt.agencyT.p.reduce((a,b)=>a+b,0)/tt.agencyT.p.length):null,
+    avg_medical: tt.agencyT.m.length?Math.round(tt.agencyT.m.reduce((a,b)=>a+b,0)/tt.agencyT.m.length):null,
+    created_at: new Date().toISOString()
+  });
+  if(ok!==null) toast(ok?'✓ 훈련 결과 Supabase 저장 완료':'저장 실패');
+}
+
+// ══════════════════════════════
+//  TAB 6: KPI 대시보드
+// ══════════════════════════════
+async function loadKPI() {
+  const rows = await supabaseSelect('drex_sessions');
+  if(!rows||!rows.length){ document.getElementById('k-count').textContent='0'; return; }
+  const count=rows.length;
+  const avgRTO=Math.round(rows.reduce((s,r)=>s+(r.final_rto||0),0)/count);
+  const avgDelay=Math.round(rows.reduce((s,r)=>s+(r.decision_delay||0),0)/count);
+  document.getElementById('k-count').textContent=count;
+  document.getElementById('k-rto').textContent=avgRTO||'—';
+  document.getElementById('k-delay').textContent=avgDelay||'—';
+
+  // 평가점수
+  const evalRows = await supabaseSelect('drex_evaluations');
+  if(evalRows&&evalRows.length){
+    const avgScore=Math.round(evalRows.reduce((s,r)=>s+(r.score||0),0)/evalRows.length*10)/10;
+    document.getElementById('k-score').textContent=avgScore;
+  }
+
+  document.getElementById('kpi-tbody').innerHTML=rows.map(r=>{
+    const grade=r.grade||'—';
+    const gc=grade==='우수'?'var(--gov-green)':grade==='보통'?'var(--gov-orange)':'var(--gov-red)';
+    return `<tr>
+      <td>${r.created_at?new Date(r.created_at).toLocaleString('ko-KR'):'-'}</td>
+      <td>${r.disaster_type||'-'}</td><td>${r.region||'-'}</td>
+      <td class="center">${r.elapsed_sec?Math.floor(r.elapsed_sec/60)+'분':'—'}</td>
+      <td class="center" style="color:var(--gov-orange);font-weight:700;">${r.decision_delay??'—'}분</td>
+      <td class="center" style="color:var(--gov-red);font-weight:700;">${r.flash_penalty??'—'}분</td>
+      <td class="center" style="color:var(--gov-orange);font-weight:700;">${r.final_rto??'—'}분</td>
+      <td class="center">—</td>
+      <td class="center"><span style="color:${gc};font-weight:700;">${grade}</span></td>
+    </tr>`;
+  }).join('');
+  toast(`KPI 데이터 ${count}건 로드 완료`);
+}
+
+// ── 초기화 ──
+renderSOP();
+renderEval();
+calcRTO();
+document.getElementById('supabase-badge').textContent = SUPABASE_URL!=='YOUR_SUPABASE_URL' ? '● DB 연결됨' : '● DB 설정 필요';
+document.getElementById('supabase-badge').style.color = SUPABASE_URL!=='YOUR_SUPABASE_URL' ? 'var(--gov-green)' : 'var(--gov-text-lt)';
+</script>
+</body>
+</html>
