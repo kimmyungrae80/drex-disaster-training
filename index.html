@@ -1,832 +1,839 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DREX v3.1 — AI 재난훈련 시뮬레이션 플랫폼</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#08111f;
-  --bg2:#0d1a2d;
-  --surface:#12233d;
-  --surface2:#172b49;
-  --surface3:#1d3558;
-  --line:#29456d;
-  --line-strong:#4272b3;
-  --primary:#5da2ff;
-  --primary-2:#7db8ff;
-  --text:#f2f7ff;
-  --text-mid:#d3e2fa;
-  --text-soft:#a8c0e8;
-  --muted:#7e96b8;
-  --good:#3ddc97;
-  --warn:#ffb84d;
-  --danger:#ff6b6b;
-  --yellow:#ffd54a;
-  --shadow:0 10px 30px rgba(0,0,0,.28);
-  --radius:12px;
-  --font:'Noto Sans KR','Malgun Gothic',sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  font-family:var(--font);
-  background:linear-gradient(180deg,#08111f 0%,#091427 100%);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-}
-button,input,select,textarea{font:inherit}
-.top-banner{
-  background:#050c16;
-  border-bottom:1px solid #163051;
-  color:var(--text-soft);
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 18px;font-size:12px
-}
-.header{
-  display:flex;align-items:stretch;gap:18px;
-  background:#0a1629;border-bottom:2px solid var(--line-strong);
-  padding:0 16px;box-shadow:var(--shadow)
-}
-.logo-wrap{display:flex;align-items:center;gap:14px;padding:16px 0;min-width:290px}
-.logo-box{
-  width:48px;height:48px;border-radius:10px;
-  background:linear-gradient(135deg,#2e6fe5,#59a5ff);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;color:#fff;box-shadow:0 6px 20px rgba(45,111,229,.35)
-}
-.logo-main{font-size:29px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
-.logo-sub{font-size:12px;color:var(--text-soft);margin-top:5px;line-height:1.4}
-.nav{display:flex;align-items:stretch;flex:1;overflow:auto}
-.nav-item{
-  border:none;background:transparent;color:var(--text-mid);
-  padding:0 16px;display:flex;align-items:center;gap:8px;cursor:pointer;
-  border-bottom:3px solid transparent;font-weight:700;white-space:nowrap
-}
-.nav-item:hover{background:#10233e;color:#fff}
-.nav-item.active{color:#fff;border-bottom-color:var(--primary)}
-.nav-num{
-  width:22px;height:22px;border-radius:999px;
-  display:inline-flex;align-items:center;justify-content:center;
-  background:#23456e;color:#fff;font-size:11px;font-weight:800
-}
-.nav-item.active .nav-num{background:var(--primary)}
-.header-side{display:flex;align-items:center;gap:14px;padding-left:16px;border-left:1px solid #1d3657;font-size:12px;color:var(--text-mid)}
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--good);margin-right:5px}
-.page-title-bar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:12px 20px;background:#0b1729;border-bottom:1px solid #193454
-}
-.breadcrumb{font-size:13px;color:var(--text-soft)}
-.breadcrumb strong{color:#fff}
-.module-title{font-size:14px;font-weight:800;color:var(--text-mid)}
-.main{padding:18px;max-width:1600px;margin:0 auto}
-.page{display:none}
-.page.active{display:block}
-.card{
-  background:linear-gradient(180deg,var(--surface) 0%,#102039 100%);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;margin-bottom:16px
-}
-.card-header{
-  padding:13px 16px;border-bottom:1px solid var(--line);
-  background:#152844;font-size:15px;font-weight:800;color:#fff;
-  display:flex;align-items:center;justify-content:space-between;gap:12px
-}
-.card-body{padding:16px}
-.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.form-group{display:flex;flex-direction:column;gap:7px}
-label{font-size:12px;font-weight:800;color:var(--text-mid)}
-label .req{color:#ff8383}
-select,input,textarea{
-  width:100%;background:#0b1729;color:#fff;border:1px solid #355681;
-  border-radius:10px;padding:12px 12px;outline:none
-}
-select:focus,input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(93,162,255,.18)}
-textarea{min-height:92px;resize:vertical;line-height:1.65}
-.btn{
-  border:none;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;
-  transition:.15s ease;background:#254b77;color:#fff
-}
-.btn:hover{filter:brightness(1.08)}
-.btn-primary{background:linear-gradient(135deg,#3a84ff,#5da2ff)}
-.btn-secondary{background:#23456e}
-.btn-success{background:#188f60}
-.btn-danger{background:#c54b57}
-.btn-full{width:100%}
-.btn-sm{padding:8px 11px;font-size:12px}
-.tag{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid transparent}
-.tag-blue{background:rgba(93,162,255,.14);color:#cfe3ff;border-color:rgba(93,162,255,.34)}
-.tag-green{background:rgba(61,220,151,.14);color:#ccffe7;border-color:rgba(61,220,151,.34)}
-.tag-orange{background:rgba(255,184,77,.14);color:#ffe4bd;border-color:rgba(255,184,77,.34)}
-.tag-red{background:rgba(255,107,107,.14);color:#ffd2d2;border-color:rgba(255,107,107,.34)}
-.tag-gray{background:rgba(191,209,237,.10);color:#d8e4f7;border-color:rgba(191,209,237,.2)}
-.empty-box{
-  min-height:260px;border:1px dashed #355681;border-radius:12px;background:#0b1729;
-  display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:15px;text-align:center;padding:20px
-}
-.summary-box{
-  padding:14px;border-radius:12px;background:#0b1729;border:1px solid #315178;color:var(--text-mid);line-height:1.75
-}
-.table-wrap{overflow:auto;border-radius:12px;border:1px solid #355681}
-.table{width:100%;border-collapse:collapse;min-width:980px}
-.table th{background:#1d3960;color:#fff;padding:11px 10px;border:1px solid #355681;font-size:12px}
-.table td{background:#0d1a2d;color:#eef4ff;padding:11px 10px;border:1px solid #355681;font-size:12px;vertical-align:top;line-height:1.7}
-.table tr:nth-child(even) td{background:#102039}
-.side-list{display:flex;flex-direction:column;gap:8px}
-.side-btn{
-  text-align:left;padding:11px 12px;background:#0b1729;border:1px solid #355681;border-radius:10px;color:#fff;font-weight:700;cursor:pointer
-}
-.side-btn.active{background:#183154;border-color:var(--primary)}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.kpi{
-  background:#0b1729;border:1px solid #355681;border-top:4px solid var(--primary);
-  border-radius:12px;padding:16px;text-align:center
-}
-.kpi-label{font-size:13px;color:var(--text-soft);font-weight:700;margin-bottom:8px}
-.kpi-value{font-size:34px;font-weight:800;color:#fff;line-height:1}
-.kpi-unit{font-size:12px;color:var(--text-soft);margin-top:6px}
-.flex-between{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.tt-layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.tt-panel{background:#0b1729;border:1px solid #355681;border-radius:12px;overflow:hidden}
-.tt-panel-head{padding:12px 14px;font-weight:800;border-bottom:1px solid #355681;background:#12243e}
-.tt-panel-body{padding:14px}
-.directive{padding:10px 12px;border-radius:10px;background:#11213a;border-left:4px solid var(--primary);color:var(--text-mid);line-height:1.6;margin-bottom:12px}
-.input-mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
-.log-box{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:8px}
-.log-item{padding:10px 12px;background:#0b1729;border:1px solid #355681;border-left:4px solid var(--primary);border-radius:10px}
-.log-time{font-size:11px;color:var(--text-soft);margin-bottom:4px}
-.log-text{font-size:12px;color:#fff;line-height:1.6}
-.resource-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-.resource{padding:12px;border-radius:10px;background:#0b1729;border:1px solid #355681;text-align:center}
-.resource-name{font-size:12px;color:var(--text-soft);margin-bottom:6px}
-.resource-value{font-size:20px;font-weight:800;color:#fff}
-.flash{display:none;padding:16px;background:rgba(197,75,87,.14);border:1px solid rgba(255,107,107,.4);border-radius:12px;margin-bottom:14px}
-.flash.show{display:block}
-.flash-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px}
-.flash-desc{font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:8px}
-.flash-constraint{font-size:13px;font-weight:800;color:#ffd2d2;background:#4a1f27;border-radius:8px;padding:10px 12px}
-.score-box{background:linear-gradient(135deg,#2f73ea,#5da2ff);border-radius:14px;padding:20px;text-align:center}
-.score-val{font-size:52px;font-weight:800;color:#fff;line-height:1}
-.score-sub{font-size:14px;color:#e9f3ff;margin-top:8px;font-weight:700}
-.muted{color:var(--muted)}
-.small{font-size:12px}
-.notice{padding:12px 14px;border-radius:12px;background:#0b1729;border:1px solid #355681;color:var(--text-mid);line-height:1.75}
-@media (max-width:1200px){.grid-4,.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tt-layout,.grid-3{grid-template-columns:1fr}.resource-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:780px){.header{flex-direction:column;padding-bottom:10px}.logo-wrap{min-width:auto}.grid-2,.grid-4,.kpi-grid{grid-template-columns:1fr}.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main{padding:12px}.page-title-bar{flex-direction:column;align-items:flex-start;gap:6px}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DREX X — Advanced Disaster Exercise Platform</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#0d1b31;
+      --panel2:#122441;
+      --panel3:#172c4f;
+      --line:#27466e;
+      --line2:#3b6aa4;
+      --text:#eff6ff;
+      --muted:#bfd3ef;
+      --soft:#8eabd0;
+      --blue:#62a6ff;
+      --cyan:#6ee7ff;
+      --green:#32d296;
+      --yellow:#ffd166;
+      --orange:#ff9f43;
+      --red:#ff6b6b;
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:14px;
+      --radius-sm:10px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#07111f 0%,#08172b 45%,#07101d 100%);color:var(--text);font-family:Inter,"Noto Sans KR","Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}
+    .app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+    .sidebar{background:rgba(7,17,31,.96);border-right:1px solid var(--line);padding:20px 18px;position:sticky;top:0;height:100vh;overflow:auto}
+    .brand{display:flex;gap:14px;align-items:center;margin-bottom:22px}
+    .logo{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#3c8cff,#65d9ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;box-shadow:var(--shadow)}
+    .brand h1{font-size:24px;line-height:1.1;margin:0}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+    .menu{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+    .menu button{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:14px 15px;border-radius:12px;text-align:left;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+    .menu button.active,.menu button:hover{background:linear-gradient(180deg,#163256,#142c4b);border-color:var(--line2)}
+    .sidebar-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:14px}
+    .sidebar-card h3{margin:0 0 10px;font-size:14px;color:var(--cyan)}
+    .sidebar-card p,.sidebar-card li{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+    .sidebar-card ul{padding-left:18px;margin:0}
+
+    .main{padding:24px 24px 40px;overflow:auto}
+    .topbar{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+    .topbar h2{margin:0;font-size:30px;line-height:1.2}
+    .topbar p{margin:8px 0 0;color:var(--muted);max-width:880px;line-height:1.7}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:none;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#4f9bff,#66d7ff);color:#07111f}
+    .btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+    .btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--cyan)}
+    .btn.small{padding:9px 12px;font-size:13px;border-radius:10px}
+    .grid{display:grid;gap:16px}
+    .grid.hero{grid-template-columns:1.3fr .9fr .9fr}
+    .card{background:linear-gradient(180deg,rgba(18,36,65,.96),rgba(10,24,44,.98));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .card-title{font-size:17px;font-weight:800;margin:0}
+    .card-sub{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+    .card-body{padding:18px 20px}
+
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .kpi{padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(7,17,31,.32)}
+    .kpi .label{font-size:12px;color:var(--muted);margin-bottom:8px}
+    .kpi .value{font-size:32px;font-weight:900}
+    .kpi .desc{font-size:12px;color:var(--soft);margin-top:6px;line-height:1.5}
+
+    .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:7px}
+    select,input,textarea{width:100%;background:#091427;border:1px solid var(--line);color:var(--text);padding:12px 13px;border-radius:12px;outline:none}
+    textarea{min-height:92px;resize:vertical;line-height:1.7}
+    select:focus,input:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(110,231,255,.12)}
+
+    .badges{display:flex;flex-wrap:wrap;gap:8px}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(98,166,255,.13);border:1px solid rgba(98,166,255,.25);font-size:12px;font-weight:700;color:#dbe9ff}
+    .badge.yellow{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.25);color:#ffe3a3}
+    .badge.red{background:rgba(255,107,107,.13);border-color:rgba(255,107,107,.25);color:#ffc0c0}
+    .badge.green{background:rgba(50,210,150,.13);border-color:rgba(50,210,150,.24);color:#aef1d6}
+    .badge.cyan{background:rgba(110,231,255,.12);border-color:rgba(110,231,255,.25);color:#b8f4ff}
+
+    .scenario-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .timeline-item{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(7,17,31,.34);position:relative}
+    .timeline-item h4{margin:0 0 6px;font-size:15px}
+    .timeline-item p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+    .timeline-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+    .mini{font-size:12px;color:var(--soft)}
+
+    .side-stack{display:flex;flex-direction:column;gap:16px}
+    .history-list,.issue-list,.log-list,.guide-steps,.aar-list{display:flex;flex-direction:column;gap:10px}
+    .history-item,.issue-item,.log-item,.guide-step,.aar-item{padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:rgba(7,17,31,.3)}
+    .history-item strong,.issue-item strong,.guide-step strong,.aar-item strong{display:block;margin-bottom:6px}
+    .history-item p,.issue-item p,.log-item p,.guide-step p,.aar-item p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+
+    .workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .lane{border:1px solid var(--line);border-radius:14px;background:rgba(7,17,31,.34);padding:12px}
+    .lane h4{margin:0 0 10px;font-size:14px;color:var(--cyan)}
+    .task{border:1px solid var(--line);border-radius:12px;padding:11px;background:var(--panel2);margin-bottom:10px}
+    .task strong{display:block;margin-bottom:6px;font-size:13px}
+    .task p{margin:0 0 8px;color:var(--muted);font-size:12px;line-height:1.6}
+    .task .meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--soft)}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .meter{padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(7,17,31,.3)}
+    .bar{height:10px;background:#091427;border-radius:999px;overflow:hidden;margin-top:10px;border:1px solid #163256}
+    .bar > span{display:block;height:100%;background:linear-gradient(90deg,#5a9eff,#69e2ff)}
+    .bar.red > span{background:linear-gradient(90deg,#ff8f8f,#ff6b6b)}
+    .bar.green > span{background:linear-gradient(90deg,#4ee2a7,#1fc783)}
+    .bar.yellow > span{background:linear-gradient(90deg,#ffe18b,#ffc35c)}
+
+    .tab{display:none}
+    .tab.active{display:block}
+
+    .help-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(110,231,255,.12);border:1px solid rgba(110,231,255,.24);color:var(--cyan);font-weight:900;cursor:pointer}
+    .modal-wrap{position:fixed;inset:0;background:rgba(2,8,18,.72);display:none;align-items:center;justify-content:center;padding:22px;z-index:50}
+    .modal-wrap.show{display:flex}
+    .modal{width:min(980px,100%);max-height:90vh;overflow:auto;background:linear-gradient(180deg,#0f223e,#0b1830);border:1px solid var(--line2);border-radius:20px;box-shadow:var(--shadow)}
+    .modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center;position:sticky;top:0;background:#102241}
+    .modal-body{padding:18px 20px 22px}
+    .close{background:none;border:none;color:white;font-size:28px;cursor:pointer}
+
+    .footer-note{margin-top:18px;color:var(--soft);font-size:12px;line-height:1.7}
+
+    @media (max-width: 1280px){
+      .grid.hero,.scenario-layout,.split{grid-template-columns:1fr}
+      .workflow{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width: 960px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto}
+      .kpis,.form-grid,.chart-row{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 680px){
+      .kpis,.form-grid,.chart-row,.workflow{grid-template-columns:1fr}
+      .topbar{flex-direction:column}
+    }
+  </style>
 </head>
 <body>
-<div class="top-banner">
-  <div>행정안전부 ｜ 김명래, Ph.D. ｜ AI 재난훈련 설계자</div>
-  <div>DREX v3.1 WORKING DEMO · 2026</div>
-</div>
-<div class="header">
-  <div class="logo-wrap">
-    <div class="logo-box">DREX</div>
-    <div>
-      <div class="logo-main">재난훈련 시뮬레이션 플랫폼</div>
-      <div class="logo-sub">로컬 작동형 데모 · SOP · RTO · 정량평가 · Table-Top 상황판단 훈련</div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">DX</div>
+        <div>
+          <h1>DREX X</h1>
+          <p>동적 재난훈련 시뮬레이션 · 사고이력 기반 훈련설계 · 협업 흐름 시각화</p>
+        </div>
+      </div>
+
+      <div class="menu" id="menu"></div>
+
+      <div class="sidebar-card">
+        <h3>이 버전의 핵심 업그레이드</h3>
+        <ul>
+          <li>사고이력·최근 이슈 기반 시나리오 반영</li>
+          <li>기관별 협업 흐름과 병목 가시화</li>
+          <li>상황변화 inject에 따라 지표가 동적으로 변동</li>
+          <li>클릭형 설명/사용 가이드 내장</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>권장 사용 흐름</h3>
+        <p>① 훈련환경 설정 → ② 과거사고·이슈 확인 → ③ 동적 시나리오 생성 → ④ 협업조치 전개 → ⑤ 상황변화 inject 적용 → ⑥ AAR 확인</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2>고도화 버전 재난훈련 플랫폼</h2>
+          <p>기존 데모의 정적 화면 한계를 줄이고, <strong>상황 변화</strong>, <strong>유사사고 이력</strong>, <strong>최근 이슈</strong>, <strong>협업기관 워크플로우</strong>, <strong>훈련 후 AAR</strong>까지 한 화면에서 시연할 수 있도록 재구성했습니다. 기존 HTML의 단순 카드형 흐름을 보완해 보다 높은 수준의 시연이 가능하도록 설계했습니다. fileciteturn1file0</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn primary" id="buildBtn">고급 시나리오 생성</button>
+          <button class="btn secondary" id="saveBtn">세션 저장</button>
+          <button class="btn ghost" id="openGuide">전체 사용가이드</button>
+        </div>
+      </div>
+
+      <section class="tab active" data-tab="dashboard">
+        <div class="kpis" id="kpis"></div>
+
+        <div class="grid hero">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">훈련환경 설정</h3>
+                <p class="card-sub">지역·재난유형·계절·현장환경·최근 이슈를 반영해 동적 시나리오를 만듭니다.</p>
+              </div>
+              <span class="help-chip" data-guide="setup">?</span>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div>
+                  <label>재난 유형</label>
+                  <select id="disasterType">
+                    <option value="flood">풍수해</option>
+                    <option value="earthquake">지진</option>
+                    <option value="fire">대형화재</option>
+                    <option value="chemical">화학사고</option>
+                    <option value="complex">복합재난</option>
+                  </select>
+                </div>
+                <div>
+                  <label>훈련 지역</label>
+                  <select id="region">
+                    <option value="충북 괴산군">충북 괴산군</option>
+                    <option value="서울 강남구">서울 강남구</option>
+                    <option value="부산 해운대구">부산 해운대구</option>
+                    <option value="인천 서구">인천 서구</option>
+                    <option value="대구 달서구">대구 달서구</option>
+                  </select>
+                </div>
+                <div>
+                  <label>계절/환경</label>
+                  <select id="season">
+                    <option value="summer">여름/장마기</option>
+                    <option value="winter">겨울/한파기</option>
+                    <option value="spring">봄/행사기</option>
+                    <option value="autumn">가을/건조기</option>
+                  </select>
+                </div>
+                <div>
+                  <label>훈련 목적</label>
+                  <select id="objective">
+                    <option value="decision">의사결정 검증</option>
+                    <option value="coordination">기관 협업 검증</option>
+                    <option value="public">주민대피/홍보 검증</option>
+                    <option value="recovery">복구전환 검증</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grid" style="margin-top:12px">
+                <div>
+                  <label>최근 이슈</label>
+                  <select id="issue">
+                    <option value="none">없음</option>
+                    <option value="heat">폭염/전력수요 급증</option>
+                    <option value="event">대규모 지역행사 중</option>
+                    <option value="rumor">SNS 허위정보 확산</option>
+                    <option value="hospital">병상 포화</option>
+                    <option value="telecom">통신장애 민감상황</option>
+                  </select>
+                </div>
+                <div>
+                  <label>인구밀집도</label>
+                  <select id="crowd">
+                    <option value="low">낮음</option>
+                    <option value="mid">중간</option>
+                    <option value="high">높음</option>
+                  </select>
+                </div>
+                <div>
+                  <label>시설 특성</label>
+                  <select id="facility">
+                    <option value="residential">주거 밀집</option>
+                    <option value="industrial">산업/물류</option>
+                    <option value="tourism">관광/행사</option>
+                    <option value="mixed">복합 상권</option>
+                  </select>
+                </div>
+                <div>
+                  <label>훈련 설계 메모</label>
+                  <input id="plannerNote" placeholder="예: 야간 지휘통제와 주민대피 연계 강조" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">유사사고 이력</h3>
+                <p class="card-sub">지역/유형 기준으로 반복되는 실패 패턴을 훈련에 주입합니다.</p>
+              </div>
+              <span class="help-chip" data-guide="history">?</span>
+            </div>
+            <div class="card-body">
+              <div class="history-list" id="historyList"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">최근 이슈 반영</h3>
+                <p class="card-sub">훈련 당시 외부환경 변수를 자동으로 추가합니다.</p>
+              </div>
+              <span class="help-chip" data-guide="issue">?</span>
+            </div>
+            <div class="card-body">
+              <div class="issue-list" id="issueList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-layout">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">동적 시나리오 흐름</h3>
+                <p class="card-sub">상황 확산, 의사결정 지연, 2차 피해 전개가 반영된 훈련 타임라인입니다.</p>
+              </div>
+              <span class="help-chip" data-guide="scenario">?</span>
+            </div>
+            <div class="card-body">
+              <div class="badges" id="scenarioBadges"></div>
+              <div class="timeline" id="timeline" style="margin-top:14px"></div>
+            </div>
+          </div>
+
+          <div class="side-stack">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3 class="card-title">즉시 상황변화 Inject</h3>
+                  <p class="card-sub">강풍, 통신두절, 병상포화 등 변수를 눌러 실시간으로 훈련 난도를 높입니다.</p>
+                </div>
+                <span class="help-chip" data-guide="inject">?</span>
+              </div>
+              <div class="card-body">
+                <div class="badges" id="injectButtons"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3 class="card-title">활동 로그</h3>
+                  <p class="card-sub">시나리오 생성, 기관조치, inject 적용, 상태변화가 기록됩니다.</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="log-list" id="logList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab" data-tab="collab">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">협업기관 워크플로우 보드</h3>
+              <p class="card-sub">요청 → 검토중 → 승인 → 실행 → 완료 흐름으로 기관별 협업 병목을 시각화합니다.</p>
+            </div>
+            <span class="help-chip" data-guide="workflow">?</span>
+          </div>
+          <div class="card-body">
+            <div class="workflow" id="workflow"></div>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:16px">
+          <div class="card">
+            <div class="card-head"><div><h3 class="card-title">기관별 조치 입력</h3><p class="card-sub">조치사항을 등록하면 협업흐름과 지표에 반영됩니다.</p></div></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div>
+                  <label>기관</label>
+                  <select id="agencyName">
+                    <option>중대본</option>
+                    <option>지대본</option>
+                    <option>소방서</option>
+                    <option>경찰서</option>
+                    <option>보건소</option>
+                    <option>통신사</option>
+                    <option>군부대</option>
+                  </select>
+                </div>
+                <div>
+                  <label>상태</label>
+                  <select id="agencyStatus">
+                    <option value="요청">요청</option>
+                    <option value="검토중">검토중</option>
+                    <option value="승인">승인</option>
+                    <option value="실행">실행</option>
+                    <option value="완료">완료</option>
+                  </select>
+                </div>
+                <div>
+                  <label>소요시간(분)</label>
+                  <input id="agencyDelay" type="number" value="10" min="0" />
+                </div>
+                <div>
+                  <label>우선순위</label>
+                  <select id="agencyPriority">
+                    <option value="보통">보통</option>
+                    <option value="높음">높음</option>
+                    <option value="긴급">긴급</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-top:12px">
+                <label>조치 내용</label>
+                <textarea id="agencyAction" placeholder="예: 저지대 3개 구역 도로통제 및 우회로 확보 요청"></textarea>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+                <button class="btn primary small" id="addAction">조치 등록</button>
+                <button class="btn secondary small" id="autoFlow">대표 협업흐름 자동 생성</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div><h3 class="card-title">협업 병목 분석</h3><p class="card-sub">지연이 큰 기관과 승인 대기 이슈를 자동으로 제시합니다.</p></div></div>
+            <div class="card-body" id="bottleneckPanel"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab" data-tab="analysis">
+        <div class="chart-row">
+          <div class="card"><div class="card-head"><div><h3 class="card-title">RTO 영향도</h3></div><span class="help-chip" data-guide="rto">?</span></div><div class="card-body" id="rtoPanel"></div></div>
+          <div class="card"><div class="card-head"><div><h3 class="card-title">피해확산 위험도</h3></div></div><div class="card-body" id="riskPanel"></div></div>
+          <div class="card"><div class="card-head"><div><h3 class="card-title">기관 협업 점수</h3></div></div><div class="card-body" id="coordPanel"></div></div>
+        </div>
+
+        <div class="split" style="margin-top:16px">
+          <div class="card">
+            <div class="card-head"><div><h3 class="card-title">훈련 지도 포인트</h3><p class="card-sub">운영자/평가관이 주목해야 할 의사결정 포인트를 자동 정리합니다.</p></div></div>
+            <div class="card-body" id="coachPanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3 class="card-title">기관장 브리핑 요약</h3><p class="card-sub">훈련 중 기관장 또는 상황판단회의용 한 페이지 브리핑입니다.</p></div></div>
+            <div class="card-body" id="briefPanel"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab" data-tab="guide">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">플랫폼 사용 가이드</h3>
+              <p class="card-sub">설명 버튼을 눌러 모듈별 가이드를 볼 수도 있고, 여기서 전체 흐름을 한 번에 확인할 수도 있습니다.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="guide-steps" id="guidePanel"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab" data-tab="aar">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">훈련 종료 후 AAR</h3>
+              <p class="card-sub">현재까지 입력된 상황과 지표를 바탕으로 잘한 점, 미흡한 점, 개선 과제를 자동 정리합니다.</p>
+            </div>
+            <button class="btn primary small" id="runAAR">AAR 생성</button>
+          </div>
+          <div class="card-body">
+            <div class="aar-list" id="aarList"></div>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          이 버전은 브라우저 단일 파일로 동작하는 고급 데모입니다. 실제 서비스로 확장하려면 사고 DB, 최근 이슈 수집, 기관별 계정/권한, 실시간 협업 메시징, 저장 서버, 지도/기상/재난 API 연동이 추가되어야 합니다.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-wrap" id="guideModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="badge cyan">사용 가이드</div>
+          <h3 style="margin:10px 0 0;font-size:24px" id="modalTitle">전체 사용가이드</h3>
+        </div>
+        <button class="close" id="closeModal">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
-  <div class="nav">
-    <button class="nav-item active" data-tab="0"><span class="nav-num">1</span>AI 시나리오</button>
-    <button class="nav-item" data-tab="1"><span class="nav-num">2</span>SOP 실행</button>
-    <button class="nav-item" data-tab="2"><span class="nav-num">3</span>RTO 산출</button>
-    <button class="nav-item" data-tab="3"><span class="nav-num">4</span>정량평가</button>
-    <button class="nav-item" data-tab="4"><span class="nav-num">5</span>Table-Top</button>
-    <button class="nav-item" data-tab="5"><span class="nav-num">6</span>KPI 현황</button>
-  </div>
-  <div class="header-side">
-    <div><span class="status-dot"></span>로컬 엔진 작동</div>
-    <div id="dbState">DB 미연결 안전모드</div>
-  </div>
-</div>
-<div class="page-title-bar">
-  <div class="breadcrumb">홈 &gt; <strong id="breadcrumb">AI 통합훈련 시나리오 자동 생성</strong></div>
-  <div class="module-title" id="moduleTitle">MODULE 01 · 행안부 통합훈련 시나리오 표준 양식</div>
-</div>
-<div class="main">
-
-  <section class="page active" id="page-0">
-    <div class="card">
-      <div class="card-header">훈련 조건 설정 <span id="scenarioStatus" class="tag tag-gray">생성 대기</span></div>
-      <div class="card-body">
-        <div class="grid-4">
-          <div class="form-group">
-            <label>재난 유형 <span class="req">*</span></label>
-            <select id="scType">
-              <option value="flood">풍수해 (태풍·호우)</option>
-              <option value="earthquake">지진</option>
-              <option value="fire">대형화재</option>
-              <option value="chemical">화학사고</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>피해 규모 <span class="req">*</span></label>
-            <select id="scScale">
-              <option value="small">소규모 (~50명)</option>
-              <option value="medium" selected>중규모 (50~500명)</option>
-              <option value="large">대규모 (500명 이상)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>훈련 지역 <span class="req">*</span></label>
-            <select id="scRegion">
-              <option value="충북 괴산군">충북 괴산군</option>
-              <option value="서울 강남구">서울 강남구</option>
-              <option value="경기 하남시">경기 하남시</option>
-              <option value="부산 해운대구">부산 해운대구</option>
-            </select>
-          </div>
-          <div class="form-group" style="justify-content:end">
-            <label>&nbsp;</label>
-            <button class="btn btn-primary" id="generateScenarioBtn">▶ 통합 시나리오 생성</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">통합훈련 시나리오 — 행안부 5단계 표준 양식 <div id="scenarioMeta"></div></div>
-      <div class="card-body" id="scenarioBody">
-        <div class="empty-box">위 조건을 선택한 뒤 <br><strong>통합 시나리오 생성</strong> 버튼을 클릭하세요.</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-1">
-    <div class="grid-2" style="grid-template-columns:280px 1fr">
-      <div class="card">
-        <div class="card-header">협업기능 (13개)</div>
-        <div class="card-body"><div class="side-list" id="sopList"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><span id="sopTitle">① 상황관리 — 안전정책과</span><button class="btn btn-success btn-sm" id="sopNextBtn">✓ 다음 단계 완료</button></div>
-        <div class="card-body" id="sopSteps"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-2">
-    <div class="grid-2" style="grid-template-columns:1fr 320px">
-      <div id="rtoCards"></div>
-      <div class="card">
-        <div class="card-header">RTO 산출 결과</div>
-        <div class="card-body">
-          <div class="score-box" style="background:linear-gradient(135deg,#7b4b19,#ffb84d)">
-            <div class="small" style="color:#fff;font-weight:800;letter-spacing:.06em">RECOVERY TIME OBJECTIVE</div>
-            <div class="score-val" id="rtoValue">100</div>
-            <div class="score-sub">분</div>
-          </div>
-          <div class="notice" style="margin-top:14px" id="rtoDelta">기준 대비 +0분</div>
-          <div style="margin-top:14px" id="rtoBreakdown"></div>
-          <button class="btn btn-secondary btn-full" style="margin-top:14px" id="recalcRtoBtn">↻ RTO 재계산</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-3">
-    <div class="grid-2" style="grid-template-columns:1fr 300px">
-      <div id="evalContent"></div>
-      <div>
-        <div class="score-box">
-          <div class="small" style="color:#fff;font-weight:800;letter-spacing:.06em">총 점수</div>
-          <div class="score-val" id="evalTotal">0</div>
-          <div class="score-sub">/ 90점</div>
-          <div class="score-sub" id="evalGrade">평가 진행 중</div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="card-header">단계별 점수</div>
-          <div class="card-body" id="evalSummary"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-4">
-    <div class="card">
-      <div class="card-header">훈련 설정</div>
-      <div class="card-body">
-        <div class="grid-3">
-          <div class="form-group">
-            <label>재난 유형</label>
-            <select id="ttType"><option value="flood">풍수해</option><option value="earthquake">지진</option><option value="fire">대형화재</option></select>
-          </div>
-          <div class="form-group">
-            <label>훈련 지역</label>
-            <select id="ttRegion"><option value="충북 괴산군">충북 괴산군</option><option value="서울 강남구">서울 강남구</option><option value="부산 해운대구">부산 해운대구</option></select>
-          </div>
-          <div class="form-group" style="justify-content:end">
-            <label>&nbsp;</label>
-            <button class="btn btn-primary" id="startTTBtn">▶ 훈련 시작</button>
-          </div>
-        </div>
-        <div class="notice" style="margin-top:14px">① 상황카드 수신 → ② 기관별 행동시간·자원 입력 → ③ 상황판단회의 → ④ 불시메시지 대응 → ⑤ RTO 반영 → ⑥ 다음 단계</div>
-      </div>
-    </div>
-
-    <div id="ttMain" style="display:none">
-      <div class="card">
-        <div class="card-body">
-          <div class="flex-between" style="flex-wrap:wrap">
-            <div style="display:flex;gap:18px;flex-wrap:wrap;font-weight:700;color:var(--text-mid)">
-              <div>단계: <strong id="ttPhase" style="color:#fff">-</strong></div>
-              <div>위기경보: <strong id="ttAlert" style="color:#fff">-</strong></div>
-              <div>경과: <strong id="ttTimer" style="color:#fff">00:00</strong></div>
-              <div>카드: <strong id="ttCardNum" style="color:#fff">0/0</strong></div>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-danger btn-sm" id="flashBtn">⚡ 불시메시지</button>
-              <button class="btn btn-secondary btn-sm" id="spmBtn">🗣 상황판단회의</button>
-              <button class="btn btn-primary btn-sm" id="nextCardBtn">다음 카드 →</button>
-              <button class="btn btn-sm" id="endTTBtn">훈련 종료</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flash" id="flashBox">
-        <div class="flash-title" id="flashTitle">불시메시지</div>
-        <div class="flash-desc" id="flashDesc"></div>
-        <div class="flash-constraint" id="flashConstraint"></div>
-        <div class="grid-2" style="grid-template-columns:1fr 180px;margin-top:12px">
-          <textarea id="flashResolve" placeholder="제한 조건에 대한 해결 결정을 입력하세요."></textarea>
-          <button class="btn btn-danger" id="resolveFlashBtn">해결 결정 제출</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">현재 상황카드 <span class="tag tag-red" id="ttUrgency">CRITICAL</span></div>
-        <div class="card-body">
-          <div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:8px" id="ttCardTitle">훈련 시작 대기 중</div>
-          <div class="summary-box" id="ttCardDesc" style="margin-bottom:10px">-</div>
-          <div class="notice" id="ttCardQ">-</div>
-        </div>
-      </div>
-
-      <div class="tt-layout">
-        <div class="tt-panel">
-          <div class="tt-panel-head">중대본</div>
-          <div class="tt-panel-body">
-            <div class="directive" id="jdDir">-</div>
-            <div class="input-mini">
-              <input type="number" id="jdTime" placeholder="행동시간(분)" min="0" value="0">
-              <input type="number" id="jdStaff" placeholder="투입인력(명)" min="0" value="0">
-            </div>
-            <textarea id="jdInput" placeholder="중대본 결정사항 입력"></textarea>
-            <button class="btn btn-full" style="margin-top:10px" data-submit="jd">중대본 제출</button>
-          </div>
-        </div>
-        <div class="tt-panel">
-          <div class="tt-panel-head">지대본</div>
-          <div class="tt-panel-body">
-            <div class="directive" id="jbDir">-</div>
-            <div class="input-mini">
-              <input type="number" id="jbDelay" placeholder="결정시간(분)" min="0" value="0">
-              <input type="text" id="jbRes" placeholder="동원자원">
-            </div>
-            <textarea id="jbInput" placeholder="지대본 결정사항 입력"></textarea>
-            <button class="btn btn-primary btn-full" style="margin-top:10px" data-submit="jb">지대본 제출 ★ RTO 반영</button>
-          </div>
-        </div>
-        <div class="tt-panel">
-          <div class="tt-panel-head">통합지원본부</div>
-          <div class="tt-panel-body">
-            <div class="directive" id="thDir">-</div>
-            <div class="grid-3" style="margin-bottom:10px">
-              <input type="number" id="agFire" placeholder="소방(분)" min="0" value="0">
-              <input type="number" id="agPolice" placeholder="경찰(분)" min="0" value="0">
-              <input type="number" id="agMed" placeholder="보건소(분)" min="0" value="0">
-            </div>
-            <textarea id="thInput" placeholder="현장 조치사항 입력"></textarea>
-            <button class="btn btn-full" style="margin-top:10px" data-submit="th">통합지원 제출</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">현재 가용 자원 현황</div>
-        <div class="card-body"><div class="resource-grid" id="resourceGrid"></div></div>
-      </div>
-
-      <div class="grid-3" style="grid-template-columns:1fr 1fr 260px">
-        <div class="card"><div class="card-header">의사결정 로그</div><div class="card-body"><div class="log-box" id="ttLog"></div></div></div>
-        <div class="card"><div class="card-header">상황판단회의</div><div class="card-body"><div class="notice" id="spmSummary">상황판단회의 버튼을 누르면 현재 단계 안건이 생성됩니다.</div><div id="spmAgenda" style="margin-top:10px"></div></div></div>
-        <div class="card"><div class="card-header">추정 RTO</div><div class="card-body"><div class="score-box" style="background:linear-gradient(135deg,#1b5fb6,#4ca0ff)"><div class="score-val" id="ttRto">100</div><div class="score-sub">분</div></div><div class="notice" style="margin-top:12px" id="ttRtoDelta">기준값 유지</div></div></div>
-      </div>
-
-      <div class="card" id="ttResultCard" style="display:none">
-        <div class="card-header">훈련 종료 — 종합 결과 분석</div>
-        <div class="card-body" id="ttResultBody"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-5">
-    <div class="card">
-      <div class="card-header">KPI 현황 대시보드 <button class="btn btn-secondary btn-sm" id="refreshKpiBtn">↻ 새로고침</button></div>
-      <div class="card-body">
-        <div class="kpi-grid" id="kpiGrid"></div>
-        <div class="card" style="margin-top:14px">
-          <div class="card-header">훈련 이력</div>
-          <div class="card-body"><div class="table-wrap"><table class="table"><thead><tr><th>훈련일시</th><th>재난유형</th><th>지역</th><th>총소요시간</th><th>의사결정지연</th><th>불시패널티</th><th>최종RTO</th><th>등급</th></tr></thead><tbody id="kpiTable"></tbody></table></div></div>
-        </div>
-        <div class="notice" style="margin-top:14px">현재 버전은 <strong>외부 API 없이 브라우저 내 로컬 엔진으로 작동</strong>합니다. 즉, 버튼이 실제로 동작하고 시연이 가능합니다.</div>
-      </div>
-    </div>
-  </section>
-</div>
 
 <script>
 const tabs = [
-  {bc:'AI 통합훈련 시나리오 자동 생성', title:'MODULE 01 · 행안부 통합훈련 시나리오 표준 양식'},
-  {bc:'SOP 실행구조', title:'MODULE 02 · 재난현장조치 행동매뉴얼 13개 협업기능'},
-  {bc:'RTO 정량 산출', title:'MODULE 03 · BIA-AHP 가중치 기반 RTO 산출'},
-  {bc:'정량평가 엔진', title:'MODULE 04 · 2025 안전한국훈련 평가지표 (90점)'},
-  {bc:'Table-Top 훈련 모드', title:'MODULE 05 · 중대본·지대본·통합지원본부 계층 훈련'},
-  {bc:'KPI 현황', title:'MODULE 06 · 로컬 저장 KPI 대시보드'}
+  {key:'dashboard', name:'통합상황판'},
+  {key:'collab', name:'협업 워크플로우'},
+  {key:'analysis', name:'분석·브리핑'},
+  {key:'guide', name:'사용 가이드'},
+  {key:'aar', name:'AAR'}
 ];
 
-document.querySelectorAll('.nav-item').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(Number(btn.dataset.tab)));
-});
-function switchTab(i){
-  document.querySelectorAll('.page').forEach((p,idx)=>p.classList.toggle('active', idx===i));
-  document.querySelectorAll('.nav-item').forEach((b,idx)=>b.classList.toggle('active', idx===i));
-  document.getElementById('breadcrumb').textContent = tabs[i].bc;
-  document.getElementById('moduleTitle').textContent = tabs[i].title;
-  if(i===2) renderRTO();
-  if(i===5) renderKPI();
-}
-
-const scenarioBank = {
-  flood: {
-    name:'풍수해 통합대응 훈련', max_alert:'심각', agencies:13,
-    summary:'괴산군 일대 시간당 80mm 이상의 극한호우가 발생하여 하천 범람, 도로 침수, 차량 전복, 다수 사상자 및 이재민 발생 상황을 가정한 통합훈련 시나리오입니다.',
-    collab:[
-      ['①-1-2','상황접수','안전정책과'],['①-1-5','상황판단회의','안전정책과'],['①-2-1','CBS 발령','안전정책과'],['①-3-4','재대본 운영','군수실'],
-      ['①-3-6','현장관리관 파견','안전정책과'],['②-1-1','이재민 파악','주민복지과'],['⑤-1-2','응급복구','건설교통과'],['⑨-1-2','교통통제','경찰서'],
-      ['⑫-2-1','출입통제','경찰서'],['⑬-1-1','수색구조','소방서'],['③-1-1','폐기물 수거','환경과'],['⑧-2-1','응급의료소','보건소']
-    ],
-    phases:[
-      {name:'평시·초기대응', time:'09:00', target:'상황전파 10분 / 회의 20분', situation:'호우예비특보 발령. 배수로 막힘 및 저지대 침수 우려가 커짐.', damage:'피해 없음, 예찰 단계', decisions:['초기 상황판단회의 개최 여부','취약지역 예찰반 편성'], actions:['취약시설 예찰 실시','하상주차장 통제 준비','비상연락망 점검'], resources:'예찰인력 20명 / 차량 5대'},
-      {name:'비상대응 1단계', time:'11:30', target:'2차회의 20분', situation:'호우주의보 발령. 저지대 침수 및 배수로 역류 발생.', damage:'경상 2명 / 주민대피 시작', decisions:['재대본 가동','사전대피 권고 발령'], actions:['재난문자 발송','임시대피소 개방','소방·경찰 비상근무'], resources:'구호세트 176개 / 구급차 3대'},
-      {name:'비상대응 2단계', time:'14:00', target:'현장연락관 즉시 파견', situation:'호우경보 발령. 시간당 80mm 집중호우로 하천 수위 상승.', damage:'부상 4명 / 이재민 88명', decisions:['주민대피 명령','통합지원본부 설치'], actions:['현장상황관리관 파견','통합지원본부 가동','긴급구조통제단 연계'], resources:'소방차 5대 / 인력 60명'},
-      {name:'주요사고', time:'17:05', target:'수색 완료 시점 관리', situation:'동진천 범람으로 차량 전복 및 고립자 발생. 복합피해 확산.', damage:'사망 2명 / 부상 4명 / 실종 3명 / 이재민 167명', decisions:['소방헬기 요청','군부대 지원 요청'], actions:['다수사상자 응급의료소 설치','실종자 수색 구조','현장 접근통제'], resources:'헬기 1대 / 구급차 7대 / 구조인력 90명'},
-      {name:'수습·복구', time:'20:00', target:'특별재난지역 건의 검토', situation:'호우가 잦아들며 구조가 완료되고, 피해 집계 및 복구가 시작됨.', damage:'재산피해 약 120억', decisions:['특별재난지역 건의','응급복구 우선순위 결정'], actions:['이재민 구호 및 심리지원','재난폐기물 수거','응급복구반 운영'], resources:'복구장비 12대 / 인력 75명'}
+const guides = {
+  all: {
+    title:'전체 사용가이드',
+    steps:[
+      ['1단계. 훈련환경 설정', '재난유형, 지역, 계절, 최근 이슈, 시설 특성을 고른 뒤 “고급 시나리오 생성”을 누릅니다.'],
+      ['2단계. 과거사고·최근 이슈 확인', '같은 유형에서 반복된 실패 패턴과 최근 외부환경 변수를 먼저 읽고 훈련의 핵심 포인트를 잡습니다.'],
+      ['3단계. 동적 시나리오 검토', '생성된 타임라인에서 단계별 상황, 의사결정 포인트, 예상 확산을 검토합니다.'],
+      ['4단계. 협업기관 조치 등록', '협업 워크플로우 탭에서 요청/검토/승인/실행/완료 흐름으로 기관간 협업을 입력합니다.'],
+      ['5단계. Inject 적용', '통신장애, 병상포화, 강풍 심화 등 버튼을 눌러 상황을 악화시키고, 지표가 어떻게 변하는지 확인합니다.'],
+      ['6단계. 분석·브리핑 확인', 'RTO, 피해확산, 협업점수, 지도 포인트, 기관장 브리핑을 통해 훈련 진행 방향을 잡습니다.'],
+      ['7단계. AAR 생성', '훈련 종료 시 AAR 탭에서 잘한 점, 미흡점, SOP 개선과제를 자동 생성합니다.']
     ]
   },
-  earthquake: {
-    name:'지진 복합대응 훈련', max_alert:'심각', agencies:11,
-    summary:'규모 6.2 지진 발생 후 건물 붕괴와 다수 고립, 병원 수용 한계, 2차 붕괴 위험을 포함한 복합재난 대응 시나리오입니다.',
-    collab:[['①-1-2','상황접수','안전정책과'],['①-1-5','상황판단회의','안전정책과'],['⑬-1-1','수색구조','소방서'],['⑧-2-1','응급의료소','보건소'],['⑤-1-2','시설복구','건설과'],['⑫-2-1','출입통제','경찰서']],
-    phases:[
-      {name:'초기대응', time:'10:00', target:'상황전파 10분', situation:'규모 6.2 지진 발생. 흔들림 신고 다수 접수.', damage:'건물 균열 및 낙하물', decisions:['즉시 재대본 가동','피해현황 파악'], actions:['긴급상황 전파','현장 출동 준비','주요시설 안전점검'], resources:'상황요원 15명'},
-      {name:'비상대응 1단계', time:'10:30', target:'회의 20분', situation:'5층 건물 일부 붕괴. 고립자 30명 추정.', damage:'사상자 다수 우려', decisions:['특수구조대 투입','광역 의료지원 요청'], actions:['현장통제','구조대 투입','응급의료소 설치'], resources:'구조인력 60명 / 구급차 5대'},
-      {name:'비상대응 2단계', time:'11:10', target:'현장연락관 즉시 파견', situation:'병원 수용 능력 한계. 여진 가능성 지속.', damage:'부상 15명 / 이재민 200세대', decisions:['광역 이송체계 가동','대피 확대'], actions:['광역 병원 연계','이재민 대피','2차 붕괴위험 통제'], resources:'경찰 40명 / 의료인력 25명'},
-      {name:'수습', time:'13:00', target:'수색 완료', situation:'구조 완료 단계. 추가 실종자 여부 확인.', damage:'사망 2명 / 부상 15명', decisions:['특재 검토','임시거주시설 확대'], actions:['피해 집계','구호물자 지원','안전진단 실시'], resources:'점검반 8개조'},
-      {name:'복구', time:'16:00', target:'복구 우선순위 확정', situation:'응급복구 및 장기 복구계획 수립.', damage:'재산피해 추정 80억', decisions:['복구 우선순위 지정','위험건축물 통제 유지'], actions:['응급복구 착수','주민 설명회','장기복구 계획 수립'], resources:'복구장비 8대'}
-    ]
-  },
-  fire: {
-    name:'대형화재 통합대응 훈련', max_alert:'경계', agencies:10,
-    summary:'공장 밀집지역 대형화재 발생과 유해가스 확산, 인접 건물 연소 확대 우려를 가정한 현장지휘 중심 시나리오입니다.',
-    collab:[['①-1-2','상황접수','안전정책과'],['⑬-1-1','화재진압·구조','소방서'],['⑨-1-2','교통통제','경찰서'],['⑧-2-1','응급의료','보건소']],
-    phases:[
-      {name:'초기대응', time:'13:00', target:'상황전파 10분', situation:'공장 밀집지역에서 화재 발생.', damage:'경상 3명', decisions:['소방대 선착대응','초기통제'], actions:['현장 출동','초기 인명대피','인근 도로 통제'], resources:'소방차 6대'},
-      {name:'비상대응 1단계', time:'13:20', target:'회의 20분', situation:'불길이 인접 창고로 확대.', damage:'부상 7명', decisions:['통합지원본부 설치','인접 공장 대피'], actions:['현장통합지휘','유해가스 측정','대피 방송'], resources:'소방인력 70명'},
-      {name:'비상대응 2단계', time:'14:10', target:'추가자원 투입', situation:'유해가스 확산 및 대형폭발 우려.', damage:'재산피해 확대', decisions:['광역 자원 요청','주민 대피 반경 확대'], actions:['방재포 설치','가스 차단','의료지원 강화'], resources:'화학차 2대'},
-      {name:'수습', time:'16:00', target:'잔불 정리', situation:'주불 진화 후 잔불 정리 단계.', damage:'사망 1명 / 부상 9명', decisions:['수습체계 전환','피해조사 시작'], actions:['피해 조사','출입통제 유지','언론 브리핑'], resources:'경찰 20명'},
-      {name:'복구', time:'18:00', target:'복구 우선순위', situation:'피해복구 및 원인조사 착수.', damage:'재산피해 60억', decisions:['응급복구','위험물 정밀조사'], actions:['폐기물 처리','시설 안전점검','복구계획 수립'], resources:'복구장비 5대'}
-    ]
-  },
-  chemical: {
-    name:'화학사고 통합대응 훈련', max_alert:'심각', agencies:12,
-    summary:'화학물질 누출과 확산, 인근 주민 노출, 대피 및 제독 절차까지 포함한 복합사고 대응 시나리오입니다.',
-    collab:[['①-1-2','상황접수','안전정책과'],['⑬-1-1','수색구조','소방서'],['⑧-2-1','제독·응급의료','보건소'],['⑫-2-1','출입통제','경찰서']],
-    phases:[
-      {name:'초기대응', time:'08:40', target:'상황전파 10분', situation:'화학물질 저장탱크 누출 신고 접수.', damage:'노출 의심 5명', decisions:['유해물질 확인','초기 통제'], actions:['초동대응반 출동','방독장비 준비','출입통제 시작'], resources:'화학대응팀 1개조'},
-      {name:'비상대응 1단계', time:'09:00', target:'회의 20분', situation:'누출 확대 및 바람 방향 변화.', damage:'주민 노출 우려', decisions:['주민 대피','제독소 설치'], actions:['재난문자 발송','대피소 개방','제독차량 배치'], resources:'제독차 2대'},
-      {name:'비상대응 2단계', time:'09:40', target:'현장통제 강화', situation:'확산범위 증가. 인근 학교 영향 가능.', damage:'부상 12명', decisions:['학교 긴급대피','광역 의료지원 요청'], actions:['학생 대피','응급의료소 설치','환경 측정'], resources:'의료인력 20명'},
-      {name:'수습', time:'12:00', target:'누출 차단 완료', situation:'누출 차단 및 오염범위 확인.', damage:'중상 2명 / 경상 10명', decisions:['오염지역 봉쇄 유지','정화작업 시작'], actions:['피해조사','정화작업','주민 안내'], resources:'환경정화반 4개조'},
-      {name:'복구', time:'15:30', target:'복구 우선순위', situation:'정화 및 시설 재가동 검토 단계.', damage:'재산피해 35억', decisions:['시설 재가동 여부','장기 모니터링 계획'], actions:['환경 모니터링','복구계획 수립','사후브리핑'], resources:'정화장비 6대'}
-    ]
-  }
+  setup:{title:'훈련환경 설정 가이드',steps:[['목적','훈련의 맥락을 설정하는 단계입니다.'],['사용법','재난유형, 지역, 계절, 훈련목적, 최근이슈, 인구밀집도, 시설특성을 고릅니다.'],['활용팁','계절/최근 이슈를 바꾸면 같은 풍수해라도 전개와 병목이 달라집니다.']]},
+  history:{title:'유사사고 이력 가이드',steps:[['목적','과거 반복된 실패 패턴을 훈련에 반영합니다.'],['사용법','카드별로 주요 실패요인과 이번 훈련 반영 포인트를 확인합니다.'],['활용팁','평가관은 이 이력 기반으로 핵심 질문을 던지면 좋습니다.']]},
+  issue:{title:'최근 이슈 반영 가이드',steps:[['목적','당시 외부환경을 넣어 정적 훈련을 방지합니다.'],['사용법','폭염, 행사, 통신장애, 병상포화, 허위정보 등 변수를 설정합니다.'],['활용팁','최근 이슈는 대국민 메시지와 기관 협업 병목에 영향을 주도록 설계했습니다.']]},
+  scenario:{title:'동적 시나리오 가이드',steps:[['목적','단계별로 악화·확산·전환되는 흐름을 보는 화면입니다.'],['사용법','각 단계 카드에서 시간, 경보, 핵심 상황, 의사결정 포인트를 확인합니다.'],['활용팁','타임라인은 상황카드가 아니라 의사결정의 누적 흐름으로 읽는 것이 좋습니다.']]},
+  inject:{title:'Inject 사용 가이드',steps:[['목적','상황을 더 어렵게 만들어 대응 역량을 검증합니다.'],['사용법','원하는 inject를 클릭하면 RTO, 위험도, 협업점수가 변합니다.'],['활용팁','훈련이 너무 쉽게 흐를 때 중간에 하나씩 주입해 의사결정 분기점을 만드세요.']]},
+  workflow:{title:'협업 워크플로우 가이드',steps:[['목적','기관 간 요청·승인·지연 구조를 시각화합니다.'],['사용법','기관, 상태, 시간, 우선순위를 정하고 조치를 등록합니다.'],['활용팁','완료 수보다 검토중/승인대기 건수가 많으면 병목입니다.']]},
+  rto:{title:'RTO 분석 가이드',steps:[['목적','의사결정 지연과 inject가 복구목표시간에 미치는 영향을 보여줍니다.'],['사용법','협업등록과 inject 이후 RTO 변화폭을 확인합니다.'],['활용팁','단순 총점보다 어떤 요인이 RTO를 끌어올렸는지 설명하는 데 활용하세요.']]}
 };
 
-function generateScenario(){
-  const type = document.getElementById('scType').value;
-  const scale = document.getElementById('scScale').value;
-  const region = document.getElementById('scRegion').value;
-  const data = JSON.parse(JSON.stringify(scenarioBank[type]));
-  const scaleText = {small:'소규모',medium:'중규모',large:'대규모'}[scale];
-  document.getElementById('scenarioStatus').className='tag tag-green';
-  document.getElementById('scenarioStatus').textContent='생성 완료';
-  document.getElementById('scenarioMeta').innerHTML = `<span class="tag tag-blue">${data.name}</span> <span class="tag tag-red">최고경보: ${data.max_alert}</span> <span class="tag tag-gray">${data.agencies}개 기관</span>`;
-  const head = data.phases.map(p=>`<th>${p.name}<br><span class="muted">${p.time}</span></th>`).join('');
-  const row = (label, key) => `<tr><td><strong>${label}</strong></td>${data.phases.map(p=>`<td>${p[key]}</td>`).join('')}</tr>`;
-  document.getElementById('scenarioBody').innerHTML = `
-    <div class="summary-box"><strong style="color:#fff">재난상황 설정:</strong> ${region} 지역, ${scaleText} 피해 규모 기준. ${data.summary}</div>
-    <div class="table-wrap" style="margin-top:14px">
-      <table class="table">
-        <thead><tr><th>구분</th>${head}</tr></thead>
-        <tbody>
-          ${row('목표 대응시간','target')}
-          ${row('재난 상황','situation')}
-          ${row('피해 상황','damage')}
-          <tr><td><strong>주요 의사결정</strong></td>${data.phases.map(p=>`<td>• ${p.decisions.join('<br>• ')}</td>`).join('')}</tr>
-          <tr><td><strong>대응 조치</strong></td>${data.phases.map(p=>`<td>• ${p.actions.join('<br>• ')}</td>`).join('')}</tr>
-          ${row('소요 자원','resources')}
-        </tbody>
-      </table>
-    </div>
-    <div style="margin-top:14px">
-      <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:10px">협업기능 코드 연계</div>
-      <div class="grid-4">
-        ${data.collab.map(c=>`<div class="notice"><div class="small" style="color:#cfe3ff;font-weight:800">${c[0]}</div><div style="font-weight:800;color:#fff;margin:4px 0">${c[1]}</div><div class="small">${c[2]}</div></div>`).join('')}
-      </div>
-    </div>`;
-}
-document.getElementById('generateScenarioBtn').addEventListener('click', generateScenario);
-
-const SOP_AGENCIES = [
-  {name:'① 상황관리', role:'안전정책과', steps:[['①-1-5','초기 상황판단회의','호우예비특보 발령 후 20분 이내 개최','완료','done'],['①-2-1','재난문자(CBS) 발령','주민대피 권고 및 위험지역 재난문자 송출','완료','done'],['①-3-4','재대본 가동','군수 주재 재난안전대책본부 운영 개시','진행중','active'],['①-3-6','현장상황관리관 파견','현장 파견 및 실시간 보고','대기','pending']]},
-  {name:'② 긴급생활안정', role:'주민복지과', steps:[['②-1-1','임시대피소 개방','지정 대피소 3개소 개방','완료','done'],['②-1-2','구호물자 배급','응급구호세트 및 담요 배급','진행중','active'],['②-1-5','심리지원 연계','이재민 심리지원 연계','대기','pending']]},
-  {name:'③ 재난환경정비', role:'환경과', steps:[['③-1-1','임시적환장 지정','재난폐기물 수거·처리','대기','pending']]},
-  {name:'④ 긴급통신지원', role:'통신담당', steps:[['④-1-2','대체통신 운영','무전기 및 유선통신 확보','진행중','active']]},
-  {name:'⑤ 시설응급복구', role:'건설교통과', steps:[['⑤-1-1','도로·교량 점검','주요도로 안전점검 완료','완료','done'],['⑤-1-2','응급복구반 가동','응급복구 장비 투입','진행중','active']]},
-  {name:'⑥ 에너지복구', role:'경제과', steps:[['⑥-1-2','이동발전차 대기','장기정전 대비 대체전원 확보','대기','pending']]},
-  {name:'⑦ 교통대책', role:'건설교통과+경찰', steps:[['⑦-1-1','하상주차장 통제','진입통제 및 차량 견인','완료','done'],['⑦-1-2','우회로 확보','침수도로 우회노선 마련','진행중','active']]},
-  {name:'⑧ 의료방역', role:'보건소', steps:[['⑧-1-1','구급차 대기 총괄','구급차 및 의료반 대기','완료','done'],['⑧-2-1','현장응급의료소 운영','다수사상자 분류 및 처치','진행중','active']]},
-  {name:'⑨ 수색구조', role:'소방서', steps:[['⑨-1-1','긴급구조통제단 가동','소방서장 주재 구조 지휘','완료','done'],['⑨-2-1','실종자 수색','군부대 협조 요청 및 수색','진행중','active']]},
-  {name:'⑩ 사회질서', role:'행정과+경찰', steps:[['⑩-1-2','범죄예방 순찰','이재민 대피 후 빈집 순찰','대기','pending']]},
-  {name:'⑪ 자원봉사', role:'사회단체', steps:[['⑪-1-1','자율방재단 가동','자율방재단 예찰 및 지원','완료','done']]},
-  {name:'⑫ 수습홍보', role:'기획홍보과', steps:[['⑫-1-1','재난방송 요청','지역방송·SNS 실시간 공지','완료','done'],['⑫-1-2','언론 브리핑','사상자·피해 현황 브리핑','진행중','active']]},
-  {name:'⑬ 농축산시설', role:'농업정책과', steps:[['⑬-1-1','저수지 사전방류','취약지역 사전점검 및 방류','완료','done']]}
-];
-let currentSop = 0;
-function renderSOP(){
-  document.getElementById('sopList').innerHTML = SOP_AGENCIES.map((a,i)=>`<button class="side-btn ${i===currentSop?'active':''}" data-sop="${i}">${a.name}<div class="small muted">${a.role}</div></button>`).join('');
-  document.getElementById('sopTitle').textContent = `${SOP_AGENCIES[currentSop].name} — ${SOP_AGENCIES[currentSop].role}`;
-  document.getElementById('sopSteps').innerHTML = SOP_AGENCIES[currentSop].steps.map((s,idx)=>`
-    <div class="notice" style="margin-bottom:10px">
-      <div class="flex-between"><div><strong style="color:#fff">${s[0]} · ${s[1]}</strong><div class="small" style="margin-top:4px">${s[2]}</div></div><span class="tag ${s[4]==='done'?'tag-green':s[4]==='active'?'tag-orange':'tag-gray'}">${s[3]}</span></div>
-    </div>`).join('');
-  document.querySelectorAll('[data-sop]').forEach(b=>b.addEventListener('click',()=>{currentSop=Number(b.dataset.sop);renderSOP();}));
-}
-document.getElementById('sopNextBtn').addEventListener('click', ()=>{
-  const steps = SOP_AGENCIES[currentSop].steps;
-  const active = steps.find(s=>s[4]==='active');
-  const pending = steps.find(s=>s[4]==='pending');
-  if(active){active[3]='완료';active[4]='done';}
-  if(pending){pending[3]='진행중';pending[4]='active';}
-  renderSOP();
-});
-
-const DECISIONS = [
-  {label:'재대본 가동 결정', delay:8, weight:.18, baseline:5, desc:'위기경보 발령 연계'},
-  {label:'사전대피 권고 발령', delay:22, weight:.22, baseline:10, desc:'상황판단회의 결과'},
-  {label:'통합지원본부 설치', delay:18, weight:.20, baseline:8, desc:'현장상황관리관 파견 포함'},
-  {label:'소방헬기 요청', delay:25, weight:.16, baseline:5, desc:'실종자 수색 연계'},
-  {label:'기관 간 협업통신', delay:15, weight:.14, baseline:5, desc:'PS-LTE 채널 개설'},
-  {label:'강제대피 명령', delay:30, weight:.10, baseline:10, desc:'불응 주민 강제대피'}
-];
-function calcRTO(){
-  const extra = DECISIONS.reduce((sum,d)=>sum + Math.max(0,d.delay-d.baseline)*d.weight*2.2,0);
-  return Math.round(100 + extra);
-}
-function renderRTO(){
-  const rto = calcRTO();
-  const delta = rto - 100;
-  document.getElementById('rtoValue').textContent = rto;
-  document.getElementById('rtoDelta').textContent = `기준 대비 +${delta}분`;
-  document.getElementById('rtoCards').innerHTML = DECISIONS.map((d,i)=>`
-    <div class="card">
-      <div class="card-header">DEC-${String(i+1).padStart(3,'0')} · w=${d.weight.toFixed(2)} <span class="tag ${d.delay>d.baseline?'tag-orange':'tag-green'}">${d.delay>d.baseline?'기준 초과':'기준 이내'}</span></div>
-      <div class="card-body">
-        <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px">${d.label}</div>
-        <div class="small muted" style="margin-bottom:12px">${d.desc}</div>
-        <label>실제 결정시간 [기준 ${d.baseline}분]</label>
-        <input type="number" min="0" max="120" value="${d.delay}" data-rto-index="${i}" style="margin-top:7px">
-      </div>
-    </div>`).join('');
-  document.getElementById('rtoBreakdown').innerHTML = `<div class="table-wrap"><table class="table"><thead><tr><th>항목</th><th>기준</th><th>실제</th><th>가중치</th><th>RTO 기여</th></tr></thead><tbody>${DECISIONS.map(d=>`<tr><td>${d.label}</td><td>${d.baseline}</td><td>${d.delay}</td><td>${d.weight.toFixed(2)}</td><td>+${Math.round(Math.max(0,d.delay-d.baseline)*d.weight*2.2)}분</td></tr>`).join('')}<tr><td colspan="4"><strong>통합 RTO</strong></td><td><strong>${rto}분</strong></td></tr></tbody></table></div>`;
-  document.querySelectorAll('[data-rto-index]').forEach(inp=>inp.addEventListener('input',()=>{DECISIONS[Number(inp.dataset.rtoIndex)].delay=Number(inp.value||0); renderRTO();}));
-}
-document.getElementById('recalcRtoBtn').addEventListener('click', renderRTO);
-
-const EVAL_DATA = [
-  {phase:'1. 훈련 기획·설계', max:18, items:[['훈련기획팀에 재난유형별 실무자 포함',0.5],['훈련기획팀 업무 분장 있음',0.5],['과거 재난사례 기반 목표 설정',1],['훈련 목표 정량적 설정',1],['기관장 별도 훈련 지시사항',1],['일정표 포함',2],['방재자원 소요계획 포함',2],['홍보·안전 세부사항 포함',2]]},
-  {phase:'2. 훈련 실시', max:63, items:[['전파 대상 적정',1],['내용 육하원칙 준수',1],['절차 신속(10분 이내)',1],['피해확인 자료 준비',1],['긴급조치사항 논의',1],['참여자 적극 토론',1],['불시훈련 정의 부합',2],['목표시간 내 도착',1.5],['PS-LTE 채널 개설',1.5],['기관장 직접 참여',5],['온라인 매체 활용',1],['목표 달성 95% 이상',5]]},
-  {phase:'3. 훈련 환류', max:9, items:[['훈련결과 점검·개선회의 실시',1],['개선계획 수립',1],['기관장 결재',1],['예산·일정 포함',1],['추적관리 절차 마련',1],['발견된 문제점 포함',1]]}
-];
-const evalState = {};
-function renderEval(){
-  document.getElementById('evalContent').innerHTML = EVAL_DATA.map((ph,pIdx)=>`
-    <div class="card">
-      <div class="card-header">${ph.phase} <span class="tag tag-blue">${ph.max}점</span></div>
-      <div class="card-body">
-        ${ph.items.map((it,i)=>{
-          const key = `${pIdx}_${i}`;
-          const checked = !!evalState[key];
-          return `<label class="notice" style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;cursor:pointer"><input type="checkbox" data-eval-key="${key}" ${checked?'checked':''} style="width:18px;height:18px;margin-top:2px"><div><strong style="color:#fff">${it[0]}</strong><div class="small muted">+${it[1]}점</div></div></label>`;
-        }).join('')}
-      </div>
-    </div>`).join('');
-  document.querySelectorAll('[data-eval-key]').forEach(el=>el.addEventListener('change',()=>{evalState[el.dataset.evalKey]=el.checked; updateEvalSummary();}));
-  updateEvalSummary();
-}
-function updateEvalSummary(){
-  let total = 0;
-  const rows = EVAL_DATA.map((ph,pIdx)=>{
-    let score = 0;
-    ph.items.forEach((it,i)=>{ if(evalState[`${pIdx}_${i}`]) score += it[1]; });
-    total += score;
-    return `<div class="notice" style="margin-bottom:8px"><div class="flex-between"><strong style="color:#fff">${ph.phase}</strong><strong style="color:#fff">${Math.round(score*10)/10}/${ph.max}</strong></div></div>`;
-  }).join('');
-  const grade = total>=80 ? '우수' : total>=60 ? '보통' : '미흡';
-  document.getElementById('evalTotal').textContent = Math.round(total*10)/10;
-  document.getElementById('evalGrade').textContent = grade;
-  document.getElementById('evalSummary').innerHTML = rows;
-}
-
-const FLASHES = [
-  {type:'통신망 마비', title:'PS-LTE 재난안전통신망 장애', desc:'행정망 이상으로 참여기관 간 실시간 통신이 불안정해졌습니다.', constraint:'⛔ PS-LTE 차단 — 유선 또는 무전기로 대체 필요', rto:15},
-  {type:'자원 제한', title:'소방헬기 기상악화 운항 취소', desc:'강풍으로 헬기 파견이 취소되었습니다.', constraint:'⛔ 소방헬기 차단 — 구급차 또는 육상 이송계획 필요', rto:20},
-  {type:'병원 수용 한계', title:'인근 병원 수용 한계 도달', desc:'반경 20km 내 병원 수용 능력이 한계에 도달했습니다.', constraint:'⛔ 의료 자원 포화 — 광역 이송체계 수립 필요', rto:18}
-];
-const TTCARDS = {
+const incidentDB = {
   flood:[
-    {phase:'평시·초기대응', alert:'관심', urg:'HIGH', title:'호우예비특보 발령', desc:'시간당 20mm 이상 집중호우 예상. 취약시설 예찰이 필요한 단계입니다.', q:'지대본: 비상근무 발령 및 취약시설 예찰 여부 결정', jd:'행안부 모니터링 강화 및 대비태세 확립 요청', jb:'재대본 가동 및 초기 상황판단회의 개최 결정', th:'취약시설 예찰반 편성 및 하상주차장 통제 검토'},
-    {phase:'비상대응 1단계', alert:'주의', urg:'HIGH', title:'호우주의보 발령', desc:'저지대 침수와 배수로 역류가 발생하기 시작했습니다.', q:'지대본: 사전대피 권고 및 대피소 개방 여부 결정', jd:'비상1단계 모니터링 및 지원 준비', jb:'재대본 가동 및 사전대피 권고 판단', th:'구호물자 확인 및 대피소 운영 준비'},
-    {phase:'주요사고', alert:'심각', urg:'CRITICAL', title:'동진천 범람 및 차량 전복', desc:'다수 사상자와 실종자가 발생한 복합사고 단계입니다.', q:'지대본: 긴급구조통제단 전면 가동 및 헬기 요청 여부 결정', jd:'소방헬기·국군 의무대 지원 검토', jb:'긴급구조통제단 가동 및 현장관리관 파견', th:'응급의료소 설치 및 병원 이송 체계 가동'}
+    {title:'괴산 하천범람 사례', lesson:'저지대 사전통제 지연, 주민대피 권고 늦음', use:'주민대피 의사결정 1차 분기점 반영'},
+    {title:'도심지 침수·차량고립 사례', lesson:'하상주차장 통제 미흡, 차량 이동유도 실패', use:'교통·홍보 협업 워크플로우 강화'},
+    {title:'배수펌프장 장애 사례', lesson:'시설관리와 전력복구 협업 지연', use:'시설/통신/전력 복구 변수 반영'}
   ],
   earthquake:[
-    {phase:'초기대응', alert:'경계', urg:'CRITICAL', title:'규모 6.2 지진 발생', desc:'건물 흔들림과 낙하물 피해가 다수 신고되고 있습니다.', q:'지대본: 재대본 즉시 가동 및 피해 파악', jd:'행안부 긴급 점검', jb:'재대본 즉시 가동', th:'구조대 출동 준비'},
-    {phase:'비상대응', alert:'심각', urg:'CRITICAL', title:'건물 붕괴 및 30명 고립', desc:'특수구조가 필요한 단계입니다.', q:'지대본: 특수구조대 투입 및 광역의료 지원 요청', jd:'특수구조대 파견', jb:'광역의료 지원 요청', th:'현장응급의료소 설치'},
-    {phase:'수습', alert:'주의', urg:'HIGH', title:'구조 완료 및 수습 전환', desc:'이재민 지원과 피해조사 단계입니다.', q:'지대본: 이재민 지원 및 2차 피해 방지 대책 결정', jd:'특재 검토', jb:'임시거주시설 운영', th:'구호물자 배급'}
+    {title:'건물붕괴 다수사상자 사례', lesson:'현장 통제선 설정 지연', use:'경찰-소방-보건소 협업 우선순위 반영'},
+    {title:'여진 반복 사례', lesson:'2차 붕괴 우려로 구조전략 변경', use:'현장 접근 제한 inject 반영'},
+    {title:'병원 수용 초과 사례', lesson:'광역 이송망 전환 늦음', use:'보건소·소방서 연계 검증'}
   ],
   fire:[
-    {phase:'초기대응', alert:'주의', urg:'HIGH', title:'공장 밀집지역 화재 발생', desc:'불길이 급속히 커지고 있습니다.', q:'지대본: 인접 공장 대피 및 도로통제 결정', jd:'광역 자원 준비', jb:'통합지원본부 설치 여부 판단', th:'화재현장 인명대피 유도'}
+    {title:'복합건축물 화재 사례', lesson:'피난유도 지연과 스프링클러 오류', use:'대피 및 홍보 메시지 강화'},
+    {title:'물류창고 화재 사례', lesson:'유해물질 정보공유 지연', use:'위험물 정보전파 절차 반영'},
+    {title:'야간 화재 사례', lesson:'초기 인명검색 우선순위 혼선', use:'야간 지휘통제 흐름 반영'}
+  ],
+  chemical:[
+    {title:'화학물질 누출 사례', lesson:'바람 방향 정보전파 미흡', use:'대피권역 설정 의사결정 반영'},
+    {title:'산업단지 폭발 사례', lesson:'현장통제와 병원 오염관리 충돌', use:'통합지원본부 조정안건 반영'},
+    {title:'유독가스 확산 사례', lesson:'주민불안·SNS 허위정보 확산', use:'대국민 홍보 모듈 강화'}
+  ],
+  complex:[
+    {title:'집중호우+정전 복합사례', lesson:'시설복구와 주민대피 우선순위 충돌', use:'기관장 결단 안건 생성'},
+    {title:'화재+통신장애 복합사례', lesson:'보고체계와 현장지휘 동시 저하', use:'통신 대체수단 검증'},
+    {title:'행사 중 재난 복합사례', lesson:'군중분산과 응급이송 동선 충돌', use:'경찰·보건소·홍보 협업 반영'}
   ]
 };
-let tt = {running:false, idx:0, cards:[], start:0, timer:null, delay:0, penalty:0, logs:[], flash:null, history:loadHistory()};
-function loadHistory(){ try{return JSON.parse(localStorage.getItem('drex_history')||'[]');}catch(e){return [];} }
-function saveHistory(){ localStorage.setItem('drex_history', JSON.stringify(tt.history.slice(0,20))); }
-function renderResources(){
-  const data = [['소방차','5대'],['구급차','7대'],['소방헬기','1대'],['드론','2대'],['군부대','50명'],['병원','3개소']];
-  document.getElementById('resourceGrid').innerHTML = data.map(r=>`<div class="resource"><div class="resource-name">${r[0]}</div><div class="resource-value">${r[1]}</div></div>`).join('');
+
+const issueDB = {
+  none:['현재 선택된 최근 이슈는 없습니다. 표준 훈련 전개로 시연됩니다.'],
+  heat:['폭염으로 전력 수요 급증 → 냉방시설·정전 민감도 상승','야외 대응 인력 피로도 증가 → 교대·휴식 고려 필요'],
+  event:['지역행사로 유동인구 증가 → 대피·교통 통제가 어려워짐','현장 주변 혼잡으로 구급차 진입시간 증가 가능'],
+  rumor:['SNS 허위정보 확산 → 재난문자·브리핑 정합성 중요','잘못된 대피정보로 주민 재집결 가능성'],
+  hospital:['응급실 병상 포화 → 광역 이송체계 조기 전환 필요','중상자 분류와 병원 분산배치 판단 중요'],
+  telecom:['통신 장애 민감상황 → PS-LTE/무전/유선 대체수단 점검 필요','기관 간 보고 지연이 RTO에 직접 영향']
+};
+
+const injectCatalog = [
+  {key:'강풍 심화', effect:{rto:10,risk:8,coord:-5}, note:'소방헬기·드론 운용 제한'},
+  {key:'통신두절', effect:{rto:16,risk:3,coord:-14}, note:'보고/승인 지연'},
+  {key:'병상 포화', effect:{rto:12,risk:10,coord:-4}, note:'광역 이송체계 필요'},
+  {key:'SNS 허위정보', effect:{rto:8,risk:7,coord:-6}, note:'홍보·경찰·지자체 공조 필요'},
+  {key:'2차 사고 발생', effect:{rto:15,risk:14,coord:-3}, note:'현장 접근과 구조전략 재조정'},
+  {key:'야간 전환', effect:{rto:9,risk:6,coord:-2}, note:'시야·지휘통제 난도 상승'}
+];
+
+let state = {
+  rto:114,
+  risk:38,
+  coord:81,
+  evac:67,
+  timeline:[],
+  workflow:[],
+  logs:[],
+  incidents:[],
+  issueNotes:[],
+  sessions: JSON.parse(localStorage.getItem('drex-x-sessions')||'[]')
+};
+
+function initMenu(){
+  const wrap = document.getElementById('menu');
+  wrap.innerHTML = tabs.map((t,i)=>`<button class="${i===0?'active':''}" data-tab-btn="${t.key}"><span>${t.name}</span><span>›</span></button>`).join('');
 }
-function addLog(label,text){
-  const elapsed = tt.start ? Math.floor((Date.now()-tt.start)/1000) : 0;
-  const time = String(Math.floor(elapsed/60)).padStart(2,'0')+':'+String(elapsed%60).padStart(2,'0');
-  tt.logs.unshift({time,label,text});
-  document.getElementById('ttLog').innerHTML = tt.logs.map(l=>`<div class="log-item"><div class="log-time">${l.time} · ${l.label}</div><div class="log-text">${l.text}</div></div>`).join('');
+
+function switchTab(tabKey){
+  document.querySelectorAll('[data-tab]').forEach(el=>el.classList.toggle('active', el.dataset.tab===tabKey));
+  document.querySelectorAll('[data-tab-btn]').forEach(el=>el.classList.toggle('active', el.dataset.tabBtn===tabKey));
 }
-function updateTTRto(){
-  const rto = Math.round(100 + tt.delay*0.8 + tt.penalty*0.6);
-  document.getElementById('ttRto').textContent = rto;
-  document.getElementById('ttRtoDelta').textContent = rto>100 ? `기준 대비 +${rto-100}분` : '기준값 유지';
-  return rto;
+
+function setKpis(){
+  const sessions = state.sessions.length;
+  document.getElementById('kpis').innerHTML = [
+    {label:'추정 RTO', value:`${state.rto}분`, desc:'Inject와 기관 지연이 반영됩니다.'},
+    {label:'피해확산 위험도', value:`${state.risk}%`, desc:'인명·시설·2차사고 위험을 통합 표시합니다.'},
+    {label:'협업 점수', value:`${state.coord}점`, desc:'기관간 요청·승인·완료 흐름을 기반으로 계산합니다.'},
+    {label:'누적 저장 세션', value:`${sessions}건`, desc:'브라우저 로컬 저장 기준입니다.'}
+  ].map(x=>`<div class="kpi"><div class="label">${x.label}</div><div class="value">${x.value}</div><div class="desc">${x.desc}</div></div>`).join('');
 }
-function renderTTCard(){
-  const c = tt.cards[tt.idx];
-  if(!c) return;
-  document.getElementById('ttPhase').textContent = c.phase;
-  document.getElementById('ttAlert').textContent = c.alert;
-  document.getElementById('ttCardNum').textContent = `${tt.idx+1}/${tt.cards.length}`;
-  document.getElementById('ttUrgency').textContent = c.urg;
-  document.getElementById('ttUrgency').className = `tag ${c.urg==='CRITICAL'?'tag-red':'tag-orange'}`;
-  document.getElementById('ttCardTitle').textContent = c.title;
-  document.getElementById('ttCardDesc').textContent = c.desc;
-  document.getElementById('ttCardQ').textContent = '▶ ' + c.q;
-  document.getElementById('jdDir').textContent = c.jd;
-  document.getElementById('jbDir').textContent = c.jb;
-  document.getElementById('thDir').textContent = c.th;
-  ['jdInput','jbInput','thInput','jbRes','flashResolve'].forEach(id=>document.getElementById(id).value='');
-  ['jdTime','jdStaff','jbDelay','agFire','agPolice','agMed'].forEach(id=>document.getElementById(id).value=0);
-  addLog('상황카드', c.title);
-}
-function startTT(){
-  const type = document.getElementById('ttType').value;
-  const region = document.getElementById('ttRegion').value;
-  tt.running = true; tt.idx = 0; tt.cards = TTCARDS[type] || TTCARDS.flood; tt.start = Date.now(); tt.delay = 0; tt.penalty = 0; tt.logs = []; tt.flash = null;
-  document.getElementById('ttMain').style.display='block';
-  document.getElementById('ttResultCard').style.display='none';
-  document.getElementById('flashBox').classList.remove('show');
-  clearInterval(tt.timer);
-  tt.timer = setInterval(()=>{
-    const e = Math.floor((Date.now()-tt.start)/1000);
-    document.getElementById('ttTimer').textContent = String(Math.floor(e/60)).padStart(2,'0') + ':' + String(e%60).padStart(2,'0');
-  }, 1000);
-  renderResources();
-  renderTTCard();
-  updateTTRto();
-  addLog('훈련 시작', `${type} · ${region}`);
-}
-function openFlash(){
-  const f = FLASHES[Math.floor(Math.random()*FLASHES.length)];
-  tt.flash = f;
-  document.getElementById('flashTitle').textContent = f.title;
-  document.getElementById('flashDesc').textContent = f.desc;
-  document.getElementById('flashConstraint').textContent = f.constraint;
-  document.getElementById('flashBox').classList.add('show');
-  addLog('불시메시지', `${f.type} 발동`);
-}
-function resolveFlash(){
-  const txt = document.getElementById('flashResolve').value.trim();
-  if(!txt || !tt.flash) return;
-  tt.penalty += tt.flash.rto;
-  document.getElementById('flashBox').classList.remove('show');
-  addLog('불시 해결', `${txt} (RTO +${tt.flash.rto}분)`);
-  tt.flash = null;
-  updateTTRto();
-}
-function submitTT(who){
-  const map = {jd:['jdInput','중대본'], jb:['jbInput','지대본'], th:['thInput','통합지원본부']};
-  const val = document.getElementById(map[who][0]).value.trim();
-  if(!val) return;
-  if(who==='jb'){
-    tt.delay += Number(document.getElementById('jbDelay').value||0);
-    updateTTRto();
-  }
-  addLog(map[who][1], val);
-  document.getElementById(map[who][0]).value='';
-}
-function openSPM(){
-  const c = tt.cards[tt.idx];
-  const agenda = [
-    `단계: ${c.phase} / 위기경보: ${c.alert}`,
-    `지대본 결정 소요: ${document.getElementById('jbDelay').value||0}분`,
-    `소방: ${document.getElementById('agFire').value||0}분 / 경찰: ${document.getElementById('agPolice').value||0}분 / 보건소: ${document.getElementById('agMed').value||0}분`,
-    `현재 추정 RTO: ${document.getElementById('ttRto').textContent}분`
+
+function buildScenario(){
+  const type = document.getElementById('disasterType').value;
+  const region = document.getElementById('region').value;
+  const season = document.getElementById('season').value;
+  const issue = document.getElementById('issue').value;
+  const crowd = document.getElementById('crowd').value;
+  const facility = document.getElementById('facility').value;
+  const objective = document.getElementById('objective').value;
+  const note = document.getElementById('plannerNote').value.trim();
+
+  state.incidents = incidentDB[type] || incidentDB.flood;
+  state.issueNotes = issueDB[issue] || issueDB.none;
+
+  const seasonText = {summer:'장마·폭우 대응',winter:'한파·결빙 대응',spring:'행사·군중 대응',autumn:'건조·산불확산 대응'}[season];
+  const typeText = {flood:'풍수해',earthquake:'지진',fire:'대형화재',chemical:'화학사고',complex:'복합재난'}[type];
+  const crowdText = {low:'저밀도',mid:'중밀도',high:'고밀도'}[crowd];
+  const objectiveText = {decision:'의사결정 검증형',coordination:'기관 협업 검증형',public:'주민대피 검증형',recovery:'복구전환 검증형'}[objective];
+
+  state.timeline = [
+    {time:'T-30', stage:'초기감지', alert:'관심', title:`${region} ${typeText} 징후 포착`, desc:`${seasonText} 환경에서 ${facility} 지역 위험징후가 포착되었습니다. 현재 훈련 설계 목적은 ${objectiveText}입니다.`},
+    {time:'T+00', stage:'상황전파', alert:'주의', title:'초기 보고 및 상황판단회의 소집', desc:`인구밀집도 ${crowdText} 환경으로 인해 보고체계와 대국민 전파의 정합성이 중요합니다.`},
+    {time:'T+20', stage:'지휘전환', alert:'경계', title:'지대본 중심 조치와 협업요청 확대', desc:'소방·경찰·보건소·통신사·시설관리기관 간 요청과 승인 병목이 발생하기 시작합니다.'},
+    {time:'T+45', stage:'확산국면', alert:'심각', title:'2차 위험 및 외부이슈 결합', desc: state.issueNotes[0] || '외부 환경 이슈가 없더라도 통신, 교통, 의료 병목 중 하나가 훈련 중 돌발변수로 발생합니다.'},
+    {time:'T+70', stage:'전환판단', alert:'경계', title:'인명구조-대피-복구 우선순위 충돌', desc:'기관장이 자원 우선순위를 재배치해야 하며, 잘못 판단하면 RTO가 급격히 상승합니다.'},
+    {time:'T+100', stage:'복구전환', alert:'주의', title:'응급복구 및 주민안정화', desc:'주요 기능 복구, 이재민 관리, 대국민 메시지 정합성 검토가 핵심입니다.'}
   ];
-  document.getElementById('spmSummary').textContent = `현재 단계(${c.phase}) 기준 상황판단회의 안건입니다.`;
-  document.getElementById('spmAgenda').innerHTML = agenda.map(a=>`<div class="notice" style="margin-top:8px">${a}</div>`).join('');
-  addLog('상황판단회의', c.phase);
+
+  if(note){ state.timeline.push({time:'설계메모', stage:'운영자 포인트', alert:'참고', title:'훈련 설계자 메모 반영', desc:note}); }
+
+  state.rto = 108 + (issue !== 'none' ? 8 : 0) + (crowd === 'high' ? 10 : crowd === 'mid' ? 5 : 0) + (facility === 'industrial' ? 6 : 0);
+  state.risk = 34 + (issue === 'hospital' ? 12 : 0) + (issue === 'rumor' ? 6 : 0) + (facility === 'tourism' ? 8 : 0) + (crowd === 'high' ? 7 : 0);
+  state.coord = 84 - (issue === 'telecom' ? 12 : 0) - (issue === 'event' ? 5 : 0) - (facility === 'mixed' ? 4 : 0);
+  state.evac = 72 - (crowd === 'high' ? 10 : 0) - (issue === 'rumor' ? 7 : 0);
+
+  state.workflow = [
+    {lane:'요청', agency:'지대본', text:'저지대 주민 사전대피 권고 발령', delay:8, priority:'긴급'},
+    {lane:'검토중', agency:'경찰서', text:'우회로 확보 및 교통통제 범위 검토', delay:14, priority:'높음'},
+    {lane:'승인', agency:'보건소', text:'응급의료소 설치 및 병상배분 승인 대기', delay:11, priority:'긴급'},
+    {lane:'실행', agency:'소방서', text:'현장 접근 및 구조대 투입', delay:6, priority:'긴급'},
+    {lane:'완료', agency:'통신사', text:'재난안전통신망 임시 채널 개설', delay:5, priority:'보통'}
+  ];
+
+  addLog('system', `${region} ${typeText} 기반 고급 시나리오 생성 완료`);
+  renderAll();
 }
-function nextCard(){
-  if(tt.idx < tt.cards.length-1){ tt.idx++; renderTTCard(); }
-  else endTT();
+
+function renderScenario(){
+  document.getElementById('scenarioBadges').innerHTML = [
+    `추정 RTO ${state.rto}분`,`위험도 ${state.risk}%`,`협업점수 ${state.coord}점`,`주민대피 준비도 ${state.evac}%`
+  ].map((t,i)=>`<span class="badge ${i===1?'red':i===2?'green':i===3?'yellow':''}">${t}</span>`).join('');
+
+  document.getElementById('timeline').innerHTML = state.timeline.map(item=>`
+    <div class="timeline-item">
+      <div class="timeline-top"><div class="badge ${item.alert==='심각'?'red':item.alert==='경계'?'yellow':item.alert==='주의'?'cyan':'green'}">${item.time} · ${item.alert}</div><div class="mini">${item.stage}</div></div>
+      <h4>${item.title}</h4>
+      <p>${item.desc}</p>
+    </div>`).join('');
 }
-function endTT(){
-  if(!tt.running) return;
-  tt.running = false;
-  clearInterval(tt.timer);
-  const elapsed = Math.floor((Date.now()-tt.start)/1000);
-  const rto = updateTTRto();
-  const grade = rto<=110 ? '우수' : rto<=130 ? '보통' : '개선필요';
-  const entry = {
-    created_at: new Date().toLocaleString('ko-KR'), disaster_type: document.getElementById('ttType').value,
-    region: document.getElementById('ttRegion').value, elapsed_sec: elapsed, decision_delay: tt.delay,
-    flash_penalty: tt.penalty, final_rto: rto, grade
+
+function renderHistory(){
+  document.getElementById('historyList').innerHTML = state.incidents.map(x=>`
+    <div class="history-item"><strong>${x.title}</strong><p>주요 교훈: ${x.lesson}</p><p style="margin-top:6px">훈련 반영: ${x.use}</p></div>`).join('');
+}
+
+function renderIssues(){
+  document.getElementById('issueList').innerHTML = state.issueNotes.map(x=>`<div class="issue-item"><strong>외부 변수</strong><p>${x}</p></div>`).join('');
+}
+
+function renderInjects(){
+  document.getElementById('injectButtons').innerHTML = injectCatalog.map(item=>`<button class="btn secondary small" onclick="applyInject('${item.key}')">${item.key}</button>`).join('');
+}
+
+function renderWorkflow(){
+  const lanes = ['요청','검토중','승인','실행','완료'];
+  document.getElementById('workflow').innerHTML = lanes.map(lane=>{
+    const tasks = state.workflow.filter(t=>t.lane===lane);
+    return `<div class="lane"><h4>${lane} (${tasks.length})</h4>${tasks.map(task=>`<div class="task"><strong>${task.agency}</strong><p>${task.text}</p><div class="meta"><span>${task.priority}</span><span>${task.delay}분</span></div></div>`).join('') || '<p class="mini">항목 없음</p>'}</div>`;
+  }).join('');
+}
+
+function renderLogs(){
+  const items = state.logs.slice(-10).reverse();
+  document.getElementById('logList').innerHTML = items.length ? items.map(x=>`<div class="log-item"><p><strong>${x.time}</strong> · ${x.text}</p></div>`).join('') : '<div class="log-item"><p>아직 기록이 없습니다.</p></div>';
+}
+
+function addLog(type,text){
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  state.logs.push({type,time,text});
+  renderLogs();
+}
+
+function applyInject(key){
+  const item = injectCatalog.find(x=>x.key===key);
+  if(!item) return;
+  state.rto += item.effect.rto;
+  state.risk = Math.min(100, state.risk + item.effect.risk);
+  state.coord = Math.max(0, state.coord + item.effect.coord);
+  state.timeline.splice(Math.max(1,state.timeline.length-2),0,{time:'Inject',stage:'돌발변수',alert:'심각',title:key,desc:item.note});
+  addLog('inject', `${key} 적용 — ${item.note}`);
+  renderAll();
+}
+
+function addAgencyAction(){
+  const agency = document.getElementById('agencyName').value;
+  const lane = document.getElementById('agencyStatus').value;
+  const delay = Number(document.getElementById('agencyDelay').value||0);
+  const priority = document.getElementById('agencyPriority').value;
+  const text = document.getElementById('agencyAction').value.trim();
+  if(!text){ alert('조치 내용을 입력하세요.'); return; }
+  state.workflow.push({lane,agency,delay,priority,text});
+  state.rto += Math.round(delay * .35);
+  if(lane==='완료') state.coord = Math.min(100,state.coord+3);
+  if(lane==='검토중') state.coord = Math.max(0,state.coord-2);
+  addLog('agency', `${agency} · ${lane} · ${text}`);
+  document.getElementById('agencyAction').value='';
+  renderAll();
+}
+
+function autoFlow(){
+  const presets = [
+    ['요청','경찰서','교량 접근통제 요청',13,'높음'],
+    ['검토중','군부대','중장비 지원 가능여부 검토',18,'보통'],
+    ['승인','중대본','광역 응급자원 전환 승인',10,'긴급'],
+    ['실행','보건소','중상자 분산이송 실시',9,'긴급'],
+    ['완료','지대본','재난문자 재송출 및 주민안내 완료',7,'높음']
+  ];
+  presets.forEach(x=>state.workflow.push({lane:x[0],agency:x[1],text:x[2],delay:x[3],priority:x[4]}));
+  state.rto += 8; state.coord -= 3;
+  addLog('workflow','대표 협업흐름 자동 생성');
+  renderAll();
+}
+
+function renderBottleneck(){
+  const pending = state.workflow.filter(x=>x.lane==='검토중' || x.lane==='승인');
+  const slow = [...state.workflow].sort((a,b)=>b.delay-a.delay).slice(0,3);
+  document.getElementById('bottleneckPanel').innerHTML = `
+    <div class="aar-list">
+      <div class="aar-item"><strong>승인/검토 병목</strong><p>${pending.length ? pending.map(x=>`${x.agency}: ${x.text}`).join(' / ') : '현재 병목이 큰 승인대기 항목은 없습니다.'}</p></div>
+      <div class="aar-item"><strong>지연시간 상위 항목</strong><p>${slow.map(x=>`${x.agency} ${x.delay}분`).join(' / ')}</p></div>
+      <div class="aar-item"><strong>평가관 질문 포인트</strong><p>왜 이 기관에서 지연이 발생했는지, 대체자원 투입 여부, 승인권자 부재 시 대안 체계가 있는지 확인하세요.</p></div>
+    </div>`;
+}
+
+function renderAnalysis(){
+  document.getElementById('rtoPanel').innerHTML = renderMeter('현재 RTO', `${state.rto}분`, Math.min(100, state.rto/2), 'red', '기준 100분 대비 상승폭을 표시합니다.');
+  document.getElementById('riskPanel').innerHTML = renderMeter('피해확산 위험', `${state.risk}%`, state.risk, 'yellow', '인명피해·2차사고·시설피해 복합값입니다.');
+  document.getElementById('coordPanel').innerHTML = renderMeter('협업 점수', `${state.coord}점`, state.coord, 'green', '기관 요청/검토/완료 흐름에 따라 변합니다.');
+
+  document.getElementById('coachPanel').innerHTML = `
+    <div class="aar-list">
+      <div class="aar-item"><strong>지금 물어볼 질문 1</strong><p>주민대피, 교통통제, 응급의료 중 현재 우선순위는 무엇이며 왜 그런가?</p></div>
+      <div class="aar-item"><strong>지금 물어볼 질문 2</strong><p>승인 대기 중인 조치가 있다면 대체결정권자 체계는 준비되어 있는가?</p></div>
+      <div class="aar-item"><strong>지금 물어볼 질문 3</strong><p>최근 이슈 변수(${document.getElementById('issue').selectedOptions[0].text})가 실제 대응체계에 어떤 추가 부담을 주는가?</p></div>
+    </div>`;
+
+  document.getElementById('briefPanel').innerHTML = `
+    <div class="aar-list">
+      <div class="aar-item"><strong>기관장 보고 한 줄 요약</strong><p>현재 추정 RTO는 ${state.rto}분이며, 협업 점수는 ${state.coord}점입니다. 가장 큰 병목은 승인/검토 단계와 외부 변수 대응입니다.</p></div>
+      <div class="aar-item"><strong>즉시 결단 필요사항</strong><p>① 대피범위 확대 여부 ② 병상 포화 대비 광역 이송 조기 전환 ③ 통신장애 대비 대체 보고체계 확정</p></div>
+      <div class="aar-item"><strong>대국민 메시지 포인트</strong><p>혼선이 생기지 않도록 단일 브리핑 문구, 재난문자 재송출, 허위정보 차단 포인트를 정리하십시오.</p></div>
+    </div>`;
+}
+
+function renderGuidePanel(){
+  document.getElementById('guidePanel').innerHTML = guides.all.steps.map(([title,text])=>`<div class="guide-step"><strong>${title}</strong><p>${text}</p></div>`).join('');
+}
+
+function renderMeter(title,value,pct,color,desc){
+  return `<div class="meter"><div class="label">${title}</div><div class="value" style="font-size:30px;font-weight:900">${value}</div><div class="bar ${color}"><span style="width:${pct}%"></span></div><div class="desc" style="margin-top:10px;color:var(--muted);font-size:13px;line-height:1.7">${desc}</div></div>`;
+}
+
+function runAAR(){
+  const pending = state.workflow.filter(x=>x.lane!=='완료').length;
+  const items = [
+    ['잘한 점','현장 대응 흐름과 협업조치가 시각적으로 정리되어 상황판단회의용 자료로 활용 가능했습니다.'],
+    ['미흡한 점',`완료되지 않은 협업 항목이 ${pending}건이며, 승인/검토 단계 병목으로 인해 RTO가 ${state.rto}분까지 상승했습니다.`],
+    ['SOP 개선과제','통신장애/병상포화/허위정보 등 외부변수에 대한 대체절차를 SOP 부속절차로 명문화할 필요가 있습니다.'],
+    ['다음 훈련 권고','동일 시나리오에서 기관장 결단 지점과 광역자원 전환 기준을 더 명확히 두고 재실시하는 것이 좋습니다.'],
+    ['평가관 총평','정적 상황보고보다 의사결정 연쇄효과를 더 잘 볼 수 있는 구조이며, 실제 사업화 단계에서는 사고 DB와 실시간 메시징 연동이 필요합니다.']
+  ];
+  document.getElementById('aarList').innerHTML = items.map(([t,d])=>`<div class="aar-item"><strong>${t}</strong><p>${d}</p></div>`).join('');
+  addLog('aar','AAR 자동 생성 완료');
+}
+
+function saveSession(){
+  const snapshot = {
+    at: new Date().toLocaleString('ko-KR'),
+    disaster: document.getElementById('disasterType').selectedOptions[0].text,
+    region: document.getElementById('region').value,
+    rto: state.rto,
+    risk: state.risk,
+    coord: state.coord
   };
-  tt.history.unshift(entry); saveHistory();
-  document.getElementById('ttResultCard').style.display='block';
-  document.getElementById('ttResultBody').innerHTML = `
-    <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-label">훈련 소요시간</div><div class="kpi-value">${Math.floor(elapsed/60)}분</div><div class="kpi-unit">${elapsed%60}초</div></div>
-      <div class="kpi"><div class="kpi-label">의사결정 지연</div><div class="kpi-value">${tt.delay}</div><div class="kpi-unit">분</div></div>
-      <div class="kpi"><div class="kpi-label">불시 패널티</div><div class="kpi-value">${tt.penalty}</div><div class="kpi-unit">분</div></div>
-      <div class="kpi"><div class="kpi-label">최종 RTO</div><div class="kpi-value">${rto}</div><div class="kpi-unit">분 / ${grade}</div></div>
-    </div>
-    <div class="notice" style="margin-top:14px">훈련 결과가 브라우저 로컬 저장소에 저장되었습니다. 현재 버전은 <strong>실제 버튼 작동</strong>과 <strong>시연용 흐름</strong>에 집중한 안정화 버전입니다.</div>`;
+  state.sessions.unshift(snapshot);
+  state.sessions = state.sessions.slice(0,20);
+  localStorage.setItem('drex-x-sessions', JSON.stringify(state.sessions));
+  setKpis();
+  addLog('save', '현재 세션 저장 완료');
+  alert('세션이 브라우저 로컬 저장소에 저장되었습니다.');
 }
 
-function renderKPI(){
-  const list = tt.history;
-  const count = list.length;
-  const avg = (arr, key) => arr.length ? Math.round(arr.reduce((s,x)=>s+(x[key]||0),0)/arr.length) : 0;
-  document.getElementById('kpiGrid').innerHTML = [
-    ['총 훈련 횟수', count, '회'],
-    ['평균 RTO', avg(list,'final_rto'), '분'],
-    ['평균 의사결정 지연', avg(list,'decision_delay'), '분'],
-    ['평균 불시 패널티', avg(list,'flash_penalty'), '분']
-  ].map(k=>`<div class="kpi"><div class="kpi-label">${k[0]}</div><div class="kpi-value">${k[1]}</div><div class="kpi-unit">${k[2]}</div></div>`).join('');
-  document.getElementById('kpiTable').innerHTML = list.length ? list.map(r=>`<tr><td>${r.created_at}</td><td>${r.disaster_type}</td><td>${r.region}</td><td>${Math.floor(r.elapsed_sec/60)}분</td><td>${r.decision_delay}분</td><td>${r.flash_penalty}분</td><td>${r.final_rto}분</td><td>${r.grade}</td></tr>`).join('') : '<tr><td colspan="8">저장된 훈련 이력이 없습니다.</td></tr>';
+function openGuideModal(key='all'){
+  const guide = guides[key] || guides.all;
+  document.getElementById('modalTitle').textContent = guide.title;
+  document.getElementById('modalBody').innerHTML = guide.steps.map(([t,d])=>`<div class="guide-step"><strong>${t}</strong><p>${d}</p></div>`).join('');
+  document.getElementById('guideModal').classList.add('show');
 }
 
-document.getElementById('startTTBtn').addEventListener('click', startTT);
-document.getElementById('flashBtn').addEventListener('click', openFlash);
-document.getElementById('resolveFlashBtn').addEventListener('click', resolveFlash);
-document.getElementById('spmBtn').addEventListener('click', openSPM);
-document.getElementById('nextCardBtn').addEventListener('click', nextCard);
-document.getElementById('endTTBtn').addEventListener('click', endTT);
-document.getElementById('refreshKpiBtn').addEventListener('click', renderKPI);
-document.querySelectorAll('[data-submit]').forEach(btn=>btn.addEventListener('click', ()=>submitTT(btn.dataset.submit)));
+function closeGuideModal(){ document.getElementById('guideModal').classList.remove('show'); }
 
-renderSOP();
-renderRTO();
-renderEval();
-renderKPI();
+function renderAll(){
+  setKpis();
+  renderHistory();
+  renderIssues();
+  renderScenario();
+  renderInjects();
+  renderWorkflow();
+  renderBottleneck();
+  renderAnalysis();
+  renderGuidePanel();
+  renderLogs();
+}
+
+initMenu();
+buildScenario();
+renderAll();
+runAAR();
+
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-tab-btn]');
+  if(btn) switchTab(btn.dataset.tabBtn);
+  const guideBtn = e.target.closest('[data-guide]');
+  if(guideBtn) openGuideModal(guideBtn.dataset.guide);
+});
+
+document.getElementById('buildBtn').addEventListener('click', buildScenario);
+document.getElementById('saveBtn').addEventListener('click', saveSession);
+document.getElementById('runAAR').addEventListener('click', runAAR);
+document.getElementById('addAction').addEventListener('click', addAgencyAction);
+document.getElementById('autoFlow').addEventListener('click', autoFlow);
+document.getElementById('openGuide').addEventListener('click', ()=>openGuideModal('all'));
+document.getElementById('closeModal').addEventListener('click', closeGuideModal);
+document.getElementById('guideModal').addEventListener('click', (e)=>{ if(e.target.id==='guideModal') closeGuideModal(); });
 </script>
 </body>
 </html>
