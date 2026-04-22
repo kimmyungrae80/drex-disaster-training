@@ -688,7 +688,7 @@ async function genSC(){
 {"id":"SCN-001","name":"재난명","location":"${region} 구체장소","date":"2025.10","agencies":11,"max_alert":"심각","situation":"상황설명 2문장","phases":[5개 각각:{name,time_real,target_time,situation,decisions:[2개],actions:[3개],resources,damage:{dead?,injury?,evac?,property?}}],"collab_codes":[12개 각각:{code,name,dept}]}`;
 
   async function api(retry=0){
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:'한국 재난관리 박사. JSON만 출력.',messages:[{role:'user',content:prompt}]})});
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:'한국 재난관리 박사. JSON만 출력.',messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     if(data.type==='error'){if(retry<2){bdg.textContent=`재시도${retry+1}...`;await new Promise(r=>setTimeout(r,2000));return api(retry+1);}throw new Error(data.error?.message||'API 오류');}
     return data;
