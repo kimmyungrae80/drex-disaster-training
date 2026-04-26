@@ -23,6 +23,8 @@ export default async function handler(req) {
 
   try {
     const body = await req.json();
+    const sessionId = req.headers.get('X-Session-ID') || 'unknown';
+    console.log(`[DREX] session=${sessionId} model=${body.model}`);
 
     const upstream = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

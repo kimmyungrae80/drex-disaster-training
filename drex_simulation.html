@@ -138,9 +138,57 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#e8f4f2;border-radius:12px;font-size:11px;color:var(--teal);font-weight:600}
 @media(max-width:640px){.mg{grid-template-columns:1fr}.rg{flex-direction:column}.sl{display:none}.hd{padding:0 14px}.main{padding:20px 12px 50px}.rpm{grid-template-columns:1fr}}
+/* ── LOGIN MODAL ── */
+.lm-overlay{position:fixed;inset:0;background:rgba(18,33,58,.7);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.lm-overlay.hidden{display:none}
+.lm-box{background:#fff;border-radius:18px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:fadeUp .3s ease}
+.lm-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.lm-icon{width:40px;height:40px;background:var(--teal);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.lm-brand h2{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:2px}
+.lm-brand p{font-size:11px;color:var(--muted);margin-top:1px}
+.lm-divider{height:1px;background:#e8e4dc;margin:18px 0}
+.lm-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:18px}
+.lm-err{background:#fff0f0;border:1.5px solid var(--red);border-radius:7px;padding:9px 13px;color:var(--red);font-size:12px;margin-bottom:14px;display:none}
+.lm-err.show{display:block}
+.lm-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
 </style>
 </head>
 <body>
+
+<!-- LOGIN MODAL -->
+<div class="lm-overlay" id="loginOverlay">
+  <div class="lm-box">
+    <div class="lm-logo">
+      <div class="lm-icon">🛡️</div>
+      <div class="lm-brand">
+        <h2>DREX</h2>
+        <p>(사)한국재난안전관리연구소 · 재난대응 AI 지원 플랫폼</p>
+      </div>
+    </div>
+    <div class="lm-divider"></div>
+    <div class="lm-title">시뮬레이션 시작 전 정보를 입력해 주세요</div>
+    <div class="lm-err" id="lmErr"></div>
+    <div class="fg">
+      <label class="fl">이름 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="lmName" placeholder="홍길동">
+    </div>
+    <div class="fg">
+      <label class="fl">소속기관 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="lmOrg" placeholder="○○시청 안전관리과">
+    </div>
+    <div class="fg">
+      <label class="fl">직책 <span style="color:var(--muted);font-weight:400">(선택)</span></label>
+      <input type="text" class="fi" id="lmPos" placeholder="팀장">
+    </div>
+    <div class="fg" style="margin-bottom:0">
+      <label class="fl">연락처 또는 이메일 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="lmContact" placeholder="010-0000-0000 또는 email@example.com">
+    </div>
+    <div class="lm-divider"></div>
+    <button class="btn-p" style="width:100%;justify-content:center" onclick="submitLogin()">시작하기 →</button>
+    <div class="lm-note">입력 정보는 플랫폼 운영 목적으로만 사용되며<br>외부에 공개되지 않습니다.</div>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header class="hd">
@@ -869,6 +917,7 @@ ${roundGuide[state.round] || ""}
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Session-ID": getSessionId(),
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
@@ -980,10 +1029,78 @@ function parseAndRenderStages(text) {
 }
 
 // ═══════════════════════════════════════════════
+// VISITOR LOGIN
+// ═══════════════════════════════════════════════
+const SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvdWFzcW5zYnhiaWt2anJyZm5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDU1MDksImV4cCI6MjA5MjI4MTUwOX0.9uqx1v12ur54fqKbsQsJxdDw8ke2S0p1B174wpZvRJY";
+
+function genSessionId() {
+  return "sess_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function getSessionId() {
+  let sid = sessionStorage.getItem("drex_session_id");
+  if (!sid) { sid = genSessionId(); sessionStorage.setItem("drex_session_id", sid); }
+  return sid;
+}
+
+async function saveVisitor(data) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/visitors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) { console.warn("visitor save failed", e); }
+}
+
+async function submitLogin() {
+  const name    = document.getElementById("lmName").value.trim();
+  const org     = document.getElementById("lmOrg").value.trim();
+  const pos     = document.getElementById("lmPos").value.trim();
+  const contact = document.getElementById("lmContact").value.trim();
+  const errEl   = document.getElementById("lmErr");
+
+  if (!name || !org || !contact) {
+    errEl.textContent = "이름, 소속기관, 연락처는 필수 입력 항목입니다.";
+    errEl.classList.add("show");
+    return;
+  }
+  errEl.classList.remove("show");
+
+  const sid = getSessionId();
+  sessionStorage.setItem("drex_visitor", JSON.stringify({ name, org, pos, contact }));
+
+  await saveVisitor({ name, organization: org, position: pos || null, contact, session_id: sid });
+
+  document.getElementById("loginOverlay").classList.add("hidden");
+}
+
+function initLogin() {
+  const sid      = sessionStorage.getItem("drex_session_id");
+  const visitor  = sessionStorage.getItem("drex_visitor");
+  if (sid && visitor) {
+    document.getElementById("loginOverlay").classList.add("hidden");
+  }
+  // Enter key submit
+  ["lmName","lmOrg","lmPos","lmContact"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") submitLogin();
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 document.getElementById("trainDate").value = new Date().toISOString().slice(0,10);
 updateStepBar(1);
+initLogin();
 </script>
 </body>
 </html>
