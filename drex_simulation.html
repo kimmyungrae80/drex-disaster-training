@@ -235,7 +235,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
         <button type="button" class="lm-tag" data-v="감염병">🦠 감염병</button>
         <button type="button" class="lm-tag" data-v="대설">❄️ 대설</button>
         <button type="button" class="lm-tag" data-v="복합재난">⚡ 복합재난</button>
+        <button type="button" class="lm-tag" data-v="기타" id="lmTagEtc">✏️ 기타</button>
       </div>
+      <input type="text" class="fi" id="lmExpertiseEtc" placeholder="전문분야 직접 입력 (예: 산불, 해양사고, 항공사고)" style="display:none;margin-top:8px">
     </div>
 
     <div class="lm-divider"></div>
@@ -1122,7 +1124,11 @@ async function submitLogin() {
   const phone   = document.getElementById("lmPhone").value.trim();
   const email   = document.getElementById("lmEmail").value.trim();
   const region  = document.getElementById("lmRegion").value;
-  const expertise = [...document.querySelectorAll("#lmExpertise .lm-tag.sel")].map(b => b.dataset.v);
+  const etcInput  = document.getElementById("lmExpertiseEtc").value.trim();
+  const expertise = [...document.querySelectorAll("#lmExpertise .lm-tag.sel")].map(b => {
+    if (b.dataset.v === "기타") return etcInput || "기타";
+    return b.dataset.v;
+  });
   const errEl   = document.getElementById("lmErr");
 
   if (!name || !pos || !org || !phone || !region || !expertise.length) {
@@ -1156,7 +1162,14 @@ function initLogin() {
     document.getElementById("loginOverlay").classList.add("hidden");
   }
   document.querySelectorAll("#lmExpertise .lm-tag").forEach(btn => {
-    btn.addEventListener("click", () => btn.classList.toggle("sel"));
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("sel");
+      if (btn.dataset.v === "기타") {
+        const etc = document.getElementById("lmExpertiseEtc");
+        etc.style.display = btn.classList.contains("sel") ? "block" : "none";
+        if (btn.classList.contains("sel")) etc.focus();
+      }
+    });
   });
   ["lmName","lmPos","lmOrg","lmPhone","lmEmail"].forEach(id => {
     document.getElementById(id).addEventListener("keydown", e => {
