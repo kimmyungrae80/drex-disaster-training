@@ -138,110 +138,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#e8f4f2;border-radius:12px;font-size:11px;color:var(--teal);font-weight:600}
 @media(max-width:640px){.mg{grid-template-columns:1fr}.rg{flex-direction:column}.sl{display:none}.hd{padding:0 14px}.main{padding:20px 12px 50px}.rpm{grid-template-columns:1fr}}
-/* ── LOGIN MODAL ── */
-.lm-overlay{position:fixed;inset:0;background:rgba(10,20,40,.82);backdrop-filter:blur(7px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.lm-overlay.hidden{display:none}
-.lm-box{background:#fff;border-radius:18px;padding:34px 30px;width:100%;max-width:480px;box-shadow:0 10px 50px rgba(0,0,0,.4);animation:fadeUp .3s ease;margin:auto}
-.lm-logo{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.lm-icon{width:44px;height:44px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.lm-brand h2{font-size:21px;font-weight:800;color:var(--navy);letter-spacing:2px}
-.lm-brand p{font-size:11px;color:var(--muted);margin-top:2px}
-.lm-divider{height:1px;background:#e8e4dc;margin:16px 0}
-.lm-heading{margin-bottom:4px}
-.lm-heading h3{font-size:16px;font-weight:700;color:var(--navy)}
-.lm-heading p{font-size:12px;color:var(--muted);margin-top:3px}
-.lm-err{background:#fff0f0;border:1.5px solid var(--red);border-radius:7px;padding:9px 13px;color:var(--red);font-size:12px;margin-bottom:14px;display:none}
-.lm-err.show{display:block}
-.lm-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.7}
-.lm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lm-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
-.lm-tag{padding:6px 13px;border-radius:16px;border:2px solid #ddd;background:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:.2s all}
-.lm-tag:hover{border-color:var(--teal);color:var(--teal)}
-.lm-tag.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
-.lm-select{width:100%;padding:11px 15px;border:2px solid #e0ddd5;border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;appearance:none;cursor:pointer}
-.lm-select:focus{border-color:var(--teal);background:#fff}
-@media(max-width:500px){.lm-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- LOGIN MODAL -->
-<div class="lm-overlay" id="loginOverlay">
-  <div class="lm-box">
-    <div class="lm-logo">
-      <div class="lm-icon">🛡️</div>
-      <div class="lm-brand">
-        <h2>DREX</h2>
-        <p>(사)한국재난안전관리연구소 · 재난대응 AI 지원 플랫폼</p>
-      </div>
-    </div>
-    <div class="lm-divider"></div>
-    <div class="lm-heading">
-      <h3>DREX 평가관 정보 등록</h3>
-      <p>처음 접속 시 1회만 입력합니다</p>
-    </div>
-    <div class="lm-divider"></div>
-    <div class="lm-err" id="lmErr"></div>
-
-    <div class="lm-row">
-      <div class="fg">
-        <label class="fl">이름 <span style="color:var(--red)">*</span></label>
-        <input type="text" class="fi" id="lmName" placeholder="홍길동">
-      </div>
-      <div class="fg">
-        <label class="fl">직책/직급 <span style="color:var(--red)">*</span></label>
-        <input type="text" class="fi" id="lmPos" placeholder="소방령, 사무관, 팀장">
-      </div>
-    </div>
-
-    <div class="fg">
-      <label class="fl">소속기관 <span style="color:var(--red)">*</span></label>
-      <input type="text" class="fi" id="lmOrg" placeholder="○○소방서 / ○○시청 안전관리과">
-    </div>
-
-    <div class="lm-row">
-      <div class="fg">
-        <label class="fl">연락처 <span style="color:var(--red)">*</span></label>
-        <input type="tel" class="fi" id="lmPhone" placeholder="010-0000-0000">
-      </div>
-      <div class="fg">
-        <label class="fl">이메일 <span style="color:var(--muted);font-weight:400">(선택)</span></label>
-        <input type="email" class="fi" id="lmEmail" placeholder="email@example.com">
-      </div>
-    </div>
-
-    <div class="fg">
-      <label class="fl">활동지역 <span style="color:var(--red)">*</span></label>
-      <select class="lm-select" id="lmRegion">
-        <option value="">— 선택하세요 —</option>
-        <option>서울·인천·경기</option>
-        <option>강원</option>
-        <option>충청</option>
-        <option>전라</option>
-        <option>경상</option>
-        <option>제주</option>
-        <option>세종</option>
-      </select>
-    </div>
-
-    <div class="fg" style="margin-bottom:0">
-      <label class="fl">전문분야 <span style="color:var(--red)">*</span> <span style="color:var(--muted);font-weight:400">(복수 선택)</span></label>
-      <div class="lm-tags" id="lmExpertise">
-        <button type="button" class="lm-tag" data-v="풍수해">🌊 풍수해</button>
-        <button type="button" class="lm-tag" data-v="지진">🏔️ 지진</button>
-        <button type="button" class="lm-tag" data-v="화재">🔥 화재</button>
-        <button type="button" class="lm-tag" data-v="화학사고">⚗️ 화학사고</button>
-        <button type="button" class="lm-tag" data-v="감염병">🦠 감염병</button>
-        <button type="button" class="lm-tag" data-v="대설">❄️ 대설</button>
-        <button type="button" class="lm-tag" data-v="복합재난">⚡ 복합재난</button>
-      </div>
-    </div>
-
-    <div class="lm-divider"></div>
-    <button class="btn-p" style="width:100%;justify-content:center;font-size:16px;padding:15px" onclick="submitLogin()">시작하기 →</button>
-    <div class="lm-note">입력 정보는 플랫폼 운영 목적으로만 사용되며 외부에 공개되지 않습니다.<br>동일 브라우저 재접속 시 재입력이 필요하지 않습니다.</div>
-  </div>
-</div>
 
 <!-- HEADER -->
 <header class="hd">
@@ -636,6 +535,7 @@ const COLLAB_MAP = {
 // STATE
 // ═══════════════════════════════════════════════
 const state = {
+  apiKey: "",
   orgName: "",
   orgData: null,
   disasters: [],
@@ -970,7 +870,6 @@ ${roundGuide[state.round] || ""}
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Session-ID": getSessionId(),
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
@@ -1082,92 +981,10 @@ function parseAndRenderStages(text) {
 }
 
 // ═══════════════════════════════════════════════
-// VISITOR LOGIN
-// ═══════════════════════════════════════════════
-const SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvdWFzcW5zYnhiaWt2anJyZm5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDU1MDksImV4cCI6MjA5MjI4MTUwOX0.9uqx1v12ur54fqKbsQsJxdDw8ke2S0p1B174wpZvRJY";
-
-function genSessionId() {
-  return "sess_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
-
-function getSessionId() {
-  let sid = sessionStorage.getItem("drex_session_id");
-  if (!sid) { sid = genSessionId(); sessionStorage.setItem("drex_session_id", sid); }
-  return sid;
-}
-
-async function saveVisitor(data) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/visitors`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Prefer": "return=minimal",
-      },
-      body: JSON.stringify(data),
-    });
-  } catch (e) { console.warn("visitor save failed", e); }
-}
-
-async function submitLogin() {
-  const name    = document.getElementById("lmName").value.trim();
-  const pos     = document.getElementById("lmPos").value.trim();
-  const org     = document.getElementById("lmOrg").value.trim();
-  const phone   = document.getElementById("lmPhone").value.trim();
-  const email   = document.getElementById("lmEmail").value.trim();
-  const region  = document.getElementById("lmRegion").value;
-  const expertise = [...document.querySelectorAll("#lmExpertise .lm-tag.sel")].map(b => b.dataset.v);
-  const errEl   = document.getElementById("lmErr");
-
-  if (!name || !pos || !org || !phone || !region || !expertise.length) {
-    errEl.textContent = "이름, 직책, 소속기관, 연락처, 활동지역, 전문분야는 필수 입력 항목입니다.";
-    errEl.classList.add("show");
-    return;
-  }
-  errEl.classList.remove("show");
-
-  const sid = getSessionId();
-  sessionStorage.setItem("drex_visitor", JSON.stringify({ name, pos, org, phone, email, region, expertise }));
-
-  await saveVisitor({
-    name,
-    organization: org,
-    position: pos,
-    phone,
-    email: email || null,
-    region,
-    expertise: expertise.join(","),
-    session_id: sid,
-  });
-
-  document.getElementById("loginOverlay").classList.add("hidden");
-}
-
-function initLogin() {
-  const sid     = sessionStorage.getItem("drex_session_id");
-  const visitor = sessionStorage.getItem("drex_visitor");
-  if (sid && visitor) {
-    document.getElementById("loginOverlay").classList.add("hidden");
-  }
-  document.querySelectorAll("#lmExpertise .lm-tag").forEach(btn => {
-    btn.addEventListener("click", () => btn.classList.toggle("sel"));
-  });
-  ["lmName","lmPos","lmOrg","lmPhone","lmEmail"].forEach(id => {
-    document.getElementById(id).addEventListener("keydown", e => {
-      if (e.key === "Enter") submitLogin();
-    });
-  });
-}
-
-// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 document.getElementById("trainDate").value = new Date().toISOString().slice(0,10);
 updateStepBar(1);
-initLogin();
 </script>
 </body>
 </html>
