@@ -11,12 +11,7 @@
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 /* ── HEADER ── */
 .hd{background:var(--navy);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
-.hd-logo{display:flex;align-items:center;gap:12px}
-.hd-icon{width:34px;height:34px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px}
-.hd-txt h1{font-size:17px;font-weight:700;letter-spacing:3px}
-.hd-txt .hd-en{font-size:10px;opacity:.75;margin-top:0;letter-spacing:.5px}
-.hd-txt .hd-en .ex{color:var(--teal);font-weight:700}
-.hd-txt p{font-size:9px;opacity:.5;margin-top:1px}
+.hd-logo{display:flex;align-items:center}
 /* step bar */
 .sbar{display:flex;align-items:center;gap:0}
 .si{display:flex;align-items:center;gap:7px}
@@ -146,10 +141,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .lm-box{background:#fff;border-radius:18px;padding:34px 30px;width:100%;max-width:480px;box-shadow:0 10px 50px rgba(0,0,0,.4);animation:fadeUp .3s ease;margin:auto}
 .lm-logo{display:flex;align-items:center;gap:12px;margin-bottom:4px}
 .lm-icon{width:44px;height:44px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.lm-brand h2{font-size:21px;font-weight:800;color:var(--navy);letter-spacing:2px}
-.lm-brand .lm-en{font-size:12px;color:var(--navy);opacity:.75;margin-top:2px;letter-spacing:.3px}
-.lm-brand .lm-en .ex{color:var(--teal);font-weight:700}
-.lm-brand p{font-size:11px;color:var(--muted);margin-top:2px}
+.lm-brand p{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
 .lm-divider{height:1px;background:#e8e4dc;margin:16px 0}
 .lm-heading{margin-bottom:4px}
 .lm-heading h3{font-size:16px;font-weight:700;color:var(--navy)}
@@ -172,11 +164,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- LOGIN MODAL -->
 <div class="lm-overlay" id="loginOverlay">
   <div class="lm-box">
-    <div class="lm-logo">
-      <div class="lm-icon">🛡️</div>
+    <div class="lm-logo" style="justify-content:center;flex-direction:column;align-items:center;gap:8px">
+      <svg width="180" height="50" viewBox="0 0 160 44">
+        <rect x="0" y="0" width="160" height="44" fill="#0f1e35" rx="6"/>
+        <line x1="10" y1="34" x2="150" y2="34" stroke="#0e8a76" stroke-width="1"/>
+        <text x="10" y="28" fill="#ffffff" font-size="20" font-weight="700" font-family="Arial,sans-serif" letter-spacing="4">DREX</text>
+        <text x="10" y="41" fill="#0e8a76" font-size="6" font-family="Arial,sans-serif" letter-spacing="1.8">DISASTER RESPONSE EXERCISE</text>
+      </svg>
       <div class="lm-brand">
-        <h2>DREX</h2>
-        <div class="lm-en">Disaster Response <span class="ex">EX</span>ercise</div>
         <p>재난훈련 AI 평가지원 플랫폼</p>
       </div>
     </div>
@@ -251,12 +246,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- HEADER -->
 <header class="hd">
   <div class="hd-logo">
-    <div class="hd-icon">🛡️</div>
-    <div class="hd-txt">
-      <h1>DREX</h1>
-      <div class="hd-en">Disaster Response <span class="ex">EX</span>ercise</div>
-      <p>재난훈련 AI 평가지원 플랫폼</p>
-    </div>
+    <svg width="160" height="44" viewBox="0 0 160 44">
+      <rect x="0" y="0" width="160" height="44" fill="#0f1e35" rx="6"/>
+      <line x1="10" y1="34" x2="150" y2="34" stroke="#0e8a76" stroke-width="1"/>
+      <text x="10" y="28" fill="#ffffff" font-size="20" font-weight="700" font-family="Arial,sans-serif" letter-spacing="4">DREX</text>
+      <text x="10" y="41" fill="#0e8a76" font-size="6" font-family="Arial,sans-serif" letter-spacing="1.8">DISASTER RESPONSE EXERCISE</text>
+    </svg>
   </div>
   <nav class="sbar">
     <div class="si"><div class="sc active" id="sc1">1</div><span class="sl active" id="sl1">기관 입력</span></div>
@@ -1177,8 +1172,8 @@ initLogin();
 </script>
 
 <footer style="text-align:center;padding:28px 20px;border-top:1px solid #e0ddd5;margin-top:20px">
-  <div style="font-size:13px;font-weight:700;color:#555;letter-spacing:.5px">© 2026 DREX · Disaster Response <span style="color:var(--teal)">EX</span>ercise</div>
-  <div style="font-size:11px;color:#aaa;margin-top:5px">재난훈련 AI 평가지원 플랫폼 · Powered by Mr.Kim PhD</div>
+  <div style="font-size:13px;font-weight:700;color:#555;letter-spacing:.5px">© 2026 DREX · Disaster Response EXercise · Powered by Mr.Kim PhD</div>
+  <div style="font-size:11px;color:#aaa;margin-top:5px">재난훈련 AI 평가지원 플랫폼</div>
 </footer>
 </body>
 </html>
