@@ -135,6 +135,41 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#e8f4f2;border-radius:12px;font-size:11px;color:var(--teal);font-weight:600}
 @media(max-width:640px){.mg{grid-template-columns:1fr}.rg{flex-direction:column}.sl{display:none}.hd{padding:0 14px}.main{padding:20px 12px 50px}.rpm{grid-template-columns:1fr}}
+/* ── CHAT FAB ── */
+.chat-fab{position:fixed;bottom:28px;right:28px;width:56px;height:56px;background:var(--teal);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(14,138,118,.45);z-index:500;border:none;transition:.2s all;color:#fff}
+.chat-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(14,138,118,.55)}
+.chat-fab.open{background:var(--navy);font-size:18px}
+/* ── CHAT PANEL ── */
+.chat-panel{position:fixed;bottom:96px;right:28px;width:380px;max-height:560px;background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.22);z-index:499;display:none;flex-direction:column;overflow:hidden;animation:chatPop .25s ease}
+.chat-panel.open{display:flex}
+@keyframes chatPop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-ph{background:var(--navy);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.chat-ph-info{display:flex;align-items:center;gap:10px}
+.chat-ph-av{width:34px;height:34px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.chat-ph-text h4{font-size:14px;font-weight:700;color:#fff}
+.chat-ph-text p{font-size:11px;color:rgba(255,255,255,.5);margin-top:1px}
+.chat-ph-acts{display:flex;gap:7px}
+.chat-ph-btn{background:rgba(255,255,255,.12);border:none;border-radius:6px;padding:5px 10px;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer;transition:.2s all;font-family:'Noto Sans KR',sans-serif}
+.chat-ph-btn:hover{background:rgba(255,255,255,.22);color:#fff}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:#f9f8f5;min-height:200px}
+.chat-msg{display:flex;flex-direction:column;max-width:86%}
+.chat-msg.user{align-self:flex-end;align-items:flex-end}
+.chat-msg.bot{align-self:flex-start;align-items:flex-start}
+.chat-bubble{padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.chat-msg.user .chat-bubble{background:var(--teal);color:#fff;border-radius:14px 14px 4px 14px}
+.chat-msg.bot .chat-bubble{background:#fff;color:var(--text);border-radius:14px 14px 14px 4px;box-shadow:0 1px 5px rgba(0,0,0,.1)}
+.chat-msg-time{font-size:10px;color:var(--muted);margin-top:3px;padding:0 2px}
+.chat-dots{display:flex;gap:4px;align-items:center;padding:10px 14px;background:#fff;border-radius:14px 14px 14px 4px;box-shadow:0 1px 5px rgba(0,0,0,.1)}
+.chat-dots span{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:db 1.2s infinite}
+.chat-dots span:nth-child(2){animation-delay:.2s}
+.chat-dots span:nth-child(3){animation-delay:.4s}
+.chat-inp{border-top:1px solid #e8e4dc;padding:11px 13px;display:flex;gap:8px;align-items:flex-end;background:#fff;flex-shrink:0}
+.chat-ta{flex:1;border:1.5px solid #e0ddd5;border-radius:10px;padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13.5px;resize:none;outline:none;max-height:100px;overflow-y:auto;line-height:1.5;transition:.2s border-color;color:var(--text);background:var(--bg)}
+.chat-ta:focus{border-color:var(--teal);background:#fff}
+.chat-send-btn{width:38px;height:38px;background:var(--teal);border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.2s all;font-size:18px;color:#fff}
+.chat-send-btn:hover{background:#0a7264}
+.chat-send-btn:disabled{background:#ccc;cursor:not-allowed}
+@media(max-width:480px){.chat-panel{right:10px;left:10px;width:auto;bottom:80px;max-height:70vh}.chat-fab{bottom:16px;right:16px}}
 /* ── LOGIN MODAL ── */
 .lm-overlay{position:fixed;inset:0;background:rgba(10,20,40,.82);backdrop-filter:blur(7px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .lm-overlay.hidden{display:none}
@@ -1395,11 +1430,13 @@ function initLogin() {
 function enterOrgMode() {
   document.getElementById("evalMain").style.display = "none";
   document.querySelector(".main").style.display = "block";
+  document.getElementById("chatFab").style.display = "flex";
 }
 
 function enterEvaluatorMode() {
   document.querySelector(".main").style.display = "none";
   document.getElementById("evalMain").style.display = "block";
+  document.getElementById("chatFab").style.display = "flex";
   initEvalStep1();
 }
 
@@ -2078,6 +2115,151 @@ function evalReset() {
 }
 
 // ═══════════════════════════════════════════════
+// CHAT
+// ═══════════════════════════════════════════════
+const CHAT_SYSTEM = `당신은 행정안전부 안전한국훈련 전문 AI 상담사 DREX입니다.
+재난훈련 기획, 평가, 컨설팅, 시나리오 작성, 평가지표 해석, 보고서 작성에 관한 모든 질문에 답변합니다.
+평가관과 기관 담당자 모두를 지원합니다.
+답변은 간결하고 실무적으로 작성하고, 목록이 필요한 경우 번호나 불릿을 활용하세요.
+반드시 한국어로 답변하세요.`;
+
+let chatHistory = [];
+let chatStreaming = false;
+
+function toggleChat() {
+  const panel = document.getElementById("chatPanel");
+  const fab   = document.getElementById("chatFab");
+  const isOpen = panel.classList.contains("open");
+  panel.classList.toggle("open", !isOpen);
+  fab.classList.toggle("open", !isOpen);
+  fab.textContent = isOpen ? "💬" : "✕";
+  if (!isOpen) {
+    if (chatHistory.length === 0) chatGreeting();
+    setTimeout(() => document.getElementById("chatInput").focus(), 180);
+  }
+}
+
+function chatGreeting() {
+  const visitor = JSON.parse(sessionStorage.getItem("drex_visitor") || "{}");
+  const name = visitor.name ? visitor.name + "님, " : "";
+  appendChat("bot", `안녕하세요! ${name}DREX AI 상담 채널입니다 🤖\n\n재난훈련 기획·평가·시나리오·컨설팅에 관한 질문을 자유롭게 입력하세요.\n\n예시:\n• "1차 컨설팅에서 기본계획서 필수 항목은?"\n• "풍수해 훈련 주민대피 절차를 설명해줘"\n• "평가 미흡을 피하려면 어떻게 해야 하나?"\n• "13개 협업기능이 뭔가요?"`);
+}
+
+function appendChat(role, text) {
+  const msgs = document.getElementById("chatMsgs");
+  const wrap = document.createElement("div");
+  wrap.className = `chat-msg ${role}`;
+  const now = new Date().toLocaleTimeString("ko-KR", {hour:"2-digit", minute:"2-digit"});
+  const id = "cb_" + Date.now() + Math.random().toString(36).slice(2,5);
+  wrap.innerHTML = `<div class="chat-bubble" id="${id}"></div><div class="chat-msg-time">${now}</div>`;
+  msgs.appendChild(wrap);
+  const bubble = document.getElementById(id);
+  bubble.textContent = text;
+  msgs.scrollTop = msgs.scrollHeight;
+  return bubble;
+}
+
+function showChatDots() {
+  const msgs = document.getElementById("chatMsgs");
+  const wrap = document.createElement("div");
+  wrap.className = "chat-msg bot";
+  wrap.id = "chatTypingRow";
+  wrap.innerHTML = `<div class="chat-dots"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeChatDots() {
+  const el = document.getElementById("chatTypingRow");
+  if (el) el.remove();
+}
+
+async function sendChat() {
+  if (chatStreaming) return;
+  const input = document.getElementById("chatInput");
+  const text  = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+  input.style.height = "";
+  document.getElementById("chatSendBtn").disabled = true;
+
+  appendChat("user", text);
+  chatHistory.push({role:"user", content:text});
+  if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
+  showChatDots();
+  chatStreaming = true;
+
+  try {
+    const resp = await fetch("/api/generate", {
+      method: "POST",
+      headers: {"Content-Type":"application/json", "X-Session-ID": getSessionId()},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1500,
+        stream: true,
+        system: CHAT_SYSTEM,
+        messages: chatHistory,
+      }),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const reader  = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let full = "", buf = "";
+    removeChatDots();
+    const bubble = appendChat("bot", "");
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, {stream:true});
+      const lines = buf.split("\n"); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const data = line.slice(5).trim();
+        if (data === "[DONE]") continue;
+        try {
+          const evt = JSON.parse(data);
+          if (evt.type === "content_block_delta" && evt.delta?.text) {
+            full += evt.delta.text;
+            bubble.textContent = full;
+            document.getElementById("chatMsgs").scrollTop = document.getElementById("chatMsgs").scrollHeight;
+          }
+        } catch {}
+      }
+    }
+    chatHistory.push({role:"assistant", content:full});
+  } catch(err) {
+    removeChatDots();
+    appendChat("bot", "⚠️ 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+  } finally {
+    chatStreaming = false;
+    document.getElementById("chatSendBtn").disabled = false;
+    document.getElementById("chatInput").focus();
+  }
+}
+
+function clearChat() {
+  chatHistory = [];
+  document.getElementById("chatMsgs").innerHTML = "";
+  appendChat("bot", "대화가 초기화되었습니다. 무엇이든 물어보세요 🤖");
+}
+
+function chatKeydown(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+function chatAutoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 100) + "px";
+}
+
+// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 document.getElementById("trainDate").value = new Date().toISOString().slice(0,10);
@@ -2086,6 +2268,32 @@ updateStepBar(1);
 document.querySelector(".main").style.display = "none";
 initLogin();
 </script>
+
+<!-- ── CHAT FAB ── -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()" title="AI 채팅 상담">💬</button>
+
+<!-- ── CHAT PANEL ── -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-ph">
+    <div class="chat-ph-info">
+      <div class="chat-ph-av">🤖</div>
+      <div class="chat-ph-text">
+        <h4>DREX AI 상담</h4>
+        <p>재난훈련 전문 AI · Claude</p>
+      </div>
+    </div>
+    <div class="chat-ph-acts">
+      <button class="chat-ph-btn" onclick="clearChat()">초기화</button>
+      <button class="chat-ph-btn" onclick="toggleChat()">✕</button>
+    </div>
+  </div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="chat-inp">
+    <textarea class="chat-ta" id="chatInput" placeholder="재난훈련에 대해 무엇이든 물어보세요..." rows="1"
+      onkeydown="chatKeydown(event)" oninput="chatAutoResize(this)"></textarea>
+    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()">↑</button>
+  </div>
+</div>
 
 <footer style="text-align:center;padding:28px 20px;border-top:1px solid #e0ddd5;margin-top:20px">
   <div style="font-size:13px;font-weight:700;color:#555;letter-spacing:.5px">© 2026 DREX · Disaster Response EXercise · Powered by Mr.Kim PhD</div>
