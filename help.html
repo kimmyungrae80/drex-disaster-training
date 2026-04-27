@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREX 사용 안내 | Disaster Response EXercise</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f3ee;--navy:#12213a;--teal:#0e8a76;--amber:#c47d1a;--red:#a82020;--card:#fff;--border:#dde0d8;--text:#2c2c2c;--muted:#666}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* header */
+.hd{background:var(--navy);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
+.hd-logo{display:flex;align-items:center}
+.hd-back{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px solid rgba(255,255,255,.3);border-radius:7px;color:rgba(255,255,255,.85);font-size:13px;font-weight:600;text-decoration:none;transition:.2s all}
+.hd-back:hover{background:rgba(255,255,255,.12);border-color:#fff}
+/* hero */
+.hero{background:var(--navy);color:#fff;padding:48px 28px 52px;text-align:center}
+.hero h1{font-size:28px;font-weight:700;margin-bottom:10px;letter-spacing:-.3px}
+.hero p{font-size:15px;opacity:.72;max-width:520px;margin:0 auto;line-height:1.75}
+/* tabs */
+.tabs{display:flex;justify-content:center;gap:0;max-width:480px;margin:0 auto 0;background:rgba(255,255,255,.1);border-radius:10px;padding:4px;margin-top:28px}
+.tab{flex:1;padding:10px 18px;border:none;background:transparent;color:rgba(255,255,255,.6);font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border-radius:7px;transition:.2s all}
+.tab.active{background:#fff;color:var(--navy)}
+/* main */
+.main{max-width:860px;margin:0 auto;padding:40px 20px 80px}
+/* section */
+.section{display:none}
+.section.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* intro banner */
+.intro-banner{background:linear-gradient(135deg,#0f1e35 0%,#1a3558 100%);border-radius:16px;padding:32px 36px;color:#fff;margin-bottom:28px;display:flex;align-items:center;gap:28px;overflow:hidden;position:relative}
+.intro-banner::before{content:'DREX';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:120px;font-weight:900;color:rgba(255,255,255,.04);letter-spacing:-4px;pointer-events:none}
+.intro-icon{width:72px;height:72px;background:var(--teal);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.intro-text h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.intro-text p{font-size:14px;opacity:.8;line-height:1.75}
+/* step card */
+.step-group{margin-bottom:32px}
+.step-group-title{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.step-group-title::after{content:'';flex:1;height:1px;background:#e0ddd5}
+.step-card{background:var(--card);border-radius:14px;padding:24px 26px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:14px;display:flex;gap:20px;align-items:flex-start}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-num.teal{background:var(--teal)}
+.step-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.step-body p{font-size:13.5px;color:var(--muted);line-height:1.75}
+.step-body .tip{background:#f0faf8;border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:10px 14px;margin-top:10px;font-size:13px;color:var(--text);line-height:1.7}
+.step-body .warn{background:#fff8ec;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:10px 14px;margin-top:10px;font-size:13px;color:var(--text);line-height:1.7}
+/* feature grid */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.feat-card{background:var(--card);border-radius:12px;padding:22px 18px;box-shadow:0 2px 10px rgba(0,0,0,.07);text-align:center}
+.feat-icon{font-size:30px;margin-bottom:10px}
+.feat-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.feat-desc{font-size:12px;color:var(--muted);line-height:1.65}
+/* eval items */
+.eval-items{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.eval-item{background:var(--bg);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.eval-item-icon{font-size:20px;width:36px;text-align:center;flex-shrink:0}
+.eval-item-text{font-size:13px}
+.eval-item-text strong{display:block;color:var(--navy);font-weight:700;margin-bottom:2px}
+.eval-item-text span{color:var(--muted);font-size:12px}
+/* rating */
+.rating-row{display:flex;gap:10px;margin:14px 0}
+.rating-chip{flex:1;padding:12px 8px;border-radius:10px;text-align:center;font-size:13px;font-weight:700}
+.rating-chip.good{background:#e8f8f0;color:#27ae60;border:2px solid #b7e8cc}
+.rating-chip.fair{background:#fff8e6;color:#f0a500;border:2px solid #ffe4a0}
+.rating-chip.poor{background:#fff0f0;color:var(--red);border:2px solid #ffc8c8}
+.rating-chip small{display:block;font-size:11px;font-weight:400;margin-top:3px;opacity:.8}
+/* faq */
+.faq-item{background:var(--card);border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.faq-q{padding:18px 22px;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;user-select:none}
+.faq-q:hover{background:#f9f8f5}
+.faq-q::after{content:'▾';font-size:14px;color:var(--teal);transition:.2s transform;flex-shrink:0}
+.faq-item.open .faq-q::after{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 22px 18px;font-size:13.5px;color:var(--muted);line-height:1.8}
+.faq-item.open .faq-a{display:block}
+/* contact box */
+.contact-box{background:var(--navy);color:#fff;border-radius:16px;padding:32px 36px;text-align:center;margin-top:36px}
+.contact-box h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.contact-box p{font-size:14px;opacity:.7;line-height:1.7;margin-bottom:18px}
+.contact-box a{display:inline-flex;align-items:center;gap:7px;padding:12px 26px;background:var(--teal);color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;transition:.2s all}
+.contact-box a:hover{background:#0a7264}
+/* print */
+@media print{
+  .hd,.tabs,#btnBack,.contact-box{display:none!important}
+  .hero{background:#fff;color:var(--navy);border-bottom:3px solid var(--navy);padding:20px 0 18px}
+  .hero h1,.hero p{color:var(--navy)!important;opacity:1!important}
+  .section{display:block!important}
+  body{background:#fff}
+  .step-card,.feat-card,.faq-item,.eval-item{break-inside:avoid}
+  .faq-a{display:block!important}
+}
+@media(max-width:640px){
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .eval-items{grid-template-columns:1fr}
+  .intro-banner{flex-direction:column;gap:16px}
+  .intro-icon{width:52px;height:52px;font-size:26px}
+  .step-card{flex-direction:column;gap:12px}
+  .rating-row{flex-direction:column}
+  .hd{padding:0 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-logo">
+    <svg width="140" height="40" viewBox="0 0 180 52">
+      <rect x="0" y="0" width="180" height="52" fill="#0f1e35" rx="6"/>
+      <polygon points="0,0 36,0 16,52 0,52" fill="#0e8a76" opacity="0.9"/>
+      <polygon points="32,0 42,0 22,52 12,52" fill="#0e8a76" opacity="0.25"/>
+      <text x="50" y="24" fill="#ffffff" font-size="18" font-weight="700" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="4">DREX</text>
+      <text x="50" y="38" fill="#0e8a76" font-size="6" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1.5">DISASTER RESPONSE EXERCISE</text>
+      <line x1="50" y1="42" x2="172" y2="42" stroke="#0e8a76" stroke-width="0.5" opacity="0.4"/>
+      <text x="50" y="49" fill="#ffffff" font-size="5.5" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1" opacity="0.4">재난훈련 AI 평가지원 플랫폼</text>
+    </svg>
+  </div>
+  <a href="index.html" class="hd-back" id="btnBack">← 플랫폼으로 돌아가기</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>DREX 사용 안내</h1>
+  <p>재난훈련 AI 평가지원 플랫폼의 주요 기능과 사용법을 안내합니다.<br>역할에 맞는 탭을 선택하여 확인하세요.</p>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('evaluator',this)">🏅 평가관</button>
+    <button class="tab" onclick="switchTab('organization',this)">🏢 기관 담당자</button>
+    <button class="tab" onclick="switchTab('faq',this)">❓ FAQ</button>
+  </div>
+</div>
+
+<!-- ─── EVALUATOR ─── -->
+<div class="main">
+<div class="section active" id="sec-evaluator">
+
+  <div class="intro-banner">
+    <div class="intro-icon">🏅</div>
+    <div class="intro-text">
+      <h2>평가관용 현장 평가 입력 도구</h2>
+      <p>행안부 안전한국훈련 기준에 따라 6개 평가항목을 현장에서 즉시 입력하고, AI 분석 의견을 받아 평가 보고서를 생성합니다.</p>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">6개 평가항목</div>
+      <div class="feat-desc">지휘통제·상황전파·유관기관협업·주민대피·현장대응·사후조치 전 항목 구조화 입력</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI 평가 의견</div>
+      <div class="feat-desc">Claude AI가 입력 내용을 기반으로 미흡사항 원인과 개선방향을 자동 분석</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">☁️</div>
+      <div class="feat-title">자동 저장</div>
+      <div class="feat-desc">입력 도중 브라우저를 닫아도 임시 저장 후 이어서 작성 가능 (로컬 저장)</div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 1 · 접속 및 로그인</div>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>DREX 플랫폼 접속</h3>
+        <p>브라우저에서 DREX 주소로 접속하면 로그인 화면이 나타납니다. <strong>🏅 평가관</strong>을 선택하세요.</p>
+        <div class="tip">💡 스마트폰 또는 태블릿 브라우저에서도 동일하게 사용할 수 있습니다. Chrome 또는 Safari를 권장합니다.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>평가관 정보 입력</h3>
+        <p>이름, 직책, 소속기관, 연락처, 활동지역, 전문분야(복수 선택)를 입력합니다. 처음 접속 시 1회만 입력하며, 이후에는 자동 유지됩니다.</p>
+        <div class="warn">⚠️ 입력 정보는 플랫폼 운영 통계 목적으로만 사용되며 외부에 공개되지 않습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 2 · 평가 기관 선택</div>
+
+    <div class="step-card">
+      <div class="step-num teal">3</div>
+      <div class="step-body">
+        <h3>평가 기관 검색</h3>
+        <p>오늘 현장 평가할 기관명을 검색창에 입력하면 자동완성 목록이 표시됩니다. 기관을 선택하면 훈련 유형과 일자가 자동으로 채워집니다.</p>
+        <div class="tip">💡 기관명이 목록에 없으면 직접 입력한 뒤 훈련유형과 일자를 수동 입력하세요.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">4</div>
+      <div class="step-body">
+        <h3>전체 평가등급 선택</h3>
+        <p>해당 기관의 전체 훈련에 대한 종합 등급을 선택합니다.</p>
+        <div class="rating-row">
+          <div class="rating-chip good">우수<small>전반적으로 양호</small></div>
+          <div class="rating-chip fair">보통<small>일부 미흡사항 있음</small></div>
+          <div class="rating-chip poor">미흡<small>전반적으로 개선 필요</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 3 · 현장 평가 입력</div>
+
+    <div class="step-card">
+      <div class="step-num teal">5</div>
+      <div class="step-body">
+        <h3>6개 평가항목 평가</h3>
+        <p>아래 6개 항목별로 등급을 선택하고, 미흡 또는 보통인 경우 구체적인 문제점을 메모란에 입력합니다.</p>
+        <div class="eval-items">
+          <div class="eval-item">
+            <div class="eval-item-icon">🎯</div>
+            <div class="eval-item-text"><strong>지휘통제</strong><span>지휘체계·의사결정·통제</span></div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-icon">📡</div>
+            <div class="eval-item-text"><strong>상황전파</strong><span>상황 전파 속도·정확성</span></div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-icon">🤝</div>
+            <div class="eval-item-text"><strong>유관기관협업</strong><span>협조·공조·자원 공유</span></div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-icon">🚶</div>
+            <div class="eval-item-text"><strong>주민대피</strong><span>대피 유도·안전 확보</span></div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-icon">🔥</div>
+            <div class="eval-item-text"><strong>현장대응</strong><span>긴급 처치·현장 통제</span></div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-icon">📝</div>
+            <div class="eval-item-text"><strong>사후조치</strong><span>복구·보고·재발 방지</span></div>
+          </div>
+        </div>
+        <div class="tip">💡 우수 항목은 메모 입력 없이 넘어가도 됩니다. 보통·미흡 항목은 현장에서 관찰한 내용을 최대한 구체적으로 입력할수록 AI 분석의 질이 높아집니다.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">6</div>
+      <div class="step-body">
+        <h3>AI 평가 의견 생성</h3>
+        <p><strong>AI 평가 의견 생성</strong> 버튼을 누르면 Claude AI가 입력 내용을 분석하여 미흡 원인, 위험 요소, 개선 권고사항을 자동으로 작성합니다.</p>
+        <div class="tip">💡 생성까지 약 10~20초가 소요됩니다. 네트워크 상태가 좋은 환경에서 사용하세요.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">7</div>
+      <div class="step-body">
+        <h3>평가 완료 및 저장</h3>
+        <p>AI 의견을 확인한 뒤 <strong>평가 완료 저장</strong> 버튼을 누르면 결과가 DREX 서버에 저장되고 완료 화면으로 이동합니다. 추가 기관이 있으면 <strong>다음 기관 평가</strong> 버튼으로 연속 진행할 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── ORGANIZATION ─── -->
+<div class="section" id="sec-organization">
+
+  <div class="intro-banner">
+    <div class="intro-icon">🏢</div>
+    <div class="intro-text">
+      <h2>기관 담당자용 훈련 시뮬레이션 도구</h2>
+      <p>기관 정보를 입력하면 AI가 취약점을 분석하고, 맞춤형 재난훈련 시나리오를 생성합니다. 사전 훈련 준비와 자체 검토에 활용하세요.</p>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🔍</div>
+      <div class="feat-title">취약점 자동 분석</div>
+      <div class="feat-desc">기관 유형·규모·이전 훈련 기록을 바탕으로 핵심 취약점을 AI가 식별합니다</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📄</div>
+      <div class="feat-title">시나리오 생성</div>
+      <div class="feat-desc">실제 행안부 훈련 기준에 맞춘 5단계 재난 대응 시나리오를 자동 작성합니다</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">평가 보고서</div>
+      <div class="feat-desc">훈련 계획 보고서 형태로 요약된 결과를 확인하고 출력할 수 있습니다</div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 1 · 접속 및 로그인</div>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>DREX 플랫폼 접속</h3>
+        <p>브라우저에서 DREX 주소로 접속하면 로그인 화면이 나타납니다. <strong>🏢 기관 담당자</strong>를 선택하세요.</p>
+        <div class="tip">💡 PC 또는 태블릿 환경을 권장합니다. 시나리오 생성 결과를 출력하거나 복사할 때 더 편리합니다.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>담당자 정보 입력</h3>
+        <p>이름, 부서명, 소속기관명, 연락처를 입력합니다. 처음 접속 시 1회만 입력합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 2 · 기관 정보 입력</div>
+
+    <div class="step-card">
+      <div class="step-num teal">3</div>
+      <div class="step-body">
+        <h3>기관명 입력</h3>
+        <p>소속 기관명을 입력합니다. 자동완성 기능이 지원되므로 기관명 일부만 입력해도 목록에서 선택할 수 있습니다. 없을 경우 직접 입력합니다.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">4</div>
+      <div class="step-body">
+        <h3>훈련 유형 및 규모 선택</h3>
+        <p>이번 훈련의 유형(종합·부분·도상)과 참여 인원 규모를 선택합니다. 이전 훈련 결과(우수/보통/미흡)도 함께 선택하면 더 정확한 분석을 받을 수 있습니다.</p>
+        <div class="tip">💡 처음 훈련하는 기관이라면 이전 결과를 '없음'으로 두면 됩니다.</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">5</div>
+      <div class="step-body">
+        <h3>취약점 분석 실행</h3>
+        <p><strong>취약점 분석 시작</strong> 버튼을 누르면 AI가 입력 정보를 바탕으로 기관의 핵심 취약 요소를 분석합니다. 분석 결과에는 지적사항, 개선 권고, 협업 기관 연계 현황이 포함됩니다.</p>
+        <div class="tip">💡 분석 완료까지 약 15~25초 소요됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-group">
+    <div class="step-group-title">STEP 3 · 시나리오 생성</div>
+
+    <div class="step-card">
+      <div class="step-num teal">6</div>
+      <div class="step-body">
+        <h3>시나리오 생성</h3>
+        <p>취약점 분석 결과를 확인한 뒤 <strong>AI 시나리오 생성</strong> 버튼을 클릭합니다. Claude AI가 기관 특성에 맞는 5단계 재난 대응 시나리오를 작성합니다:</p>
+        <ul style="padding-left:20px;margin-top:10px;font-size:13px;color:var(--muted);line-height:1.9">
+          <li><strong>초기 대응</strong> — 재난 발생 직후 지휘·보고 절차</li>
+          <li><strong>현장 통제</strong> — 현장 안전 확보 및 통제 방법</li>
+          <li><strong>주민 대피</strong> — 대피 경로·수단·안내 방법</li>
+          <li><strong>유관기관 협조</strong> — 소방·경찰·군 등 공조 절차</li>
+          <li><strong>사후 복구</strong> — 피해 집계·복구·재발 방지</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num teal">7</div>
+      <div class="step-body">
+        <h3>결과 활용</h3>
+        <p>생성된 시나리오는 화면에서 바로 확인하거나, 브라우저 인쇄 기능(Ctrl+P / Cmd+P)으로 PDF로 저장할 수 있습니다. 훈련 계획서, 상황 보고서, 지휘 절차 매뉴얼 초안으로 활용하세요.</p>
+        <div class="tip">💡 시나리오를 복사(Ctrl+A → Ctrl+C)해서 한글 또는 Word 문서에 붙여넣으면 추가 편집이 가능합니다.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── FAQ ─── -->
+<div class="section" id="sec-faq">
+
+  <div class="step-group" style="margin-bottom:8px">
+    <div class="step-group-title">자주 묻는 질문</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">DREX는 어떤 서비스인가요?</div>
+    <div class="faq-a">DREX(Disaster Response EXercise)는 행안부 안전한국훈련을 지원하는 AI 기반 재난훈련 평가지원 플랫폼입니다. 현장 평가관이 스마트폰으로 실시간 평가를 입력하거나, 기관 담당자가 훈련 시나리오를 준비할 때 Claude AI의 분석을 즉시 활용할 수 있습니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">로그인 정보가 저장되지 않아요.</div>
+    <div class="faq-a">DREX는 브라우저의 세션 저장소(sessionStorage)를 사용하므로, 브라우저 탭을 닫으면 로그인이 해제됩니다. 다시 접속하면 로그인 화면이 나타납니다. 시크릿(비공개) 모드에서도 동일하게 동작합니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">평가 중 브라우저가 꺼졌어요. 입력한 내용이 사라졌나요?</div>
+    <div class="faq-a">평가관 모드에서는 입력 내용이 로컬 저장소(localStorage)에 자동 저장됩니다. 다시 접속해 평가관으로 로그인하면 이어서 작성할 수 있습니다. 단, 브라우저 캐시를 지웠거나 다른 기기에서 접속하면 이전 내용이 없을 수 있습니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">AI 분석 결과가 늦게 나오거나 오류가 발생해요.</div>
+    <div class="faq-a">AI 분석은 인터넷 연결과 서버 상태에 따라 10~30초 소요됩니다. 오류가 발생하면 페이지를 새로 고침(F5)한 뒤 다시 시도하세요. 반복적인 오류 발생 시 네트워크 환경을 확인하거나, 운영자에게 문의해 주세요.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">평가 결과는 어디에 저장되나요?</div>
+    <div class="faq-a">평가 완료 후 결과는 DREX 운영 데이터베이스(Supabase)에 저장됩니다. 저장된 데이터는 평가 통계 및 플랫폼 개선 목적으로만 활용되며, 제3자에게 제공되지 않습니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">기관명이 자동완성 목록에 없어요.</div>
+    <div class="faq-a">목록에 없는 기관은 검색창에 직접 전체 기관명을 입력하면 됩니다. 자동완성은 자주 참여하는 기관 위주로 등록되어 있으며, 순차적으로 추가될 예정입니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">시나리오를 PDF로 저장할 수 있나요?</div>
+    <div class="faq-a">별도의 다운로드 버튼은 없지만, 브라우저 인쇄 기능(Ctrl+P 또는 Cmd+P)에서 <strong>PDF로 저장</strong>을 선택하면 됩니다. 인쇄 시 화면 요소가 간소화되어 깔끔한 PDF가 생성됩니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">모바일에서 사용해도 되나요?</div>
+    <div class="faq-a">네, 반응형으로 설계되어 스마트폰과 태블릿에서도 사용 가능합니다. 현장 평가관은 스마트폰으로 평가 입력이 가능하며, 시나리오 생성은 화면이 넓은 태블릿 또는 PC를 권장합니다.</div>
+  </div>
+
+  <div class="contact-box">
+    <h3>추가 문의</h3>
+    <p>사용 중 문제가 발생하거나 개선 의견이 있으시면<br>아래 이메일로 연락해 주세요.</p>
+    <a href="mailto:kimmyungrae80@gmail.com">✉ kimmyungrae80@gmail.com</a>
+    <p style="margin-top:16px;font-size:12px;opacity:.45">Powered by Mr.Kim PhD · DREX v1.0</p>
+  </div>
+
+</div>
+</div><!-- /main -->
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  window.scrollTo({top: document.querySelector('.hero').offsetHeight + 60, behavior: 'smooth'});
+}
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

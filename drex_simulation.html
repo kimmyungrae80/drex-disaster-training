@@ -200,6 +200,27 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .badge-fair{background:#fff8e6;color:#f0a500}
 .badge-poor{background:#fff0f0;color:var(--red)}
 .issue-list-item{padding:10px 14px;border-left:3px solid var(--red);background:#fff5f5;border-radius:0 8px 8px 0;margin-bottom:8px;font-size:14px;color:var(--text)}
+/* ── CHECKLIST (1차 컨설팅) ── */
+.ck-prog-wrap{background:var(--card);border-radius:14px;padding:20px 24px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);position:sticky;top:62px;z-index:10}
+.ck-prog-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ck-prog-title{font-size:14px;font-weight:700;color:var(--navy)}
+.ck-prog-num{font-size:16px;font-weight:700;color:var(--teal)}
+.ck-prog-bar{height:8px;background:#e0ddd5;border-radius:4px;overflow:hidden}
+.ck-prog-fill{height:100%;background:var(--teal);border-radius:4px;transition:.4s width}
+.ck-sec{background:var(--card);border-radius:14px;padding:20px 22px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.ck-sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #f0ede7;transition:.3s all}
+.ck-sec-title{font-size:13.5px;font-weight:700;color:var(--navy);transition:.3s color}
+.ck-sec-cnt{font-size:12px;font-weight:700;color:var(--muted);background:var(--bg);padding:3px 10px;border-radius:10px;transition:.3s all;flex-shrink:0}
+.ck-sec-cnt.alldone{color:#27ae60;background:#e8f8f0}
+.ck-sec-hd.alldone .ck-sec-title{color:#27ae60}
+.ck-row{display:flex;align-items:flex-start;gap:11px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:.15s background;margin-bottom:3px;user-select:none}
+.ck-row:hover{background:#f5f3ee}
+.ck-row.checked{background:#e8f8f0}
+.ck-box{width:21px;height:21px;border:2px solid #ccc;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s all;font-size:13px;color:transparent;margin-top:2px}
+.ck-row.checked .ck-box{background:#27ae60;border-color:#27ae60;color:#fff}
+.ck-lbl{font-size:13.5px;color:var(--text);line-height:1.65}
+.ck-row.checked .ck-lbl{color:#1a8c4a}
+.ck-sub{font-size:11px;color:var(--amber);font-weight:600;margin-top:3px;display:block}
 </style>
 </head>
 <body>
@@ -412,7 +433,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div id="evalCards"></div>
 
     <div id="errEstep2" class="errbox">⚠️ <span id="errEMsg2"></span></div>
-    <button class="btn-a" style="width:100%;justify-content:center;font-size:17px;padding:18px;margin-top:8px" onclick="evalGoStep3()">평가 완료 →</button>
+    <button id="evalStep2Btn" class="btn-a" style="width:100%;justify-content:center;font-size:17px;padding:18px;margin-top:8px" onclick="evalGoStep3()">평가 완료 →</button>
   </div>
 
   <!-- E-STEP 3: 완료 및 보고서 -->
@@ -1385,7 +1406,7 @@ function enterEvaluatorMode() {
 // ═══════════════════════════════════════════════
 // EVALUATOR — STEP 1
 // ═══════════════════════════════════════════════
-const evalState = { org:"", disaster:"", round:"", scores:{}, issues:{} };
+const evalState = { org:"", disaster:"", round:"", scores:{}, issues:{}, checks:{}, consultMemo:"" };
 
 function updateEvalBar(active) {
   [1,2,3].forEach(n => {
@@ -1481,7 +1502,64 @@ const EVAL_ITEMS = [
   {id:"post",   icon:"📋", title:"사후조치",     desc:"피해조사, 복구 계획, 사후 보고 체계"},
 ];
 
+const CONSULT1_SECTIONS = [
+  { title:"사전 준비 확인", items:[
+    {text:"컨설팅 단계별(준비·실시·종료) 활동과 확인문서를 숙지하였는가?"},
+    {text:"민간전문가 역할 및 차수별 해야 할 일을 숙지하였는가?"},
+    {text:"훈련 주관기관에 기본계획서를 사전 요청하였는가?"},
+    {text:"훈련 담당자 수준을 확인하였는가? (재난대응 실무경험·훈련기획 경험 有/無)"},
+  ]},
+  { title:"훈련 기획팀 구성", items:[
+    {text:"훈련 기획팀이 구성되었는가?"},
+    {text:"재난유형 소관부서 실무자가 기획팀에 포함되었는가?"},
+    {text:"훈련 기관장의 지침·지시사항을 확인하였는가?"},
+    {text:"훈련 기획팀에 주요 일정표가 별도로 작성되었는가?"},
+    {text:"훈련 기획팀이 별도로 사전회의를 실시하였는가?"},
+  ]},
+  { title:"훈련 일정표 수립", items:[
+    {text:"훈련 일정표가 수립되었는가?"},
+    {text:"기획회의·컨설팅·교육·체험단·훈련실시·사후조치 보고 등이 포함되었는가?"},
+    {text:"목표일정(훈련 수행 당일)이 설정되었는가?"},
+    {text:"훈련 기획팀 및 참여기관 활동이 함께 작성되었는가?"},
+  ]},
+  { title:"훈련 기본계획서 확인", items:[
+    {text:"금년도 행안부 훈련목표와 중점사항을 알고 있는가?"},
+    {text:"금년도 행안부 훈련 일정 계획을 알고 있는가?"},
+    {text:"작년도 훈련 미흡한 점(문제점·개선사항)을 확인하였는가?"},
+    {text:"훈련 기본계획서 구성요소가 모두 포함되었는가?", sub:"※ 지자체: 추진근거·중점사항·훈련목표·훈련개요·추진계획·훈련평가·준비계획·일정·행정사항"},
+    {text:"최근 훈련 주관기관에서 경험한 재난유형을 반영하였는가?"},
+  ]},
+  { title:"훈련 목표 및 범위 설정", items:[
+    {text:"대응역량 취약성 분석을 통해 훈련목표가 선정되었는가?"},
+    {text:"선정된 훈련목표는 명확하고 구현 가능한 용어로 표현되었는가?"},
+    {text:"목표달성 수준이 적절한 지표로 환산되었는가?"},
+    {text:"훈련범위 5개 요소가 적절하게 선정되었는가?", sub:"(훈련상황 / 훈련장소 / 훈련참여부서 / 훈련참여기관 / 동원장비)"},
+    {text:"훈련 참여기관(13개 협업기능)이 협의를 통해 결정되었는가?"},
+  ]},
+  { title:"통합 훈련 시나리오 초안", items:[
+    {text:"통합 훈련 시나리오(상황+대응) 초안이 작성되었는가?"},
+    {text:"위기관리 매뉴얼(표준·실무·행동)을 반영하였는가?"},
+    {text:"현실성·사실성을 기반으로 작성되었는가?"},
+    {text:"기상(악천후)·교통 상황이 반영되었는가?"},
+    {text:"13개 협업기관별 임무와 역할이 명시되었는가?"},
+    {text:"지휘부의 주요 쟁점(의사결정 소요)이 포함되었는가?"},
+    {text:"예상하지 못한 돌발상황이 포함되었는가?"},
+  ]},
+  { title:"훈련평가 중점사항", items:[
+    {text:"금년도 훈련평가 중점사항을 안내하였는가?"},
+    {text:"평가지표별 준비사항 또는 주의사항을 조언하였는가?"},
+  ]},
+];
+
+const CONSULT1_TOTAL = CONSULT1_SECTIONS.reduce((a,s)=>a+s.items.length,0);
+
 function renderEvalCards() {
+  if (evalState.round === "1차 컨설팅") {
+    renderConsult1Cards();
+    document.getElementById("evalStep2Btn").textContent = "컨설팅 보고서 생성 →";
+    return;
+  }
+  document.getElementById("evalStep2Btn").textContent = "평가 완료 →";
   const container = document.getElementById("evalCards");
   container.innerHTML = "";
   evalState.scores = {}; evalState.issues = {};
@@ -1508,6 +1586,92 @@ function renderEvalCards() {
   });
 }
 
+function renderConsult1Cards() {
+  evalState.checks = {}; evalState.consultMemo = "";
+  const container = document.getElementById("evalCards");
+  container.innerHTML = "";
+
+  // progress bar
+  const prog = document.createElement("div");
+  prog.className = "ck-prog-wrap";
+  prog.id = "ckProgWrap";
+  prog.innerHTML = `
+    <div class="ck-prog-hd">
+      <span class="ck-prog-title">📋 1차 컨설팅 체크리스트 · 훈련 기본계획 수립 단계 · 훈련일 10~7주 전</span>
+      <span class="ck-prog-num" id="ckProgNum">0 / ${CONSULT1_TOTAL}</span>
+    </div>
+    <div class="ck-prog-bar"><div class="ck-prog-fill" id="ckProgFill" style="width:0%"></div></div>`;
+  container.appendChild(prog);
+
+  CONSULT1_SECTIONS.forEach((sec, si) => {
+    const secEl = document.createElement("div");
+    secEl.className = "ck-sec";
+    secEl.id = `ckSec${si}`;
+    const hdId = `ckSecHd${si}`;
+    const cntId = `ckSecCnt${si}`;
+    let rows = sec.items.map((item, ii) => {
+      const key = `s${si}_i${ii}`;
+      return `<div class="ck-row" id="ckRow_${key}" onclick="toggleCheck('${key}')">
+        <div class="ck-box" id="ckBox_${key}">✓</div>
+        <div>
+          <span class="ck-lbl" id="ckLbl_${key}">${item.text}</span>
+          ${item.sub ? `<span class="ck-sub">${item.sub}</span>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+    secEl.innerHTML = `
+      <div class="ck-sec-hd" id="${hdId}">
+        <span class="ck-sec-title">섹션 ${si+1}. ${sec.title}</span>
+        <span class="ck-sec-cnt" id="${cntId}">0 / ${sec.items.length} 완료</span>
+      </div>
+      ${rows}`;
+    container.appendChild(secEl);
+  });
+
+  // memo
+  const memoEl = document.createElement("div");
+  memoEl.className = "eval-card";
+  memoEl.innerHTML = `
+    <div class="eval-card-title">📝 컨설팅 주요 조언 및 지적사항</div>
+    <div class="eval-card-sub">1차 컨설팅에서 지적한 사항, 개선 요청 내용, 다음 컨설팅 준비 요청사항 등을 입력하세요</div>
+    <textarea class="eval-issue" rows="6" style="min-height:120px"
+      placeholder="1차 컨설팅에서 지적한 사항, 개선 요청 내용, 다음 컨설팅 준비 요청사항 등을 입력하세요"
+      oninput="evalState.consultMemo=this.value; saveEvalDraft()"></textarea>`;
+  container.appendChild(memoEl);
+}
+
+function toggleCheck(key) {
+  evalState.checks[key] = !evalState.checks[key];
+  const row = document.getElementById("ckRow_"+key);
+  const box = document.getElementById("ckBox_"+key);
+  if (evalState.checks[key]) {
+    row.classList.add("checked");
+    box.style.color = "#fff";
+  } else {
+    row.classList.remove("checked");
+    box.style.color = "transparent";
+  }
+  updateConsult1Progress();
+  saveEvalDraft();
+}
+
+function updateConsult1Progress() {
+  const total = CONSULT1_TOTAL;
+  const done = Object.values(evalState.checks).filter(Boolean).length;
+  document.getElementById("ckProgNum").textContent = `${done} / ${total}`;
+  document.getElementById("ckProgFill").style.width = (done/total*100) + "%";
+
+  CONSULT1_SECTIONS.forEach((sec, si) => {
+    const secDone = sec.items.filter((_,ii) => evalState.checks[`s${si}_i${ii}`]).length;
+    const cntEl = document.getElementById(`ckSecCnt${si}`);
+    const hdEl  = document.getElementById(`ckSecHd${si}`);
+    cntEl.textContent = `${secDone} / ${sec.items.length} 완료`;
+    const allDone = secDone === sec.items.length;
+    cntEl.classList.toggle("alldone", allDone);
+    hdEl.classList.toggle("alldone", allDone);
+  });
+}
+
 function setScore(id, score, btn) {
   const card = btn.closest(".eval-card");
   card.querySelectorAll(".eval-btn").forEach(b => b.classList.remove("sel"));
@@ -1524,12 +1688,19 @@ function saveEvalDraft() {
 }
 
 function evalGoStep3() {
+  document.getElementById("errEstep2").classList.remove("show");
+  if (evalState.round === "1차 컨설팅") {
+    renderEvalSummary();
+    saveEvalResult();
+    showEvalPanel(3);
+    generateEvalReport();
+    return;
+  }
   const allScored = EVAL_ITEMS.every(item => evalState.scores[item.id]);
   if (!allScored) {
     document.getElementById("errEMsg2").textContent = "모든 평가 항목을 선택해 주세요.";
     document.getElementById("errEstep2").classList.add("show"); return;
   }
-  document.getElementById("errEstep2").classList.remove("show");
   renderEvalSummary();
   saveEvalResult();
   showEvalPanel(3);
@@ -1540,11 +1711,34 @@ function evalGoStep3() {
 // ═══════════════════════════════════════════════
 function renderEvalSummary() {
   document.getElementById("evalSummaryMeta").textContent = evalState.org + " · " + evalState.disaster + " · " + evalState.round;
-  const scoreMap = {good:"✅ 좋음", fair:"⚠️ 보통", poor:"❌ 미흡"};
-  const badgeMap = {good:"badge-good", fair:"badge-fair", poor:"badge-poor"};
-
   const summaryEl = document.getElementById("evalSummaryList");
   summaryEl.innerHTML = "";
+
+  if (evalState.round === "1차 컨설팅") {
+    const done = Object.values(evalState.checks).filter(Boolean).length;
+    const pct = Math.round(done / CONSULT1_TOTAL * 100);
+    summaryEl.innerHTML = `
+      <div class="summary-item">
+        <div class="summary-badge badge-good" style="font-size:18px">📋</div>
+        <div style="flex:1"><strong style="font-size:16px">체크리스트 이행률</strong></div>
+        <div style="font-size:18px;font-weight:700;color:var(--teal)">${pct}%</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-badge badge-good" style="font-size:18px">✅</div>
+        <div style="flex:1"><strong style="font-size:16px">완료 항목</strong></div>
+        <div style="font-size:18px;font-weight:700;color:#27ae60">${done}항목</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-badge badge-poor" style="font-size:18px">⬜</div>
+        <div style="flex:1"><strong style="font-size:16px">미완료 항목</strong></div>
+        <div style="font-size:18px;font-weight:700;color:var(--red)">${CONSULT1_TOTAL - done}항목</div>
+      </div>`;
+    document.getElementById("evalIssueSection").style.display = "none";
+    return;
+  }
+
+  const scoreMap = {good:"✅ 좋음", fair:"⚠️ 보통", poor:"❌ 미흡"};
+  const badgeMap = {good:"badge-good", fair:"badge-fair", poor:"badge-poor"};
   EVAL_ITEMS.forEach(item => {
     const sc = evalState.scores[item.id] || "미평가";
     const d = document.createElement("div");
@@ -1582,12 +1776,49 @@ async function saveEvalResult() {
 }
 
 async function generateEvalReport() {
-  const scoreMap = {good:"좋음", fair:"보통", poor:"미흡"};
-  const evalText = EVAL_ITEMS.map(item =>
-    `- ${item.title}: ${scoreMap[evalState.scores[item.id]]||"미평가"}${evalState.issues[item.id] ? " / 지적: " + evalState.issues[item.id] : ""}`
-  ).join("\n");
+  let prompt;
+  if (evalState.round === "1차 컨설팅") {
+    const checkedItems = [];
+    const uncheckedItems = [];
+    CONSULT1_SECTIONS.forEach((sec, si) => {
+      sec.items.forEach((item, ii) => {
+        const key = `s${si}_i${ii}`;
+        const label = `[${sec.title}] ${item.text}`;
+        if (evalState.checks[key]) checkedItems.push(label);
+        else uncheckedItems.push(label);
+      });
+    });
+    prompt = `당신은 행정안전부 안전한국훈련 민간전문가 컨설턴트입니다.
+아래 1차 컨설팅 체크리스트 결과를 바탕으로 컨설팅 보고서를 작성해 주세요.
 
-  const prompt = `당신은 행정안전부 안전한국훈련 평가 보고서 작성 전문가입니다.
+기관: ${evalState.org}
+재난유형: ${evalState.disaster}
+컨설팅 단계: 1차 컨설팅 (훈련 기본계획 수립 단계, 훈련일 10~7주 전)
+
+[이행 완료 항목]
+${checkedItems.length ? checkedItems.map(i=>"✅ "+i).join("\n") : "(없음)"}
+
+[미완료 항목]
+${uncheckedItems.length ? uncheckedItems.map(i=>"⬜ "+i).join("\n") : "(없음)"}
+
+[컨설팅 메모]
+${evalState.consultMemo || "(없음)"}
+
+보고서 형식:
+1. 컨설팅 개요
+2. 이행 완료 사항 (항목별 '이행'으로 표시)
+3. 미이행·미흡 사항 (항목별 '미흡'으로 표시)
+4. 개선 권고사항 (미이행 항목 중심으로 구체적 조언)
+5. 다음 컨설팅(2차) 준비 요청사항
+6. 종합 의견
+
+공식적이고 간결한 공문체로 작성하세요.`;
+  } else {
+    const scoreMap = {good:"좋음", fair:"보통", poor:"미흡"};
+    const evalText = EVAL_ITEMS.map(item =>
+      `- ${item.title}: ${scoreMap[evalState.scores[item.id]]||"미평가"}${evalState.issues[item.id] ? " / 지적: " + evalState.issues[item.id] : ""}`
+    ).join("\n");
+    prompt = `당신은 행정안전부 안전한국훈련 평가 보고서 작성 전문가입니다.
 아래 현장 평가 결과를 바탕으로 공문체 평가 보고서를 작성해 주세요.
 
 기관: ${evalState.org}
@@ -1605,6 +1836,7 @@ ${evalText}
 5. 종합 의견
 
 공식적이고 간결한 공문체로 작성하세요.`;
+  }
 
   const reportBox = document.getElementById("evalReportBox");
   const errEl = document.getElementById("errEstep3");
@@ -1662,7 +1894,7 @@ function downloadEvalReport() {
 
 function evalReset() {
   evalState.org = ""; evalState.disaster = ""; evalState.round = "";
-  evalState.scores = {}; evalState.issues = {};
+  evalState.scores = {}; evalState.issues = {}; evalState.checks = {}; evalState.consultMemo = "";
   document.getElementById("evalOrgInput").value = "";
   document.querySelectorAll("#evalDisasterTags .tb").forEach(b => b.classList.remove("sel"));
   document.querySelectorAll("#evalRoundGroup .rb").forEach(b => b.classList.remove("sel"));
