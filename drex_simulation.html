@@ -1553,9 +1553,77 @@ const CONSULT1_SECTIONS = [
 
 const CONSULT1_TOTAL = CONSULT1_SECTIONS.reduce((a,s)=>a+s.items.length,0);
 
+const CONSULT2_SECTIONS = [
+  { title:"1차 컨설팅 후 변경사항 확인", items:[
+    {text:"1차 컨설팅 후 변경사항을 사전에 파악하였는가?"},
+    {text:"훈련 기본계획서의 수정·보완 여부를 확인하였는가?"},
+    {text:"1차 컨설팅 지적사항의 반영 결과를 확인하였는가?"},
+  ]},
+  { title:"토론·현장 훈련 시나리오 자문", items:[
+    {text:"통합 훈련 시나리오를 바탕으로 토론·현장 훈련 시나리오가 작성되었는가?"},
+    {text:"훈련 목표를 검증할 수 있는 주요사건이 작성되었는가?"},
+    {text:"주요사건과 세부사건이 구분되어 작성되었는가?"},
+    {text:"훈련 목표·범위에 따라 주요사건의 규모가 설정되었는가?"},
+    {text:"현재 시점(훈련일시)으로 작성되었는가?"},
+    {text:"시간의 흐름에 따라 작성되었는가?"},
+    {text:"위기관리 매뉴얼(표준·실무·행동)과의 연계성이 확보되었는가?"},
+    {text:"시나리오 없는 무대본 훈련인 경우, 부서임무카드 적정성을 확인하였는가?"},
+  ]},
+  { title:"훈련 실행계획서 자문", items:[
+    {text:"훈련 실행계획서 전반적 사항에 대한 자문을 실시하였는가?"},
+    {text:"훈련 개요(일시·장소·훈련주관·참여기관·재난유형)가 포함되었는가?"},
+    {text:"훈련 중점사항(목표·역량·기대행동)이 기술되었는가?"},
+    {text:"훈련 방법(토론기반/실행기반)이 명시되었는가?"},
+    {text:"훈련 참여자 역할·임무가 모두 기술되었는가?"},
+    {text:"일정별 주요훈련 진행계획이 포함되었는가?"},
+    {text:"자체훈련평가계획이 포함되었는가?"},
+    {text:"홍보계획이 포함되었는가?"},
+    {text:"향후 추진일정이 포함되었는가?"},
+    {text:"실제 훈련 시나리오 및 참여기관 현황이 첨부되었는가?"},
+  ]},
+  { title:"통합 훈련 시나리오 최종 검토", items:[
+    {text:"통합 훈련 시나리오 최종 검토를 실시하였는가?"},
+    {text:"부서별 임무카드가 작성되었는가?"},
+    {text:"훈련 메시지가 작성되었는가?"},
+  ]},
+  { title:"훈련 참여기관 협의", items:[
+    {text:"훈련 참여기관들에 대한 의견 수렴을 실시하였는가?"},
+    {text:"참여기관 간 협의·조정이 완료되었는가?"},
+  ]},
+  { title:"평가지표 기준 미흡사항 자문", items:[
+    {text:"현재까지 훈련준비 상황을 평가지표 기준으로 점검하였는가?"},
+    {text:"평가지표 기준 미흡사항에 대한 개선 조언을 제공하였는가?"},
+    {text:"실제 훈련 목표와 범위 등이 훈련 개요에 명확히 포함되었는가?"},
+    {text:"토론·실행기반 훈련 참여기관·인원·대상 장비가 명확히 산정되었는가?"},
+    {text:"토론·실행기반 훈련 참여기관 임무와 역할이 명확히 제시되었는가?"},
+    {text:"토론·실행기반 훈련 시나리오 작성이 적절한가(매뉴얼 연계성·실현성)?"},
+    {text:"설정된 훈련목표 달성을 위한 중점훈련내용이 반영되었는가?"},
+    {text:"실제 훈련 성공을 위한 안전지침 및 계획이 반영되었는가?"},
+    {text:"토론·실행기반 훈련평가를 위한 평가지표 구현내용이 반영되었는가?"},
+    {text:"사후강평 및 개선계획 수립을 위한 내용이 포함되었는가?"},
+    {text:"당해 연도 행안부 훈련중점 및 가점을 위한 훈련내용이 포함되었는가?"},
+  ]},
+  { title:"예행연습 및 훈련 당일 준비 협의", items:[
+    {text:"예행연습(리허설) 계획을 확인하였는가?"},
+    {text:"훈련 당일 시간계획을 검토하였는가?"},
+    {text:"협조사항에 대한 기관 간 협의가 완료되었는가?"},
+  ]},
+  { title:"훈련주재자·참가자 역할 조언", items:[
+    {text:"훈련 주재자의 역할(현장 지휘·참여 유도·해결방안 지시)을 조언하였는가?"},
+    {text:"훈련 참가자의 역할(시나리오 숙지·계획 검토·안전지침 준수)을 조언하였는가?"},
+  ]},
+];
+
+const CONSULT2_TOTAL = CONSULT2_SECTIONS.reduce((a,s)=>a+s.items.length,0);
+
 function renderEvalCards() {
   if (evalState.round === "1차 컨설팅") {
     renderConsult1Cards();
+    document.getElementById("evalStep2Btn").textContent = "컨설팅 보고서 생성 →";
+    return;
+  }
+  if (evalState.round === "2차 컨설팅") {
+    renderConsult2Cards();
     document.getElementById("evalStep2Btn").textContent = "컨설팅 보고서 생성 →";
     return;
   }
@@ -1640,6 +1708,58 @@ function renderConsult1Cards() {
   container.appendChild(memoEl);
 }
 
+function renderConsult2Cards() {
+  evalState.checks = {}; evalState.consultMemo = "";
+  const container = document.getElementById("evalCards");
+  container.innerHTML = "";
+
+  const prog = document.createElement("div");
+  prog.className = "ck-prog-wrap";
+  prog.id = "ckProgWrap";
+  prog.innerHTML = `
+    <div class="ck-prog-hd">
+      <span class="ck-prog-title">📋 2차 컨설팅 체크리스트 · 훈련 실행계획 수립 단계 · 훈련일 4~3주 전</span>
+      <span class="ck-prog-num" id="ckProgNum">0 / ${CONSULT2_TOTAL}</span>
+    </div>
+    <div class="ck-prog-bar"><div class="ck-prog-fill" id="ckProgFill" style="width:0%"></div></div>`;
+  container.appendChild(prog);
+
+  CONSULT2_SECTIONS.forEach((sec, si) => {
+    const secEl = document.createElement("div");
+    secEl.className = "ck-sec";
+    secEl.id = `ckSec${si}`;
+    const hdId = `ckSecHd${si}`;
+    const cntId = `ckSecCnt${si}`;
+    let rows = sec.items.map((item, ii) => {
+      const key = `s${si}_i${ii}`;
+      return `<div class="ck-row" id="ckRow_${key}" onclick="toggleCheck('${key}')">
+        <div class="ck-box" id="ckBox_${key}">✓</div>
+        <div>
+          <span class="ck-lbl" id="ckLbl_${key}">${item.text}</span>
+          ${item.sub ? `<span class="ck-sub">${item.sub}</span>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+    secEl.innerHTML = `
+      <div class="ck-sec-hd" id="${hdId}">
+        <span class="ck-sec-title">섹션 ${si+1}. ${sec.title}</span>
+        <span class="ck-sec-cnt" id="${cntId}">0 / ${sec.items.length} 완료</span>
+      </div>
+      ${rows}`;
+    container.appendChild(secEl);
+  });
+
+  const memoEl = document.createElement("div");
+  memoEl.className = "eval-card";
+  memoEl.innerHTML = `
+    <div class="eval-card-title">📝 컨설팅 주요 조언 및 지적사항</div>
+    <div class="eval-card-sub">2차 컨설팅에서 지적한 사항, 개선 요청 내용, 다음 단계(훈련 실시) 준비 요청사항 등을 입력하세요</div>
+    <textarea class="eval-issue" rows="6" style="min-height:120px"
+      placeholder="2차 컨설팅에서 지적한 사항, 개선 요청 내용, 다음 단계(훈련 실시) 준비 요청사항 등을 입력하세요"
+      oninput="evalState.consultMemo=this.value; saveEvalDraft()"></textarea>`;
+  container.appendChild(memoEl);
+}
+
 function toggleCheck(key) {
   evalState.checks[key] = !evalState.checks[key];
   const row = document.getElementById("ckRow_"+key);
@@ -1651,7 +1771,8 @@ function toggleCheck(key) {
     row.classList.remove("checked");
     box.style.color = "transparent";
   }
-  updateConsult1Progress();
+  if (evalState.round === "2차 컨설팅") updateConsult2Progress();
+  else updateConsult1Progress();
   saveEvalDraft();
 }
 
@@ -1662,6 +1783,23 @@ function updateConsult1Progress() {
   document.getElementById("ckProgFill").style.width = (done/total*100) + "%";
 
   CONSULT1_SECTIONS.forEach((sec, si) => {
+    const secDone = sec.items.filter((_,ii) => evalState.checks[`s${si}_i${ii}`]).length;
+    const cntEl = document.getElementById(`ckSecCnt${si}`);
+    const hdEl  = document.getElementById(`ckSecHd${si}`);
+    cntEl.textContent = `${secDone} / ${sec.items.length} 완료`;
+    const allDone = secDone === sec.items.length;
+    cntEl.classList.toggle("alldone", allDone);
+    hdEl.classList.toggle("alldone", allDone);
+  });
+}
+
+function updateConsult2Progress() {
+  const total = CONSULT2_TOTAL;
+  const done = Object.values(evalState.checks).filter(Boolean).length;
+  document.getElementById("ckProgNum").textContent = `${done} / ${total}`;
+  document.getElementById("ckProgFill").style.width = (done/total*100) + "%";
+
+  CONSULT2_SECTIONS.forEach((sec, si) => {
     const secDone = sec.items.filter((_,ii) => evalState.checks[`s${si}_i${ii}`]).length;
     const cntEl = document.getElementById(`ckSecCnt${si}`);
     const hdEl  = document.getElementById(`ckSecHd${si}`);
@@ -1689,7 +1827,7 @@ function saveEvalDraft() {
 
 function evalGoStep3() {
   document.getElementById("errEstep2").classList.remove("show");
-  if (evalState.round === "1차 컨설팅") {
+  if (evalState.round === "1차 컨설팅" || evalState.round === "2차 컨설팅") {
     renderEvalSummary();
     saveEvalResult();
     showEvalPanel(3);
@@ -1714,9 +1852,10 @@ function renderEvalSummary() {
   const summaryEl = document.getElementById("evalSummaryList");
   summaryEl.innerHTML = "";
 
-  if (evalState.round === "1차 컨설팅") {
+  if (evalState.round === "1차 컨설팅" || evalState.round === "2차 컨설팅") {
+    const total = evalState.round === "2차 컨설팅" ? CONSULT2_TOTAL : CONSULT1_TOTAL;
     const done = Object.values(evalState.checks).filter(Boolean).length;
-    const pct = Math.round(done / CONSULT1_TOTAL * 100);
+    const pct = Math.round(done / total * 100);
     summaryEl.innerHTML = `
       <div class="summary-item">
         <div class="summary-badge badge-good" style="font-size:18px">📋</div>
@@ -1731,7 +1870,7 @@ function renderEvalSummary() {
       <div class="summary-item">
         <div class="summary-badge badge-poor" style="font-size:18px">⬜</div>
         <div style="flex:1"><strong style="font-size:16px">미완료 항목</strong></div>
-        <div style="font-size:18px;font-weight:700;color:var(--red)">${CONSULT1_TOTAL - done}항목</div>
+        <div style="font-size:18px;font-weight:700;color:var(--red)">${total - done}항목</div>
       </div>`;
     document.getElementById("evalIssueSection").style.display = "none";
     return;
@@ -1810,6 +1949,42 @@ ${evalState.consultMemo || "(없음)"}
 3. 미이행·미흡 사항 (항목별 '미흡'으로 표시)
 4. 개선 권고사항 (미이행 항목 중심으로 구체적 조언)
 5. 다음 컨설팅(2차) 준비 요청사항
+6. 종합 의견
+
+공식적이고 간결한 공문체로 작성하세요.`;
+  } else if (evalState.round === "2차 컨설팅") {
+    const checkedItems = [];
+    const uncheckedItems = [];
+    CONSULT2_SECTIONS.forEach((sec, si) => {
+      sec.items.forEach((item, ii) => {
+        const key = `s${si}_i${ii}`;
+        const label = `[${sec.title}] ${item.text}`;
+        if (evalState.checks[key]) checkedItems.push(label);
+        else uncheckedItems.push(label);
+      });
+    });
+    prompt = `당신은 행정안전부 안전한국훈련 민간전문가 컨설턴트입니다.
+아래 2차 컨설팅 체크리스트 결과를 바탕으로 컨설팅 보고서를 작성해 주세요.
+
+기관: ${evalState.org}
+재난유형: ${evalState.disaster}
+컨설팅 단계: 2차 컨설팅 (훈련 실행계획 수립 단계, 훈련일 4~3주 전)
+
+[이행 완료 항목]
+${checkedItems.length ? checkedItems.map(i=>"✅ "+i).join("\n") : "(없음)"}
+
+[미완료 항목]
+${uncheckedItems.length ? uncheckedItems.map(i=>"⬜ "+i).join("\n") : "(없음)"}
+
+[컨설팅 메모]
+${evalState.consultMemo || "(없음)"}
+
+보고서 형식:
+1. 컨설팅 개요
+2. 이행 완료 사항 (항목별 '이행'으로 표시)
+3. 미이행·미흡 사항 (항목별 '미흡'으로 표시)
+4. 개선 권고사항 (미이행 항목 중심으로 구체적 조언)
+5. 훈련 실시 전 최종 준비 요청사항
 6. 종합 의견
 
 공식적이고 간결한 공문체로 작성하세요.`;
