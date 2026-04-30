@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DREX · Disaster Response EXercise</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f5f3ee;--navy:#12213a;--teal:#0e8a76;--amber:#c47d1a;--red:#a82020;--card:#fff;--border:#dde0d8;--text:#2c2c2c;--muted:#666}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -831,6 +832,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div>
       <div class="ttx-hd-title" id="ttxSitTitle">재난 상황 제목</div>
       <div class="ttx-hd-title"><small id="ttxTimePressure"></small></div>
+      <div class="ttx-hd-title"><small id="ttxWeaknessApplied" style="color:#7ec8e3;font-style:italic"></small></div>
     </div>
     <div class="ttx-hd-right">
       <span class="sev-badge sev-red" id="ttxSevBadge">🔴 위급</span>
@@ -934,6 +936,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <button class="btn-s" onclick="ttxPrintReport()">🖨️ 보고서 출력</button>
       <button class="btn-s" onclick="ttxReset()">🔄 새 훈련 시작</button>
     </div>
+  </div>
+
+  <!-- 이전 훈련 기록 -->
+  <div class="card" id="ttxHistoryCard" style="display:none">
+    <div class="ct">📅 이 기관의 이전 훈련 기록</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Supabase에서 조회한 최근 5회 TTX 훈련 이력입니다.</div>
+    <div id="ttxHistoryContent"></div>
   </div>
 </div>
 
@@ -1589,6 +1598,7 @@ function parseAndRenderStages(text) {
 // ═══════════════════════════════════════════════
 const SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvdWFzcW5zYnhiaWt2anJyZm5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDU1MDksImV4cCI6MjA5MjI4MTUwOX0.9uqx1v12ur54fqKbsQsJxdDw8ke2S0p1B174wpZvRJY";
+const supabaseClient = (window.supabase || window['supabase'])?.createClient(SUPABASE_URL, SUPABASE_KEY) || null;
 
 function genSessionId() { return "sess_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 function getSessionId() {
@@ -2523,7 +2533,7 @@ function chatAutoResize(el) {
 }
 
 // ═══════════════════════════════════════════════
-// TTX SIMULATOR MODULE
+// TTX SIMULATOR MODULE (Supabase 연동)
 // ═══════════════════════════════════════════════
 const TTX_AGENCIES = [
   {id:'fire',   name:'소방본부',    icon:'🚒'},
@@ -2553,7 +2563,15 @@ let ttxState = {
   variables:{casualties:0,displaced:0,infrastructure_damage:0,resource_needed:0},
   decisions:[],
   totalScore:0,
+  sessionId:null,
 };
+
+// ─── Supabase helper (오프라인 폴백) ──────────
+async function ttxSb(fn) {
+  if(!supabaseClient) return {data:null,error:'no client'};
+  try{return await fn();}
+  catch(e){console.warn('TTX Supabase 오프라인 모드:', e.message);return {data:null,error:e};}
+}
 
 // ─── Tab Switch ───────────────────────────────
 function switchOrgTab(tab) {
@@ -2671,17 +2689,36 @@ async function ttxGenerateScenario() {
 
   ttxState.orgName=orgName; ttxState.disasterType=disaster;
   ttxState.region=region; ttxState.intensity=intensity; ttxState.participants=participants;
+  ttxState.sessionId=null;
 
   const genBtn=document.getElementById('ttxGenBtn');
   const loadEl=document.getElementById('ttxGenLoading');
   genBtn.disabled=true; loadEl.style.display='block';
 
-  const prompt=`아래 조건으로 TTX 시나리오를 JSON으로만 생성하세요.
+  // STEP 1: Supabase에서 기관 과거 지적사항 조회
+  let pastIssues='조회된 지적사항 없음';
+  const {data:issueData}=await ttxSb(()=>supabaseClient
+    .from('issues')
+    .select('issue_content, issue_category')
+    .ilike('organization_name','%'+orgName+'%')
+    .order('created_at',{ascending:false})
+    .limit(10)
+  );
+  if(issueData?.length){
+    pastIssues=issueData.map(i=>'- ['+( i.issue_category||'기타')+'] '+i.issue_content).join('\n');
+  }
+
+  // STEP 2: Claude API 호출 (지적사항 반영)
+  const prompt=`아래 기관의 과거 지적사항을 반드시 반영하여 TTX 시나리오를 생성하세요.
 기관: ${orgName}, 재난: ${disaster}, 지역: ${region}, 강도: ${intensity}, 참여인원: ${participants}명
 
-JSON 형식만 출력 (다른 텍스트 없이):
+[이 기관의 과거 지적사항]
+${pastIssues}
+
+위 지적사항에서 반복되는 취약점이 있다면 시나리오 돌발상황에 반드시 포함하세요.
+JSON으로만 응답 (다른 텍스트 없이):
 {
-  "situation_title": "재난 상황 제목 (30자 이내, 구체적)",
+  "situation_title": "재난 상황 제목 (30자 이내)",
   "initial_report": "최초 상황 보고 (현실적인 3~4문장, 피해 규모 포함)",
   "severity": "red",
   "affected_population": 5000,
@@ -2691,17 +2728,18 @@ JSON 형식만 출력 (다른 텍스트 없이):
     "infrastructure_damage": 23,
     "resource_needed": 120
   },
-  "time_pressure": "골든타임 경고 메시지 (1문장, 긴박감 있게)",
-  "phase1_event": "1단계 돌발상황 (구체적 1~2문장)",
-  "phase2_event": "2단계 돌발상황 (더 심각한 상황 1~2문장)",
-  "phase3_event": "3단계 돌발상황 (최고조 위기 1~2문장)"
+  "time_pressure": "골든타임 경고 메시지 (1문장)",
+  "weakness_applied": "반영된 취약점 요약 (1문장, 과거 지적사항 없으면 '일반 시나리오 적용')",
+  "phase1_event": "1단계 돌발상황 (1~2문장, 과거 취약점 반영)",
+  "phase2_event": "2단계 돌발상황 더 심각하게 (1~2문장)",
+  "phase3_event": "3단계 돌발상황 최고조 위기 (1~2문장)"
 }`;
 
   try{
     const text=await ttxStreamAPI(
       [{role:'user',content:prompt}],
       '당신은 행안부 안전한국훈련 전문가입니다. 재난대응 TTX 시나리오를 현실적으로 생성하세요.',
-      1500
+      1800
     );
     const sc=ttxParseJSON(text);
     if(!sc||!sc.situation_title) throw new Error('시나리오 파싱 실패. 다시 시도해주세요.');
@@ -2713,6 +2751,23 @@ JSON 형식만 출력 (다른 텍스트 없이):
     ttxState.totalScore=0;
     ttxState.elapsedSeconds=0;
     TTX_AGENCIES.forEach(a=>{ttxState.agencyStatuses[a.id]='대기중';});
+
+    // STEP 3: Supabase에 세션 저장
+    const {data:session}=await ttxSb(()=>supabaseClient
+      .from('ttx_sessions')
+      .insert({
+        organization_name:orgName,
+        disaster_type:disaster,
+        region:region,
+        difficulty:intensity,
+        participants:participants,
+        scenario_title:sc.situation_title,
+        severity:sc.severity,
+      })
+      .select('id')
+      .single()
+    );
+    if(session?.id) ttxState.sessionId=session.id;
 
     ttxSaveState();
     ttxRenderMeetingHeader();
@@ -2736,6 +2791,8 @@ function ttxRenderMeetingHeader() {
   if(!sc) return;
   document.getElementById('ttxSitTitle').textContent=sc.situation_title;
   document.getElementById('ttxTimePressure').textContent='⏰ '+sc.time_pressure;
+  const wkEl=document.getElementById('ttxWeaknessApplied');
+  if(wkEl) wkEl.textContent=sc.weakness_applied?'🎯 반영된 취약점: '+sc.weakness_applied:'';
 
   const badge=document.getElementById('ttxSevBadge');
   const sevMap={red:'🔴 위급',orange:'🟠 경계',yellow:'🟡 주의'};
@@ -2791,6 +2848,15 @@ function ttxCycleStatus(id) {
     card.className='ttx-ag-card ags-'+cls;
     const st=card.querySelector('.ttx-ag-st');
     if(st) st.textContent=next;
+  }
+  // Supabase: 기관 상태 변경 기록
+  if(ttxState.sessionId){
+    const agency=TTX_AGENCIES.find(a=>a.id===id);
+    ttxSb(()=>supabaseClient.from('ttx_agency_status').insert({
+      session_id:ttxState.sessionId,
+      agency_name:agency?.name||id,
+      final_status:next
+    }));
   }
   ttxSaveState();
 }
@@ -2885,6 +2951,8 @@ async function ttxSelectOption(label) {
   ob.textContent='결과 분석 중...';
   ob.classList.add('show');
 
+  const currentSitText=document.getElementById('ttxSituationText').textContent;
+
   const prompt=`선택한 의사결정: ${label}안 - ${option.action} (위험도: ${option.risk})
 현재 피해 현황: 인명피해 ${ttxState.variables.casualties}명, 이재민 ${ttxState.variables.displaced}명, 시설피해 ${ttxState.variables.infrastructure_damage}건, 투입자원 ${ttxState.variables.resource_needed}
 재난: ${ttxState.disasterType} ${ttxState.phase}단계
@@ -2920,6 +2988,23 @@ async function ttxSelectOption(label) {
     ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
 
     ob.textContent=`[${label}안 선택 결과]\n${parsed.outcome}\n\n📊 이번 단계 점수: ${score}점 (누적 평균: ${ttxState.totalScore}점)`;
+
+    // Supabase: 의사결정 저장
+    if(ttxState.sessionId){
+      await ttxSb(()=>supabaseClient.from('ttx_decisions').insert({
+        session_id:ttxState.sessionId,
+        phase:ttxState.phase,
+        situation_text:currentSitText.slice(0,500),
+        chosen_option:option.action,
+        option_label:label,
+        outcome_text:parsed.outcome,
+        score:score,
+        casualties_delta:parsed.variable_changes?.casualties||0,
+        displaced_delta:parsed.variable_changes?.displaced||0,
+        resource_delta:parsed.variable_changes?.resource_needed||0
+      }));
+    }
+
     ttxSaveState();
 
     const nw=document.getElementById('ttxNextWrap');
@@ -2950,10 +3035,10 @@ function ttxNextPhase() {
 // ─── STEP 3: Results ──────────────────────────
 function ttxRenderResults() {
   const score=ttxState.totalScore;
-  let grade,gradeColor;
-  if(score>=80){grade='우수 ⭐';gradeColor='var(--teal)';}
-  else if(score>=60){grade='보통 ✅';gradeColor='var(--amber)';}
-  else{grade='미흡 ⚠️';gradeColor='var(--red)';}
+  let gradeText,grade,gradeColor;
+  if(score>=80){gradeText='우수';grade='우수 ⭐';gradeColor='var(--teal)';}
+  else if(score>=60){gradeText='보통';grade='보통 ✅';gradeColor='var(--amber)';}
+  else{gradeText='미흡';grade='미흡 ⚠️';gradeColor='var(--red)';}
 
   document.getElementById('ttxScoreNum').textContent=score;
   document.getElementById('ttxScoreRing').style.borderColor=gradeColor;
@@ -2968,24 +3053,87 @@ function ttxRenderResults() {
   const m=Math.floor((ttxState.elapsedSeconds%3600)/60);
   document.getElementById('resElapsed').textContent=h?h+'시간 '+m+'분':m+'분';
 
-  // RTO
-  const sc=ttxState.scenario;
-  const baseRTO=48;
-  const orig=sc.key_variables||{};
-  const dmg=(ttxState.variables.casualties/(orig.casualties||1))+(ttxState.variables.displaced/(orig.displaced||1));
-  const damageFactor=Math.min(3.0,Math.max(1.0,1+dmg*0.4));
-  const resFactor=Math.min(1.5,Math.max(0.5,1.5-(ttxState.variables.resource_needed/(orig.resource_needed||1))*0.25));
-  const decFactor=Math.min(1.4,Math.max(0.6,1.4-(score/100)*0.8));
-  const rtoMid=baseRTO*damageFactor*resFactor*decFactor;
-  const rtoMin=Math.round(rtoMid*0.85);
-  const rtoMax=Math.round(rtoMid*1.15);
-  const rtoPct=Math.round(rtoMid/baseRTO*100);
+  // RTO 산출 (스펙 공식)
+  const v=ttxState.variables;
+  const rtoBase=48;
+  const casualties=v.casualties||0;
+  const origResourceNeeded=ttxState.scenario?.key_variables?.resource_needed||1;
+  const dmgFactor=casualties>50?1.5:casualties>20?1.2:1.0;
+  const resFactor=(v.resource_needed<origResourceNeeded*0.5)?1.4:1.0;
+  const decFactor=score>=80?0.8:score>=60?1.0:1.3;
+  const rtoMin=Math.round(rtoBase*dmgFactor*resFactor*decFactor*0.85);
+  const rtoMax=Math.round(rtoBase*dmgFactor*resFactor*decFactor*1.15);
+  const rtoMid=Math.round((rtoMin+rtoMax)/2);
+  const rtoPct=Math.round(rtoMid/rtoBase*100);
 
   document.getElementById('rtoFormula').textContent=
-    `RTO = ${baseRTO}h × ${damageFactor.toFixed(2)}(피해계수) × ${resFactor.toFixed(2)}(자원계수) × ${decFactor.toFixed(2)}(의사결정계수)`;
+    `RTO = ${rtoBase}h × ${dmgFactor.toFixed(1)}(피해계수) × ${resFactor.toFixed(1)}(자원계수) × ${decFactor.toFixed(1)}(의사결정계수)`;
   document.getElementById('rtoResult').textContent=`예상 복구 소요: ${rtoMin}시간 ~ ${rtoMax}시간`;
   document.getElementById('rtoCmp').textContent=
     `행안부 권고 기준(48시간) 대비 ${rtoPct}% 수준 · ${rtoPct<=100?'✅ 기준 이내':'⚠️ 기준 초과'}`;
+
+  // Supabase: 세션 완료 업데이트
+  if(ttxState.sessionId){
+    ttxSb(()=>supabaseClient.from('ttx_sessions').update({
+      completed_at:new Date().toISOString(),
+      total_score:score,
+      grade:gradeText,
+      rto_min:rtoMin,
+      rto_max:rtoMax
+    }).eq('id',ttxState.sessionId));
+  }
+
+  // 이전 훈련 기록 조회
+  ttxLoadHistory();
+}
+
+// ─── History ──────────────────────────────────
+async function ttxLoadHistory() {
+  const histCard=document.getElementById('ttxHistoryCard');
+  const histContent=document.getElementById('ttxHistoryContent');
+  if(!histCard||!histContent) return;
+  histCard.style.display='block';
+  histContent.innerHTML='<div class="ttx-spin-wrap"><div class="ttx-spin"></div><div class="ttx-spin-text">이전 기록 조회 중...</div></div>';
+
+  const {data:history}=await ttxSb(()=>supabaseClient
+    .from('ttx_sessions')
+    .select('started_at,disaster_type,total_score,grade,rto_min,rto_max')
+    .eq('organization_name',ttxState.orgName)
+    .not('total_score','is',null)
+    .order('started_at',{ascending:false})
+    .limit(5)
+  );
+
+  if(!history?.length){
+    histContent.innerHTML='<div style="font-size:13px;color:var(--muted);padding:10px 0">이전 훈련 기록이 없습니다. (오늘이 첫 번째 훈련입니다)</div>';
+    return;
+  }
+
+  const rows=history.map(h=>{
+    const dt=new Date(h.started_at).toLocaleDateString('ko-KR',{year:'2-digit',month:'2-digit',day:'2-digit'});
+    const s=h.total_score??'-';
+    const g=h.grade??'-';
+    const rto=(h.rto_min&&h.rto_max)?h.rto_min+'~'+h.rto_max+'h':'-';
+    const gc=g==='우수'?'color:var(--teal)':g==='보통'?'color:var(--amber)':g==='미흡'?'color:var(--red)':'';
+    return `<tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0ede7;font-size:12px;color:var(--muted)">${dt}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0ede7;font-size:12px">${h.disaster_type||'-'}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0ede7;font-size:14px;font-weight:700;color:var(--navy)">${s}점</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0ede7;font-size:12px;font-weight:700;${gc}">${g}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0ede7;font-size:12px">${rto}</td>
+    </tr>`;
+  }).join('');
+
+  histContent.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-family:'Noto Sans KR',sans-serif">
+    <thead><tr style="background:var(--navy)">
+      <th style="padding:9px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.7);font-weight:600;white-space:nowrap">훈련 일시</th>
+      <th style="padding:9px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.7);font-weight:600">재난유형</th>
+      <th style="padding:9px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.7);font-weight:600">점수</th>
+      <th style="padding:9px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.7);font-weight:600">등급</th>
+      <th style="padding:9px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.7);font-weight:600">RTO</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
 }
 
 async function ttxGenerateReport() {
@@ -3066,7 +3214,7 @@ function ttxReset() {
     scenario:null,phase:1,timerInterval:null,elapsedSeconds:0,
     agencyStatuses:{},
     variables:{casualties:0,displaced:0,infrastructure_damage:0,resource_needed:0},
-    decisions:[],totalScore:0,
+    decisions:[],totalScore:0,sessionId:null,
   };
   localStorage.removeItem('drex_ttx');
   document.getElementById('ttxOrgName').value='';
@@ -3076,6 +3224,8 @@ function ttxReset() {
   document.querySelectorAll('#ttxIntensityGroup .rb').forEach(b=>b.classList.remove('sel'));
   document.getElementById('ttxErr1').classList.remove('show');
   document.getElementById('ttxRptBox').style.display='none';
+  const hc=document.getElementById('ttxHistoryCard');
+  if(hc) hc.style.display='none';
   showTtxStep(1);
 }
 
