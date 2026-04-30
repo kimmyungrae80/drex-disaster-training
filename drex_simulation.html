@@ -256,6 +256,88 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ck-lbl{font-size:13.5px;color:var(--text);line-height:1.65}
 .ck-row.checked .ck-lbl{color:#1a8c4a}
 .ck-sub{font-size:11px;color:var(--amber);font-weight:600;margin-top:3px;display:block}
+/* ── TAB NAVIGATION ── */
+.tab-nav{display:flex;gap:0;margin:-36px -20px 28px;background:var(--navy);padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{padding:16px 20px;background:transparent;border:none;border-bottom:3px solid transparent;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:.2s all;white-space:nowrap;flex-shrink:0}
+.tab-btn:hover{color:rgba(255,255,255,.8)}
+.tab-btn.active{color:#fff;border-bottom-color:var(--teal)}
+@media(max-width:640px){.tab-nav{margin:-20px -12px 18px;padding:0 12px}.tab-btn{padding:12px 14px;font-size:13px}}
+/* ── TTX SIMULATOR ── */
+.ttx-panel{display:none}
+.ttx-panel.active{display:block;animation:fadeUp .35s ease}
+.ttx-hd{background:var(--navy);color:#fff;border-radius:14px;padding:18px 22px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ttx-hd-title{font-size:16px;font-weight:700;flex:1;min-width:160px}
+.ttx-hd-title small{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.5;font-weight:400}
+.ttx-hd-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.sev-badge{padding:5px 13px;border-radius:16px;font-size:12px;font-weight:700;flex-shrink:0}
+.sev-red{background:#ef4444;color:#fff}
+.sev-orange{background:#f97316;color:#fff}
+.sev-yellow{background:#eab308;color:#1a1a1a}
+.ttx-timer{font-size:22px;font-weight:700;color:#ef4444;font-family:monospace;flex-shrink:0;min-width:80px;text-align:right}
+.ttx-phase-badge{font-size:12px;font-weight:600;background:rgba(255,255,255,.15);padding:5px 13px;border-radius:16px;flex-shrink:0;color:#fff}
+.ttx-grid{display:grid;grid-template-columns:190px 1fr 210px;gap:14px;margin-bottom:18px}
+@media(max-width:900px){.ttx-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ttx-grid{grid-template-columns:1fr}}
+.ttx-met-wrap{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.ttx-met-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-align:center}
+.ttx-met-card{background:var(--bg);border-radius:10px;padding:12px 8px;text-align:center;border:2px solid transparent;transition:.2s;cursor:pointer;margin-bottom:6px}
+.ttx-met-card:last-child{margin-bottom:0}
+.ttx-met-card:hover{border-color:var(--teal);transform:translateY(-1px)}
+.ttx-met-label{font-size:10px;color:var(--muted);font-weight:500;margin-bottom:4px}
+.ttx-met-val{font-size:20px;font-weight:700;color:var(--navy)}
+.ttx-met-unit{font-size:10px;color:var(--muted);margin-top:2px}
+.ttx-center-wrap{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
+.ttx-situation-box{background:#f5f3ee;border-radius:10px;padding:14px;font-size:13px;line-height:1.8;margin-bottom:12px;min-height:70px;white-space:pre-line;border-left:3px solid var(--teal)}
+.ttx-alert-banner{background:#ef4444;color:#fff;border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;font-weight:600;display:none;animation:alertPop .4s ease}
+.ttx-alert-banner.show{display:block}
+@keyframes alertPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.ttx-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+@media(max-width:600px){.ttx-opts{grid-template-columns:1fr}}
+.ttx-opt{padding:13px;border-radius:10px;border:2px solid #e0ddd5;background:#fff;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-align:left;transition:.2s all;width:100%}
+.ttx-opt:hover:not(:disabled){border-color:var(--teal);background:#f0faf8}
+.ttx-opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.ttx-opt:disabled{cursor:not-allowed;opacity:.75}
+.ttx-opt-lbl{font-weight:700;font-size:14px;margin-bottom:3px}
+.ttx-opt-txt{font-size:12.5px;line-height:1.5;margin-top:3px}
+.ttx-risk{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:6px}
+.risk-h{background:#ffe4e4;color:#ef4444}
+.risk-m{background:#fff4e4;color:#f97316}
+.risk-l{background:#e4f4e4;color:#16a34a}
+.ttx-opt.sel .ttx-risk{background:rgba(255,255,255,.2);color:#fff}
+.ttx-outcome{background:#0d1b2a;color:#b8d4e8;border-radius:10px;padding:16px;font-size:13px;line-height:1.8;white-space:pre-line;display:none;margin-top:10px}
+.ttx-outcome.show{display:block}
+.ttx-agencies-wrap{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
+.ttx-ag-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-align:center}
+.ttx-ag-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.ttx-ag-card{border-radius:8px;padding:7px 3px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s all;background:#fafafa}
+.ttx-ag-card:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.ttx-ag-icon{font-size:16px;margin-bottom:2px}
+.ttx-ag-name{font-size:8.5px;color:var(--navy);font-weight:600;line-height:1.3;word-break:keep-all;margin-bottom:3px}
+.ttx-ag-st{font-size:8px;font-weight:700;padding:2px 5px;border-radius:6px;display:inline-block}
+.ags-standby{border-color:#e4e7ed}.ags-standby .ttx-ag-st{background:#e4e7ed;color:#555}
+.ags-dispatch{border-color:#93c5fd;background:#eff6ff}.ags-dispatch .ttx-ag-st{background:#dbeafe;color:#1d4ed8}
+.ags-field{border-color:#fdba74;background:#fff7ed}.ags-field .ttx-ag-st{background:#fed7aa;color:#c2410c}
+.ags-done{border-color:#86efac;background:#f0fdf4}.ags-done .ttx-ag-st{background:#bbf7d0;color:#065f46}
+.ttx-score-ring{width:110px;height:110px;border-radius:50%;border:8px solid var(--teal);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 12px}
+.ttx-score-num{font-size:32px;font-weight:700;color:var(--navy)}
+.ttx-score-unit{font-size:11px;color:var(--muted)}
+.ttx-grade-txt{font-size:18px;font-weight:700;text-align:center;margin-bottom:18px}
+.ttx-res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:640px){.ttx-res-grid{grid-template-columns:repeat(2,1fr)}}
+.ttx-res-card{background:var(--bg);border-radius:10px;padding:14px;text-align:center;border:1px solid #e0ddd5}
+.ttx-res-val{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.ttx-res-lbl{font-size:11px;color:var(--muted);font-weight:500}
+.rto-section{background:linear-gradient(135deg,var(--navy),#1a3660);color:#fff;border-radius:14px;padding:22px;margin-bottom:18px}
+.rto-h{font-size:14px;font-weight:700;margin-bottom:10px;color:#7ec8e3}
+.rto-formula{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:10px;font-family:monospace;line-height:1.6}
+.rto-val{font-size:20px;font-weight:700;margin-bottom:6px}
+.rto-cmp{font-size:12px;color:rgba(255,255,255,.65)}
+.ttx-spin-wrap{text-align:center;padding:28px 20px}
+.ttx-spin{display:inline-block;width:30px;height:30px;border:3px solid #e0ddd5;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ttx-spin-text{font-size:13px;color:var(--muted);margin-top:12px}
+@media print{.hd,.tab-nav,.chat-fab,.chat-panel,#orgTabNav,button{display:none!important}.ttx-panel{display:block!important}.rto-section{color:#000;background:#f5f5f5}}
 </style>
 </head>
 <body>
@@ -509,6 +591,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- MAIN -->
 <div class="main">
 
+<!-- ORG TAB NAV -->
+<div class="tab-nav" id="orgTabNav" style="display:none">
+  <button class="tab-btn active" id="orgTabBtn1" onclick="switchOrgTab(1)">📋 훈련 시뮬레이션</button>
+  <button class="tab-btn" id="orgTabBtn2" onclick="switchOrgTab(2)">🏛️ TTX 시뮬레이터</button>
+</div>
+
+<div id="orgSimSection">
+
 <!-- ═══════ STEP 1 ═══════ -->
 <div class="panel active" id="step1">
   <div class="ptitle">
@@ -677,6 +767,177 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 </div>
+
+</div><!-- /orgSimSection -->
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TTX SIMULATOR PANEL                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="ttxMainPanel" style="display:none">
+
+<!-- TTX STEP 1: 시나리오 생성 -->
+<div class="ttx-panel active" id="ttxStep1">
+  <div class="ptitle">
+    <h2>🏛️ TTX 상황판단회의 시뮬레이터</h2>
+    <p>훈련 조건을 입력하면 Claude AI가 실전적인 TTX 시나리오를 자동 생성합니다.</p>
+  </div>
+  <div class="card">
+    <div class="ct">훈련 조건 입력</div>
+    <div class="fg">
+      <label class="fl">기관명 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="ttxOrgName" placeholder="예: 충청북도 청주시">
+    </div>
+    <div class="fg">
+      <label class="fl">재난유형 <span style="color:var(--red)">*</span></label>
+      <select class="fi" id="ttxDisasterType">
+        <option value="">— 선택하세요 —</option>
+        <option value="홍수/태풍">🌊 홍수/태풍</option>
+        <option value="지진">🏔️ 지진</option>
+        <option value="산불">🔥 산불</option>
+        <option value="화학사고">⚗️ 화학사고</option>
+        <option value="감염병">🦠 감염병</option>
+        <option value="복합재난">⚡ 복합재난</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">지역 특성 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="ttxRegion" placeholder="예: 해안 도심, 산간 농촌, 내륙 공업지대">
+    </div>
+    <div class="fg">
+      <label class="fl">훈련 강도 <span style="color:var(--red)">*</span></label>
+      <div class="rg" id="ttxIntensityGroup">
+        <button class="rb" data-v="초급" onclick="ttxSelectIntensity(this)">초급<br><small style="font-weight:400;font-size:11px">기본 대응 절차</small></button>
+        <button class="rb" data-v="중급" onclick="ttxSelectIntensity(this)">중급<br><small style="font-weight:400;font-size:11px">복합 상황 대응</small></button>
+        <button class="rb" data-v="고급" onclick="ttxSelectIntensity(this)">고급<br><small style="font-weight:400;font-size:11px">극한 위기 대응</small></button>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">참여 인원 수 <span style="color:var(--red)">*</span></label>
+      <input type="number" class="fi" id="ttxParticipants" placeholder="예: 30" min="1" max="500" style="max-width:200px">
+      <div class="hint">훈련에 참여하는 전체 인원 수 (단위: 명)</div>
+    </div>
+    <div class="errbox" id="ttxErr1">⚠️ <span id="ttxErrMsg1"></span></div>
+    <div id="ttxGenLoading" style="display:none">
+      <div class="ttx-spin-wrap"><div class="ttx-spin"></div><div class="ttx-spin-text">Claude AI가 시나리오를 생성 중입니다...</div></div>
+    </div>
+    <button class="btn-p" onclick="ttxGenerateScenario()" id="ttxGenBtn">🤖 시나리오 생성 →</button>
+  </div>
+</div>
+
+<!-- TTX STEP 2: 상황판단회의 -->
+<div class="ttx-panel" id="ttxStep2">
+  <!-- 고정 헤더 -->
+  <div class="ttx-hd">
+    <div>
+      <div class="ttx-hd-title" id="ttxSitTitle">재난 상황 제목</div>
+      <div class="ttx-hd-title"><small id="ttxTimePressure"></small></div>
+    </div>
+    <div class="ttx-hd-right">
+      <span class="sev-badge sev-red" id="ttxSevBadge">🔴 위급</span>
+      <span class="ttx-phase-badge" id="ttxPhaseBadge">1/3 단계</span>
+      <span class="ttx-timer" id="ttxTimerDisplay">00:00:00</span>
+    </div>
+  </div>
+
+  <!-- 3열 레이아웃 -->
+  <div class="ttx-grid">
+    <!-- 좌측: 현황판 -->
+    <div class="ttx-met-wrap">
+      <div class="ttx-met-title">📊 현황판</div>
+      <div class="ttx-met-card" onclick="ttxEditMetric('casualties')">
+        <div class="ttx-met-label">인명피해</div>
+        <div class="ttx-met-val" id="metCasualties">0</div>
+        <div class="ttx-met-unit">명</div>
+      </div>
+      <div class="ttx-met-card" onclick="ttxEditMetric('displaced')">
+        <div class="ttx-met-label">이재민</div>
+        <div class="ttx-met-val" id="metDisplaced">0</div>
+        <div class="ttx-met-unit">명</div>
+      </div>
+      <div class="ttx-met-card" onclick="ttxEditMetric('infrastructure_damage')">
+        <div class="ttx-met-label">시설피해</div>
+        <div class="ttx-met-val" id="metInfra">0</div>
+        <div class="ttx-met-unit">건</div>
+      </div>
+      <div class="ttx-met-card" onclick="ttxEditMetric('resource_needed')">
+        <div class="ttx-met-label">투입자원</div>
+        <div class="ttx-met-val" id="metResource">0</div>
+        <div class="ttx-met-unit">단위</div>
+      </div>
+    </div>
+
+    <!-- 중앙: 상황 + 의사결정 -->
+    <div class="ttx-center-wrap">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
+      <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
+      <div class="ttx-alert-banner" id="ttxAlertBanner">🚨 돌발상황 발생!</div>
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px" id="ttxOptTitle">의사결정 선택지</div>
+      <div class="ttx-opts" id="ttxOptsGrid">
+        <div class="ttx-spin-wrap" style="grid-column:1/-1"><div class="ttx-spin"></div></div>
+      </div>
+      <div class="ttx-outcome" id="ttxOutcomeBox"></div>
+      <div id="ttxNextWrap" style="display:none;margin-top:14px;text-align:right">
+        <button class="btn-p" id="ttxNextBtn" onclick="ttxNextPhase()">다음 단계 →</button>
+      </div>
+    </div>
+
+    <!-- 우측: 13개 협업기관 -->
+    <div class="ttx-agencies-wrap">
+      <div class="ttx-ag-title">🤝 협업기관 현황</div>
+      <div class="ttx-ag-grid" id="ttxAgGrid"></div>
+      <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">카드 클릭 시 상태 변경</div>
+    </div>
+  </div>
+</div>
+
+<!-- TTX STEP 3: 결과 분석 대시보드 -->
+<div class="ttx-panel" id="ttxStep3">
+  <div class="ptitle">
+    <h2>📊 TTX 훈련 결과 분석</h2>
+    <p id="ttxResultMeta">훈련 결과를 분석합니다.</p>
+  </div>
+
+  <!-- 종합 점수 -->
+  <div class="card" style="text-align:center">
+    <div class="ct" style="justify-content:center">종합 평가</div>
+    <div class="ttx-score-ring" id="ttxScoreRing">
+      <div class="ttx-score-num" id="ttxScoreNum">-</div>
+      <div class="ttx-score-unit">/ 100</div>
+    </div>
+    <div class="ttx-grade-txt" id="ttxGradeLabel">-</div>
+    <div class="ttx-res-grid">
+      <div class="ttx-res-card"><div class="ttx-res-val" id="resTotalDec">0</div><div class="ttx-res-lbl">총 의사결정</div></div>
+      <div class="ttx-res-card"><div class="ttx-res-val" id="resCasual">0</div><div class="ttx-res-lbl">최종 인명피해(명)</div></div>
+      <div class="ttx-res-card"><div class="ttx-res-val" id="resResrc">0</div><div class="ttx-res-lbl">총 투입자원</div></div>
+      <div class="ttx-res-card"><div class="ttx-res-val" id="resElapsed">0분</div><div class="ttx-res-lbl">소요시간</div></div>
+    </div>
+  </div>
+
+  <!-- RTO 시뮬레이션 -->
+  <div class="rto-section">
+    <div class="rto-h">⏱️ 복구목표시간(RTO) 시뮬레이션</div>
+    <div class="rto-formula" id="rtoFormula">RTO = 기준시간(48h) × 피해계수 × 자원계수 × 의사결정계수</div>
+    <div class="rto-val" id="rtoResult">산출 중...</div>
+    <div class="rto-cmp" id="rtoCmp">행안부 권고 기준(48시간) 대비 분석 중</div>
+  </div>
+
+  <!-- AI 보고서 -->
+  <div class="card">
+    <div class="ct">🤖 AI 종합 평가 보고서</div>
+    <div class="eval-card-sub" style="font-size:13px;color:var(--muted);margin-bottom:14px">훈련 의사결정 내역을 바탕으로 Claude AI가 종합 평가 보고서를 생성합니다.</div>
+    <div id="ttxRptLoading" style="display:none">
+      <div class="ttx-spin-wrap"><div class="ttx-spin"></div><div class="ttx-spin-text">AI 보고서 생성 중...</div></div>
+    </div>
+    <div id="ttxRptBox" style="display:none;background:#0d1b2a;color:#b8d4e8;border-radius:10px;padding:20px;font-size:13px;line-height:1.9;white-space:pre-wrap;margin-bottom:16px;font-family:'Noto Sans KR',sans-serif"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn-a" onclick="ttxGenerateReport()" id="ttxRptBtn">🤖 AI 보고서 생성</button>
+      <button class="btn-s" onclick="ttxPrintReport()">🖨️ 보고서 출력</button>
+      <button class="btn-s" onclick="ttxReset()">🔄 새 훈련 시작</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ttxMainPanel -->
 
 </div><!-- /main -->
 
@@ -1431,6 +1692,8 @@ function enterOrgMode() {
   document.getElementById("evalMain").style.display = "none";
   document.querySelector(".main").style.display = "block";
   document.getElementById("chatFab").style.display = "flex";
+  document.getElementById("orgTabNav").style.display = "flex";
+  ttxRestoreState();
 }
 
 function enterEvaluatorMode() {
@@ -2257,6 +2520,563 @@ function chatKeydown(e) {
 function chatAutoResize(el) {
   el.style.height = "auto";
   el.style.height = Math.min(el.scrollHeight, 100) + "px";
+}
+
+// ═══════════════════════════════════════════════
+// TTX SIMULATOR MODULE
+// ═══════════════════════════════════════════════
+const TTX_AGENCIES = [
+  {id:'fire',   name:'소방본부',    icon:'🚒'},
+  {id:'police', name:'경찰청',      icon:'🚓'},
+  {id:'mil',    name:'군부대',      icon:'🪖'},
+  {id:'health', name:'보건소/병원', icon:'🏥'},
+  {id:'edu',    name:'교육청',      icon:'🏫'},
+  {id:'env',    name:'환경부',      icon:'🌿'},
+  {id:'land',   name:'국토교통부',  icon:'🏗️'},
+  {id:'mois',   name:'행안부',      icon:'📋'},
+  {id:'kepco',  name:'전기(한전)',  icon:'⚡'},
+  {id:'telecom',name:'통신(KT)',    icon:'📡'},
+  {id:'util',   name:'수도/가스',   icon:'🔧'},
+  {id:'vol',    name:'자원봉사',    icon:'🤝'},
+  {id:'biz',    name:'민간기업',    icon:'🏢'},
+];
+const TTX_STATUS_CYCLE = ['대기중','출동중','현장투입','완료'];
+const TTX_STATUS_CLS   = {'대기중':'standby','출동중':'dispatch','현장투입':'field','완료':'done'};
+
+let ttxState = {
+  orgName:'', disasterType:'', region:'', intensity:'', participants:0,
+  scenario:null,
+  phase:1,
+  timerInterval:null,
+  elapsedSeconds:0,
+  agencyStatuses:{},
+  variables:{casualties:0,displaced:0,infrastructure_damage:0,resource_needed:0},
+  decisions:[],
+  totalScore:0,
+};
+
+// ─── Tab Switch ───────────────────────────────
+function switchOrgTab(tab) {
+  const sim = document.getElementById('orgSimSection');
+  const ttx = document.getElementById('ttxMainPanel');
+  const sbar = document.querySelector('.hd .sbar');
+  document.getElementById('orgTabBtn1').classList.toggle('active', tab===1);
+  document.getElementById('orgTabBtn2').classList.toggle('active', tab===2);
+  if (tab===1) {
+    sim.style.display='block'; ttx.style.display='none';
+    if (sbar) sbar.style.display='flex';
+  } else {
+    sim.style.display='none'; ttx.style.display='block';
+    if (sbar) sbar.style.display='none';
+  }
+}
+
+// ─── Step Nav ─────────────────────────────────
+function showTtxStep(n) {
+  ['ttxStep1','ttxStep2','ttxStep3'].forEach((id,i)=>{
+    document.getElementById(id).className='ttx-panel'+(i+1===n?' active':'');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function ttxSelectIntensity(btn) {
+  document.querySelectorAll('#ttxIntensityGroup .rb').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  ttxState.intensity=btn.dataset.v;
+}
+
+// ─── Persist ──────────────────────────────────
+function ttxSaveState() {
+  const s={...ttxState,timerInterval:null};
+  try{localStorage.setItem('drex_ttx',JSON.stringify(s));}catch(e){}
+}
+
+function ttxRestoreState() {
+  try{
+    const saved=JSON.parse(localStorage.getItem('drex_ttx')||'null');
+    if(!saved||!saved.scenario) return;
+    ttxState=Object.assign(ttxState,saved,{timerInterval:null});
+    if(ttxState.scenario && ttxState.phase<=3){
+      switchOrgTab(2);
+      if(ttxState.phase===3 && ttxState.decisions.length>=3){
+        ttxRenderResults();
+        showTtxStep(3);
+      } else if(ttxState.phase>=1){
+        ttxRenderMeetingHeader();
+        ttxRenderMetrics();
+        ttxRenderAgencies();
+        showTtxStep(2);
+        ttxStartTimer();
+        ttxLoadOptions();
+      }
+    }
+  }catch(e){}
+}
+
+// ─── API Streaming ────────────────────────────
+async function ttxStreamAPI(messages, system, maxTokens) {
+  const body={model:'claude-sonnet-4-6',max_tokens:maxTokens||2000,stream:true,messages};
+  if(system) body.system=system;
+  const resp=await fetch('/api/generate',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Session-ID':getSessionId()},
+    body:JSON.stringify(body),
+  });
+  if(!resp.ok) throw new Error('HTTP '+resp.status);
+  const reader=resp.body.getReader();
+  const dec=new TextDecoder();
+  let full='',buf='';
+  while(true){
+    const{done,value}=await reader.read();
+    if(done) break;
+    buf+=dec.decode(value,{stream:true});
+    const lines=buf.split('\n'); buf=lines.pop();
+    for(const line of lines){
+      if(!line.startsWith('data:')) continue;
+      const data=line.slice(5).trim();
+      if(data==='[DONE]') continue;
+      try{const e=JSON.parse(data);if(e.type==='content_block_delta'&&e.delta?.text)full+=e.delta.text;}catch{}
+    }
+  }
+  return full;
+}
+
+function ttxParseJSON(text) {
+  const m=text.match(/```json\s*([\s\S]*?)\s*```/)||text.match(/```\s*([\s\S]*?)\s*```/);
+  const raw=m?m[1]:text;
+  try{return JSON.parse(raw.trim());}catch{
+    const obj=raw.match(/\{[\s\S]*\}/);
+    if(obj)try{return JSON.parse(obj[0]);}catch{}
+    return null;
+  }
+}
+
+// ─── STEP 1: Scenario Generation ──────────────
+async function ttxGenerateScenario() {
+  const orgName=document.getElementById('ttxOrgName').value.trim();
+  const disaster=document.getElementById('ttxDisasterType').value;
+  const region=document.getElementById('ttxRegion').value.trim();
+  const intensity=ttxState.intensity;
+  const participants=parseInt(document.getElementById('ttxParticipants').value)||0;
+
+  const errEl=document.getElementById('ttxErr1');
+  const errMsg=document.getElementById('ttxErrMsg1');
+  errEl.classList.remove('show');
+
+  if(!orgName){errMsg.textContent='기관명을 입력해주세요.';errEl.classList.add('show');return;}
+  if(!disaster){errMsg.textContent='재난유형을 선택해주세요.';errEl.classList.add('show');return;}
+  if(!region){errMsg.textContent='지역 특성을 입력해주세요.';errEl.classList.add('show');return;}
+  if(!intensity){errMsg.textContent='훈련 강도를 선택해주세요.';errEl.classList.add('show');return;}
+  if(!participants){errMsg.textContent='참여 인원 수를 입력해주세요.';errEl.classList.add('show');return;}
+
+  ttxState.orgName=orgName; ttxState.disasterType=disaster;
+  ttxState.region=region; ttxState.intensity=intensity; ttxState.participants=participants;
+
+  const genBtn=document.getElementById('ttxGenBtn');
+  const loadEl=document.getElementById('ttxGenLoading');
+  genBtn.disabled=true; loadEl.style.display='block';
+
+  const prompt=`아래 조건으로 TTX 시나리오를 JSON으로만 생성하세요.
+기관: ${orgName}, 재난: ${disaster}, 지역: ${region}, 강도: ${intensity}, 참여인원: ${participants}명
+
+JSON 형식만 출력 (다른 텍스트 없이):
+{
+  "situation_title": "재난 상황 제목 (30자 이내, 구체적)",
+  "initial_report": "최초 상황 보고 (현실적인 3~4문장, 피해 규모 포함)",
+  "severity": "red",
+  "affected_population": 5000,
+  "key_variables": {
+    "casualties": 15,
+    "displaced": 800,
+    "infrastructure_damage": 23,
+    "resource_needed": 120
+  },
+  "time_pressure": "골든타임 경고 메시지 (1문장, 긴박감 있게)",
+  "phase1_event": "1단계 돌발상황 (구체적 1~2문장)",
+  "phase2_event": "2단계 돌발상황 (더 심각한 상황 1~2문장)",
+  "phase3_event": "3단계 돌발상황 (최고조 위기 1~2문장)"
+}`;
+
+  try{
+    const text=await ttxStreamAPI(
+      [{role:'user',content:prompt}],
+      '당신은 행안부 안전한국훈련 전문가입니다. 재난대응 TTX 시나리오를 현실적으로 생성하세요.',
+      1500
+    );
+    const sc=ttxParseJSON(text);
+    if(!sc||!sc.situation_title) throw new Error('시나리오 파싱 실패. 다시 시도해주세요.');
+
+    ttxState.scenario=sc;
+    ttxState.variables={...sc.key_variables};
+    ttxState.phase=1;
+    ttxState.decisions=[];
+    ttxState.totalScore=0;
+    ttxState.elapsedSeconds=0;
+    TTX_AGENCIES.forEach(a=>{ttxState.agencyStatuses[a.id]='대기중';});
+
+    ttxSaveState();
+    ttxRenderMeetingHeader();
+    ttxRenderMetrics();
+    ttxRenderAgencies();
+    showTtxStep(2);
+    ttxStartTimer();
+    ttxLoadOptions();
+
+  }catch(err){
+    errMsg.textContent='오류: '+err.message;
+    errEl.classList.add('show');
+  }finally{
+    genBtn.disabled=false; loadEl.style.display='none';
+  }
+}
+
+// ─── STEP 2: Meeting UI ───────────────────────
+function ttxRenderMeetingHeader() {
+  const sc=ttxState.scenario;
+  if(!sc) return;
+  document.getElementById('ttxSitTitle').textContent=sc.situation_title;
+  document.getElementById('ttxTimePressure').textContent='⏰ '+sc.time_pressure;
+
+  const badge=document.getElementById('ttxSevBadge');
+  const sevMap={red:'🔴 위급',orange:'🟠 경계',yellow:'🟡 주의'};
+  badge.textContent=sevMap[sc.severity]||'🔴 위급';
+  badge.className='sev-badge sev-'+(sc.severity||'red');
+  document.getElementById('ttxPhaseBadge').textContent=ttxState.phase+'/3 단계';
+}
+
+function ttxRenderMetrics() {
+  const v=ttxState.variables;
+  document.getElementById('metCasualties').textContent=(v.casualties||0).toLocaleString();
+  document.getElementById('metDisplaced').textContent=(v.displaced||0).toLocaleString();
+  document.getElementById('metInfra').textContent=(v.infrastructure_damage||0).toLocaleString();
+  document.getElementById('metResource').textContent=(v.resource_needed||0).toLocaleString();
+}
+
+function ttxEditMetric(key) {
+  const labels={casualties:'인명피해(명)',displaced:'이재민(명)',infrastructure_damage:'시설피해(건)',resource_needed:'투입자원(단위)'};
+  const cur=ttxState.variables[key]||0;
+  const val=prompt(labels[key]+' 수치를 입력하세요 (현재: '+cur+')',cur);
+  if(val!==null&&!isNaN(parseInt(val))){
+    ttxState.variables[key]=Math.max(0,parseInt(val));
+    ttxRenderMetrics();
+    ttxSaveState();
+  }
+}
+
+function ttxRenderAgencies() {
+  const grid=document.getElementById('ttxAgGrid');
+  grid.innerHTML='';
+  TTX_AGENCIES.forEach(a=>{
+    const st=ttxState.agencyStatuses[a.id]||'대기중';
+    const cls=TTX_STATUS_CLS[st]||'standby';
+    const card=document.createElement('div');
+    card.className='ttx-ag-card ags-'+cls;
+    card.id='ag_'+a.id;
+    card.onclick=()=>ttxCycleStatus(a.id);
+    card.innerHTML=`<div class="ttx-ag-icon">${a.icon}</div>
+      <div class="ttx-ag-name">${a.name}</div>
+      <div class="ttx-ag-st">${st}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function ttxCycleStatus(id) {
+  const cur=ttxState.agencyStatuses[id]||'대기중';
+  const idx=TTX_STATUS_CYCLE.indexOf(cur);
+  const next=TTX_STATUS_CYCLE[(idx+1)%TTX_STATUS_CYCLE.length];
+  ttxState.agencyStatuses[id]=next;
+  const cls=TTX_STATUS_CLS[next];
+  const card=document.getElementById('ag_'+id);
+  if(card){
+    card.className='ttx-ag-card ags-'+cls;
+    const st=card.querySelector('.ttx-ag-st');
+    if(st) st.textContent=next;
+  }
+  ttxSaveState();
+}
+
+// ─── Timer ────────────────────────────────────
+function ttxStartTimer() {
+  if(ttxState.timerInterval) clearInterval(ttxState.timerInterval);
+  ttxState.timerInterval=setInterval(()=>{
+    ttxState.elapsedSeconds++;
+    const h=Math.floor(ttxState.elapsedSeconds/3600);
+    const m=Math.floor((ttxState.elapsedSeconds%3600)/60);
+    const s=ttxState.elapsedSeconds%60;
+    const el=document.getElementById('ttxTimerDisplay');
+    if(el) el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+}
+
+function ttxStopTimer() {
+  if(ttxState.timerInterval) clearInterval(ttxState.timerInterval);
+  ttxState.timerInterval=null;
+}
+
+// ─── Load Options ─────────────────────────────
+async function ttxLoadOptions() {
+  const sc=ttxState.scenario;
+  if(!sc) return;
+  const phEvt=[sc.phase1_event,sc.phase2_event,sc.phase3_event];
+  const curEvt=phEvt[ttxState.phase-1]||'';
+
+  document.getElementById('ttxOptTitle').textContent='['+ttxState.phase+'단계] 의사결정 선택지';
+  document.getElementById('ttxOptsGrid').innerHTML='<div class="ttx-spin-wrap" style="grid-column:1/-1"><div class="ttx-spin"></div><div class="ttx-spin-text">선택지 생성 중...</div></div>';
+  document.getElementById('ttxOutcomeBox').classList.remove('show');
+  document.getElementById('ttxNextWrap').style.display='none';
+
+  // Show situation
+  document.getElementById('ttxSituationText').textContent=sc.initial_report;
+
+  // Alert banner
+  const ab=document.getElementById('ttxAlertBanner');
+  ab.textContent='🚨 돌발상황: '+curEvt;
+  ab.classList.add('show');
+  document.getElementById('ttxPhaseBadge').textContent=ttxState.phase+'/3 단계';
+
+  const prompt=`재난 상황: ${sc.situation_title}
+현재 돌발상황(${ttxState.phase}단계): ${curEvt}
+기관: ${ttxState.orgName}, 재난: ${ttxState.disasterType}
+인명피해: ${ttxState.variables.casualties}명, 이재민: ${ttxState.variables.displaced}명
+
+의사결정 선택지 4개를 JSON으로만 생성하세요:
+{
+  "options": [
+    {"label": "A", "action": "대응 행동 (25자 이내)", "risk": "높음"},
+    {"label": "B", "action": "대응 행동 (25자 이내)", "risk": "중간"},
+    {"label": "C", "action": "대응 행동 (25자 이내)", "risk": "낮음"},
+    {"label": "D", "action": "대응 행동 (25자 이내)", "risk": "중간"}
+  ]
+}`;
+
+  try{
+    const text=await ttxStreamAPI([{role:'user',content:prompt}],null,800);
+    const parsed=ttxParseJSON(text);
+    if(!parsed||!parsed.options||!parsed.options.length) throw new Error('선택지 파싱 실패');
+    ttxState.currentOptions=parsed.options;
+    ttxRenderOptions(parsed.options);
+  }catch(err){
+    document.getElementById('ttxOptsGrid').innerHTML=`<div style="color:var(--red);font-size:13px;padding:16px;grid-column:1/-1">⚠️ 선택지 생성 실패: ${err.message}<br><button class="btn-s" style="margin-top:8px;font-size:12px" onclick="ttxLoadOptions()">다시 시도</button></div>`;
+  }
+}
+
+function ttxRenderOptions(options) {
+  const riskCls={'높음':'risk-h','중간':'risk-m','낮음':'risk-l'};
+  document.getElementById('ttxOptsGrid').innerHTML=options.map(o=>`
+    <button class="ttx-opt" data-label="${o.label}" onclick="ttxSelectOption('${o.label}')">
+      <div class="ttx-opt-lbl">${o.label}안</div>
+      <div class="ttx-opt-txt">${o.action}</div>
+      <span class="ttx-risk ${riskCls[o.risk]||'risk-m'}">위험도: ${o.risk}</span>
+    </button>`).join('');
+}
+
+async function ttxSelectOption(label) {
+  const opts=document.querySelectorAll('.ttx-opt');
+  if([...opts].some(b=>b.disabled)) return;
+  opts.forEach(b=>{
+    b.classList.toggle('sel',b.dataset.label===label);
+    b.disabled=true;
+  });
+
+  const option=ttxState.currentOptions?.find(o=>o.label===label);
+  if(!option) return;
+
+  const ob=document.getElementById('ttxOutcomeBox');
+  ob.textContent='결과 분석 중...';
+  ob.classList.add('show');
+
+  const prompt=`선택한 의사결정: ${label}안 - ${option.action} (위험도: ${option.risk})
+현재 피해 현황: 인명피해 ${ttxState.variables.casualties}명, 이재민 ${ttxState.variables.displaced}명, 시설피해 ${ttxState.variables.infrastructure_damage}건, 투입자원 ${ttxState.variables.resource_needed}
+재난: ${ttxState.disasterType} ${ttxState.phase}단계
+
+결과를 JSON으로만 생성하세요:
+{
+  "outcome": "이 결정의 결과 설명 (2~3문장, 현실적 결과)",
+  "variable_changes": {
+    "casualties": 5,
+    "displaced": -100,
+    "infrastructure_damage": 2,
+    "resource_needed": 30
+  },
+  "score": 72,
+  "next_situation": "다음 단계로 이어지는 상황 브리핑 (1~2문장)"
+}`;
+
+  try{
+    const text=await ttxStreamAPI([{role:'user',content:prompt}],null,700);
+    const parsed=ttxParseJSON(text);
+    if(!parsed) throw new Error('결과 파싱 실패');
+
+    if(parsed.variable_changes){
+      Object.keys(parsed.variable_changes).forEach(k=>{
+        if(ttxState.variables[k]!==undefined)
+          ttxState.variables[k]=Math.max(0,(ttxState.variables[k]||0)+(parsed.variable_changes[k]||0));
+      });
+      ttxRenderMetrics();
+    }
+
+    const score=Math.min(100,Math.max(0,parsed.score||50));
+    ttxState.decisions.push({phase:ttxState.phase,option:label,outcome:parsed.outcome,score});
+    ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
+
+    ob.textContent=`[${label}안 선택 결과]\n${parsed.outcome}\n\n📊 이번 단계 점수: ${score}점 (누적 평균: ${ttxState.totalScore}점)`;
+    ttxSaveState();
+
+    const nw=document.getElementById('ttxNextWrap');
+    const nb=document.getElementById('ttxNextBtn');
+    nw.style.display='block';
+    nb.textContent=ttxState.phase<3?`${ttxState.phase+1}단계 진입 →`:'결과 분석 →';
+
+  }catch(err){
+    ob.textContent='⚠️ 결과 생성 실패: '+err.message;
+  }
+}
+
+function ttxNextPhase() {
+  if(ttxState.phase<3){
+    ttxState.phase++;
+    document.getElementById('ttxNextWrap').style.display='none';
+    document.getElementById('ttxOutcomeBox').classList.remove('show');
+    ttxSaveState();
+    ttxLoadOptions();
+  }else{
+    ttxStopTimer();
+    ttxRenderResults();
+    showTtxStep(3);
+    ttxGenerateReport();
+  }
+}
+
+// ─── STEP 3: Results ──────────────────────────
+function ttxRenderResults() {
+  const score=ttxState.totalScore;
+  let grade,gradeColor;
+  if(score>=80){grade='우수 ⭐';gradeColor='var(--teal)';}
+  else if(score>=60){grade='보통 ✅';gradeColor='var(--amber)';}
+  else{grade='미흡 ⚠️';gradeColor='var(--red)';}
+
+  document.getElementById('ttxScoreNum').textContent=score;
+  document.getElementById('ttxScoreRing').style.borderColor=gradeColor;
+  document.getElementById('ttxGradeLabel').textContent=grade;
+  document.getElementById('ttxGradeLabel').style.color=gradeColor;
+  document.getElementById('ttxResultMeta').textContent=ttxState.orgName+' · '+ttxState.disasterType+' TTX 훈련 결과 · 강도: '+ttxState.intensity;
+
+  document.getElementById('resTotalDec').textContent=ttxState.decisions.length;
+  document.getElementById('resCasual').textContent=(ttxState.variables.casualties||0).toLocaleString();
+  document.getElementById('resResrc').textContent=(ttxState.variables.resource_needed||0).toLocaleString();
+  const h=Math.floor(ttxState.elapsedSeconds/3600);
+  const m=Math.floor((ttxState.elapsedSeconds%3600)/60);
+  document.getElementById('resElapsed').textContent=h?h+'시간 '+m+'분':m+'분';
+
+  // RTO
+  const sc=ttxState.scenario;
+  const baseRTO=48;
+  const orig=sc.key_variables||{};
+  const dmg=(ttxState.variables.casualties/(orig.casualties||1))+(ttxState.variables.displaced/(orig.displaced||1));
+  const damageFactor=Math.min(3.0,Math.max(1.0,1+dmg*0.4));
+  const resFactor=Math.min(1.5,Math.max(0.5,1.5-(ttxState.variables.resource_needed/(orig.resource_needed||1))*0.25));
+  const decFactor=Math.min(1.4,Math.max(0.6,1.4-(score/100)*0.8));
+  const rtoMid=baseRTO*damageFactor*resFactor*decFactor;
+  const rtoMin=Math.round(rtoMid*0.85);
+  const rtoMax=Math.round(rtoMid*1.15);
+  const rtoPct=Math.round(rtoMid/baseRTO*100);
+
+  document.getElementById('rtoFormula').textContent=
+    `RTO = ${baseRTO}h × ${damageFactor.toFixed(2)}(피해계수) × ${resFactor.toFixed(2)}(자원계수) × ${decFactor.toFixed(2)}(의사결정계수)`;
+  document.getElementById('rtoResult').textContent=`예상 복구 소요: ${rtoMin}시간 ~ ${rtoMax}시간`;
+  document.getElementById('rtoCmp').textContent=
+    `행안부 권고 기준(48시간) 대비 ${rtoPct}% 수준 · ${rtoPct<=100?'✅ 기준 이내':'⚠️ 기준 초과'}`;
+}
+
+async function ttxGenerateReport() {
+  const rptBtn=document.getElementById('ttxRptBtn');
+  const rptLd=document.getElementById('ttxRptLoading');
+  const rptBox=document.getElementById('ttxRptBox');
+  rptBtn.disabled=true; rptLd.style.display='block'; rptBox.style.display='none';
+
+  const decText=ttxState.decisions.map((d,i)=>
+    `${i+1}단계: ${d.option}안 선택 (점수 ${d.score}점)\n결과: ${d.outcome}`).join('\n\n');
+
+  const prompt=`TTX 상황판단회의 훈련 종합 평가 보고서를 작성하세요.
+
+기관: ${ttxState.orgName}
+재난유형: ${ttxState.disasterType}
+지역: ${ttxState.region}
+훈련 강도: ${ttxState.intensity} / 참여 인원: ${ttxState.participants}명
+종합 점수: ${ttxState.totalScore}점
+훈련 시간: ${Math.floor(ttxState.elapsedSeconds/60)}분 ${ttxState.elapsedSeconds%60}초
+
+의사결정 내역:
+${decText}
+
+최종 피해 현황:
+인명피해: ${ttxState.variables.casualties}명, 이재민: ${ttxState.variables.displaced}명
+시설피해: ${ttxState.variables.infrastructure_damage}건, 투입자원: ${ttxState.variables.resource_needed}단위
+
+아래 형식으로 작성하세요 (행안부 공문체):
+
+【TTX 훈련 개요】
+(기관명, 재난유형, 훈련일시, 참여인원 등 1~2문장)
+
+【잘한 의사결정 3가지】
+1. (구체적으로)
+2.
+3.
+
+【개선 필요 사항 3가지】
+1. (구체적 개선 방향 포함)
+2.
+3.
+
+【다음 훈련 권고사항】
+1.
+2.
+3.
+
+【복구목표시간(RTO) 평가】
+(RTO 산출 결과와 행안부 기준 대비 평가 1~2문장)
+
+【종합 의견】
+(전반적인 평가와 격려/개선 방향 2~3문장)`;
+
+  try{
+    const text=await ttxStreamAPI(
+      [{role:'user',content:prompt}],
+      '당신은 행정안전부 안전한국훈련 TTX 전문 평가위원입니다. 현실적이고 구체적인 평가 보고서를 공문체로 작성하세요.',
+      2500
+    );
+    rptBox.textContent=text;
+    rptBox.style.display='block';
+    window._ttxRptText=text;
+  }catch(err){
+    rptBox.textContent='⚠️ 보고서 생성 실패: '+err.message;
+    rptBox.style.display='block';
+  }finally{
+    rptLd.style.display='none';
+    rptBtn.disabled=false;
+  }
+}
+
+function ttxPrintReport(){window.print();}
+
+function ttxReset() {
+  ttxStopTimer();
+  ttxState={
+    orgName:'',disasterType:'',region:'',intensity:'',participants:0,
+    scenario:null,phase:1,timerInterval:null,elapsedSeconds:0,
+    agencyStatuses:{},
+    variables:{casualties:0,displaced:0,infrastructure_damage:0,resource_needed:0},
+    decisions:[],totalScore:0,
+  };
+  localStorage.removeItem('drex_ttx');
+  document.getElementById('ttxOrgName').value='';
+  document.getElementById('ttxDisasterType').value='';
+  document.getElementById('ttxRegion').value='';
+  document.getElementById('ttxParticipants').value='';
+  document.querySelectorAll('#ttxIntensityGroup .rb').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('ttxErr1').classList.remove('show');
+  document.getElementById('ttxRptBox').style.display='none';
+  showTtxStep(1);
 }
 
 // ═══════════════════════════════════════════════
