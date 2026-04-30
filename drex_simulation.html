@@ -347,15 +347,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <div class="lm-overlay" id="loginOverlay">
   <div class="lm-box">
     <div class="lm-logo" style="justify-content:center;flex-direction:column;align-items:center;gap:0">
-      <svg width="260" height="80" viewBox="0 0 260 80">
-        <rect x="0" y="0" width="260" height="80" fill="#0f1e35" rx="8"/>
-        <polygon points="0,0 52,0 24,80 0,80" fill="#0e8a76" opacity="0.9"/>
-        <polygon points="46,0 60,0 32,80 18,80" fill="#0e8a76" opacity="0.25"/>
-        <text x="72" y="36" fill="#ffffff" font-size="28" font-weight="700" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="5">DREX</text>
-        <text x="72" y="54" fill="#0e8a76" font-size="7.5" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1.8">DISASTER RESPONSE EXERCISE</text>
-        <line x1="72" y1="59" x2="248" y2="59" stroke="#0e8a76" stroke-width="0.5" opacity="0.4"/>
-        <text x="72" y="70" fill="#ffffff" font-size="6.5" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1" opacity="0.5">재난훈련 AI 평가지원 플랫폼</text>
-      </svg>
+      <svg width="240" height="70" viewBox="0 0 240 70">
+  <rect x="0" y="0" width="240" height="70" fill="#f7f6f2" rx="8"/>
+  <text x="14" y="48" fill="#0a1628" font-size="38" font-weight="700"
+    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">DR</text>
+  <text x="98" y="48" fill="#0e8a76" font-size="38" font-weight="700"
+    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">EX</text>
+  <rect x="14" y="54" width="210" height="0.8" fill="#0a1628" opacity="0.1"/>
+  <text x="14" y="65" fill="#0e8a76" font-size="7"
+    font-family="'Helvetica Neue',Arial,sans-serif"
+    letter-spacing="1.5">DISASTER RESPONSE EXERCISE</text>
+</svg>
     </div>
     <div class="lm-divider"></div>
     <div class="lm-heading">
@@ -460,14 +462,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <header class="hd">
   <div class="hd-logo">
     <svg width="180" height="52" viewBox="0 0 180 52">
-      <rect x="0" y="0" width="180" height="52" fill="#0f1e35" rx="6"/>
-      <polygon points="0,0 36,0 16,52 0,52" fill="#0e8a76" opacity="0.9"/>
-      <polygon points="32,0 42,0 22,52 12,52" fill="#0e8a76" opacity="0.25"/>
-      <text x="50" y="24" fill="#ffffff" font-size="18" font-weight="700" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="4">DREX</text>
-      <text x="50" y="38" fill="#0e8a76" font-size="6" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1.5">DISASTER RESPONSE EXERCISE</text>
-      <line x1="50" y1="42" x2="172" y2="42" stroke="#0e8a76" stroke-width="0.5" opacity="0.4"/>
-      <text x="50" y="49" fill="#ffffff" font-size="5.5" font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="1" opacity="0.4">재난훈련 AI 평가지원 플랫폼</text>
-    </svg>
+  <rect x="0" y="0" width="180" height="52" fill="#f7f6f2" rx="6"/>
+  <text x="10" y="36" fill="#0a1628" font-size="30" font-weight="700"
+    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">DR</text>
+  <text x="76" y="36" fill="#0e8a76" font-size="30" font-weight="700"
+    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">EX</text>
+  <rect x="10" y="40" width="158" height="0.8" fill="#0a1628" opacity="0.1"/>
+  <text x="10" y="50" fill="#0e8a76" font-size="6"
+    font-family="'Helvetica Neue',Arial,sans-serif"
+    letter-spacing="1.5">DISASTER RESPONSE EXERCISE</text>
+</svg>
   </div>
   <nav class="sbar">
     <div class="si"><div class="sc active" id="sc1">1</div><span class="sl active" id="sl1">기관 입력</span></div>
@@ -823,6 +827,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </div>
     <button class="btn-p" onclick="ttxGenerateScenario()" id="ttxGenBtn">🤖 시나리오 생성 →</button>
   </div>
+  <!-- 시나리오 생성 후 정보 표시 -->
+  <div id="ttxScenInfoCard" style="display:none;background:#0d1b2a;border-radius:12px;padding:20px 22px;margin-top:-8px;margin-bottom:22px">
+    <div style="color:#7ec8e3;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:.5px">📊 몬테카를로 시나리오 생성 정보</div>
+    <div style="font-size:12px;line-height:2.1;color:#b8d4e8" id="ttxScenInfoBody"></div>
+    <button class="btn-s" style="margin-top:14px;font-size:12px;border-color:rgba(255,255,255,.2);color:#b8d4e8;background:transparent" onclick="ttxGenerateScenario()">🎲 다른 시나리오 생성</button>
+  </div>
 </div>
 
 <!-- TTX STEP 2: 상황판단회의 -->
@@ -873,6 +883,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
       <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
       <div class="ttx-alert-banner" id="ttxAlertBanner">🚨 돌발상황 발생!</div>
+      <div id="ttxUnexpectedBanner" style="display:none;background:#7c1010;color:#fff;border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;font-weight:600;animation:alertPop .4s ease">⚡ 돌발변수 발생!</div>
       <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px" id="ttxOptTitle">의사결정 선택지</div>
       <div class="ttx-opts" id="ttxOptsGrid">
         <div class="ttx-spin-wrap" style="grid-column:1/-1"><div class="ttx-spin"></div></div>
@@ -921,6 +932,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="rto-formula" id="rtoFormula">RTO = 기준시간(48h) × 피해계수 × 자원계수 × 의사결정계수</div>
     <div class="rto-val" id="rtoResult">산출 중...</div>
     <div class="rto-cmp" id="rtoCmp">행안부 권고 기준(48시간) 대비 분석 중</div>
+  </div>
+
+  <!-- 시나리오 재현 정보 -->
+  <div class="card" id="ttxReplayCard" style="display:none;background:#0d1b2a;border:none">
+    <div class="ct" style="color:#7ec8e3">🔢 시나리오 재현 정보</div>
+    <div id="ttxReplayBody" style="font-size:13px;line-height:2;color:#b8d4e8"></div>
   </div>
 
   <!-- AI 보고서 -->
@@ -2564,6 +2581,10 @@ let ttxState = {
   decisions:[],
   totalScore:0,
   sessionId:null,
+  monteCarloSeed:null,
+  uncertaintyFactors:[],
+  realCaseRef:'',
+  unexpectedEventsCount:0,
 };
 
 // ─── Supabase helper (오프라인 폴백) ──────────
@@ -2631,10 +2652,43 @@ function ttxRestoreState() {
   }catch(e){}
 }
 
+// ─── Monte Carlo Sampling ─────────────────────
+function monteCarloSample(disasterType, difficulty) {
+  const params = {
+    '홍수/태풍': {casualties:{mean:10,std:12}, displaced:{mean:800,std:600},   damage:{mean:40,std:35},  resource:{mean:80,std:60}},
+    '지진':      {casualties:{mean:40,std:50}, displaced:{mean:3000,std:2000}, damage:{mean:200,std:150},resource:{mean:400,std:200}},
+    '산불':      {casualties:{mean:3,std:5},   displaced:{mean:400,std:300},   damage:{mean:80,std:70},  resource:{mean:120,std:80}},
+    '화학사고':  {casualties:{mean:15,std:20}, displaced:{mean:1200,std:800},  damage:{mean:60,std:50},  resource:{mean:150,std:100}},
+    '감염병':    {casualties:{mean:30,std:60}, displaced:{mean:100,std:150},   damage:{mean:5,std:10},   resource:{mean:500,std:400}},
+    '복합재난':  {casualties:{mean:60,std:70}, displaced:{mean:2500,std:2000}, damage:{mean:180,std:150},resource:{mean:500,std:300}},
+  };
+  function normalSample(mean, std) {
+    let u1=Math.random(), u2=Math.random();
+    const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+    return Math.round(Math.max(0, mean+z*std));
+  }
+  const multiplier={초급:0.6,중급:1.0,고급:1.6}[difficulty]||1.0;
+  const p=params[disasterType]||params['복합재난'];
+  const seed=Math.floor(Math.random()*100000);
+  return {
+    seed,
+    casualties:           Math.round(normalSample(p.casualties.mean, p.casualties.std) * multiplier),
+    displaced:            Math.round(normalSample(p.displaced.mean,  p.displaced.std)  * multiplier),
+    infrastructure_damage:Math.round(normalSample(p.damage.mean,     p.damage.std)     * multiplier),
+    resource_needed:      Math.round(normalSample(p.resource.mean,   p.resource.std)   * multiplier),
+    uncertaintyFactors:[
+      +(Math.random()*0.4+0.8).toFixed(3),
+      +(Math.random()*0.4+0.8).toFixed(3),
+      +(Math.random()*0.4+0.8).toFixed(3),
+    ],
+  };
+}
+
 // ─── API Streaming ────────────────────────────
-async function ttxStreamAPI(messages, system, maxTokens) {
+async function ttxStreamAPI(messages, system, maxTokens, tools) {
   const body={model:'claude-sonnet-4-6',max_tokens:maxTokens||2000,stream:true,messages};
   if(system) body.system=system;
+  if(tools) body.tools=tools;
   const resp=await fetch('/api/generate',{
     method:'POST',
     headers:{'Content-Type':'application/json','X-Session-ID':getSessionId()},
@@ -2689,13 +2743,20 @@ async function ttxGenerateScenario() {
 
   ttxState.orgName=orgName; ttxState.disasterType=disaster;
   ttxState.region=region; ttxState.intensity=intensity; ttxState.participants=participants;
-  ttxState.sessionId=null;
+  ttxState.sessionId=null; ttxState.unexpectedEventsCount=0;
 
   const genBtn=document.getElementById('ttxGenBtn');
   const loadEl=document.getElementById('ttxGenLoading');
+  const infoCard=document.getElementById('ttxScenInfoCard');
   genBtn.disabled=true; loadEl.style.display='block';
+  if(infoCard) infoCard.style.display='none';
 
-  // STEP 1: Supabase에서 기관 과거 지적사항 조회
+  // ① Monte Carlo 사전 샘플링 (Box-Muller)
+  const mc=monteCarloSample(disaster, intensity);
+  ttxState.monteCarloSeed=mc.seed;
+  ttxState.uncertaintyFactors=mc.uncertaintyFactors;
+
+  // ② Supabase 기관 과거 지적사항 조회
   let pastIssues='조회된 지적사항 없음';
   const {data:issueData}=await ttxSb(()=>supabaseClient
     .from('issues')
@@ -2705,46 +2766,67 @@ async function ttxGenerateScenario() {
     .limit(10)
   );
   if(issueData?.length){
-    pastIssues=issueData.map(i=>'- ['+( i.issue_category||'기타')+'] '+i.issue_content).join('\n');
+    pastIssues=issueData.map(i=>'- ['+(i.issue_category||'기타')+'] '+i.issue_content).join('\n');
   }
 
-  // STEP 2: Claude API 호출 (지적사항 반영)
-  const prompt=`아래 기관의 과거 지적사항을 반드시 반영하여 TTX 시나리오를 생성하세요.
-기관: ${orgName}, 재난: ${disaster}, 지역: ${region}, 강도: ${intensity}, 참여인원: ${participants}명
+  // ③ Claude API 호출 (웹 검색 + 과거 지적사항 반영)
+  const prompt=`당신은 행안부 안전한국훈련 TTX 전문가입니다.
 
-[이 기관의 과거 지적사항]
+먼저 web_search 도구로 "${disaster} 실제 사례 한국 최근 3년" 을 검색하여 현실적인 레퍼런스를 파악한 뒤, 아래 조건으로 TTX 시나리오를 생성하세요.
+
+[훈련 조건]
+- 기관: ${orgName}
+- 재난: ${disaster}
+- 지역: ${region}
+- 강도: ${intensity}
+- 참여인원: ${participants}명
+
+[Monte Carlo 사전 샘플링 결과 — 반드시 이 수치를 기준으로 시나리오를 작성하세요]
+- 인명피해(초기): ${mc.casualties}명
+- 이재민: ${mc.displaced}명
+- 시설피해: ${mc.infrastructure_damage}건
+- 필요자원: ${mc.resource_needed}단위
+- 불확실성 계수: [${mc.uncertaintyFactors.join(', ')}]
+- MC 시드: ${mc.seed}
+
+[이 기관의 과거 지적사항 — 돌발상황에 반드시 반영]
 ${pastIssues}
 
-위 지적사항에서 반복되는 취약점이 있다면 시나리오 돌발상황에 반드시 포함하세요.
-JSON으로만 응답 (다른 텍스트 없이):
+JSON으로만 응답 (마크다운 없이):
 {
   "situation_title": "재난 상황 제목 (30자 이내)",
-  "initial_report": "최초 상황 보고 (현실적인 3~4문장, 피해 규모 포함)",
+  "initial_report": "최초 상황 보고 (현실적 3~4문장, 위 MC 수치 포함)",
   "severity": "red",
-  "affected_population": 5000,
+  "affected_population": ${Math.round(mc.displaced*1.5)},
   "key_variables": {
-    "casualties": 15,
-    "displaced": 800,
-    "infrastructure_damage": 23,
-    "resource_needed": 120
+    "casualties": ${mc.casualties},
+    "displaced": ${mc.displaced},
+    "infrastructure_damage": ${mc.infrastructure_damage},
+    "resource_needed": ${mc.resource_needed}
   },
-  "time_pressure": "골든타임 경고 메시지 (1문장)",
-  "weakness_applied": "반영된 취약점 요약 (1문장, 과거 지적사항 없으면 '일반 시나리오 적용')",
-  "phase1_event": "1단계 돌발상황 (1~2문장, 과거 취약점 반영)",
-  "phase2_event": "2단계 돌발상황 더 심각하게 (1~2문장)",
-  "phase3_event": "3단계 돌발상황 최고조 위기 (1~2문장)"
+  "time_pressure": "골든타임 경고 (1문장)",
+  "weakness_applied": "반영된 취약점 요약 (과거 지적사항 없으면 '일반 시나리오 적용')",
+  "phase1_event": "1단계 돌발상황 (과거 취약점 반영)",
+  "phase2_event": "2단계 돌발상황 (더 심각)",
+  "phase3_event": "3단계 돌발상황 (최고조 위기)",
+  "real_case_reference": "검색한 실제 사례 요약 (사건명, 연도, 교훈 1~2문장. 검색 결과 없으면 '최근 유사사례 없음')",
+  "uncertainty_factors": [${mc.uncertaintyFactors.join(', ')}],
+  "monte_carlo_seed": ${mc.seed}
 }`;
 
   try{
+    const webSearchTool=[{type:'web_search_20250305',name:'web_search'}];
     const text=await ttxStreamAPI(
       [{role:'user',content:prompt}],
-      '당신은 행안부 안전한국훈련 전문가입니다. 재난대응 TTX 시나리오를 현실적으로 생성하세요.',
-      1800
+      null,
+      2200,
+      webSearchTool
     );
     const sc=ttxParseJSON(text);
     if(!sc||!sc.situation_title) throw new Error('시나리오 파싱 실패. 다시 시도해주세요.');
 
     ttxState.scenario=sc;
+    ttxState.realCaseRef=sc.real_case_reference||'';
     ttxState.variables={...sc.key_variables};
     ttxState.phase=1;
     ttxState.decisions=[];
@@ -2752,7 +2834,18 @@ JSON으로만 응답 (다른 텍스트 없이):
     ttxState.elapsedSeconds=0;
     TTX_AGENCIES.forEach(a=>{ttxState.agencyStatuses[a.id]='대기중';});
 
-    // STEP 3: Supabase에 세션 저장
+    // 생성 정보 표시
+    if(infoCard){
+      const infoBody=document.getElementById('ttxScenInfoBody');
+      if(infoBody) infoBody.innerHTML=
+        `<b>MC 시드:</b> ${mc.seed}<br>`+
+        `<b>불확실성 계수:</b> [${mc.uncertaintyFactors.join(', ')}]<br>`+
+        `<b>실제 사례 참조:</b> ${sc.real_case_reference||'없음'}<br>`+
+        `<b>초기 피해 (MC):</b> 인명 ${mc.casualties}명 · 이재민 ${mc.displaced}명 · 시설 ${mc.infrastructure_damage}건 · 자원 ${mc.resource_needed}단위`;
+      infoCard.style.display='block';
+    }
+
+    // Supabase 세션 저장
     const {data:session}=await ttxSb(()=>supabaseClient
       .from('ttx_sessions')
       .insert({
@@ -2890,6 +2983,8 @@ async function ttxLoadOptions() {
   document.getElementById('ttxOptsGrid').innerHTML='<div class="ttx-spin-wrap" style="grid-column:1/-1"><div class="ttx-spin"></div><div class="ttx-spin-text">선택지 생성 중...</div></div>';
   document.getElementById('ttxOutcomeBox').classList.remove('show');
   document.getElementById('ttxNextWrap').style.display='none';
+  const ub=document.getElementById('ttxUnexpectedBanner');
+  if(ub) ub.style.display='none';
 
   // Show situation
   document.getElementById('ttxSituationText').textContent=sc.initial_report;
@@ -2905,13 +3000,13 @@ async function ttxLoadOptions() {
 기관: ${ttxState.orgName}, 재난: ${ttxState.disasterType}
 인명피해: ${ttxState.variables.casualties}명, 이재민: ${ttxState.variables.displaced}명
 
-의사결정 선택지 4개를 JSON으로만 생성하세요:
+의사결정 선택지 4개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수, 위험도 높을수록 높게 설정):
 {
   "options": [
-    {"label": "A", "action": "대응 행동 (25자 이내)", "risk": "높음"},
-    {"label": "B", "action": "대응 행동 (25자 이내)", "risk": "중간"},
-    {"label": "C", "action": "대응 행동 (25자 이내)", "risk": "낮음"},
-    {"label": "D", "action": "대응 행동 (25자 이내)", "risk": "중간"}
+    {"label": "A", "action": "대응 행동 (25자 이내)", "risk": "높음", "unexpected_prob": 30, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
+    {"label": "B", "action": "대응 행동 (25자 이내)", "risk": "중간", "unexpected_prob": 18, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
+    {"label": "C", "action": "대응 행동 (25자 이내)", "risk": "낮음", "unexpected_prob": 8, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
+    {"label": "D", "action": "대응 행동 (25자 이내)", "risk": "중간", "unexpected_prob": 22, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"}
   ]
 }`;
 
@@ -2933,6 +3028,7 @@ function ttxRenderOptions(options) {
       <div class="ttx-opt-lbl">${o.label}안</div>
       <div class="ttx-opt-txt">${o.action}</div>
       <span class="ttx-risk ${riskCls[o.risk]||'risk-m'}">위험도: ${o.risk}</span>
+      ${o.unexpected_prob?`<span style="font-size:9px;color:rgba(255,255,255,.45);margin-top:3px;display:block">⚡ 돌발확률 ${o.unexpected_prob}%</span>`:''}
     </button>`).join('');
 }
 
@@ -2946,6 +3042,21 @@ async function ttxSelectOption(label) {
 
   const option=ttxState.currentOptions?.find(o=>o.label===label);
   if(!option) return;
+
+  // 돌발 불확실성 이벤트 트리거
+  let unexpectedFired=false;
+  if(option.unexpected_prob && Math.random()*100 < option.unexpected_prob) {
+    unexpectedFired=true;
+    ttxState.unexpectedEventsCount=(ttxState.unexpectedEventsCount||0)+1;
+    const ub=document.getElementById('ttxUnexpectedBanner');
+    if(ub){
+      ub.textContent='⚡ 돌발변수 발생! '+(option.unexpected_event||'예상치 못한 사태가 발생했습니다!');
+      ub.style.display='block';
+    }
+    ttxState.variables.casualties=Math.max(0,(ttxState.variables.casualties||0)+Math.ceil((ttxState.variables.casualties||10)*0.15));
+    ttxState.variables.displaced=Math.max(0,(ttxState.variables.displaced||0)+Math.ceil((ttxState.variables.displaced||100)*0.15));
+    ttxRenderMetrics();
+  }
 
   const ob=document.getElementById('ttxOutcomeBox');
   ob.textContent='결과 분석 중...';
@@ -3081,6 +3192,20 @@ function ttxRenderResults() {
       rto_min:rtoMin,
       rto_max:rtoMax
     }).eq('id',ttxState.sessionId));
+  }
+
+  // 시나리오 재현 정보 표시
+  const replayCard=document.getElementById('ttxReplayCard');
+  const replayBody=document.getElementById('ttxReplayBody');
+  if(replayCard&&replayBody&&ttxState.monteCarloSeed){
+    replayCard.style.display='block';
+    const uf=ttxState.uncertaintyFactors?.join(', ')||'없음';
+    replayBody.innerHTML=
+      `<b>몬테카를로 시드:</b> ${ttxState.monteCarloSeed}<br>`+
+      `<b>불확실성 계수:</b> [${uf}]<br>`+
+      `<b>참고 실제 사례:</b> ${ttxState.realCaseRef||'없음'}<br>`+
+      `<b>돌발 이벤트 발생:</b> ${ttxState.unexpectedEventsCount||0}회 / 전체 3단계<br>`+
+      `<span style="font-size:11px;color:rgba(255,255,255,.4);margin-top:6px;display:block">동일 시드로 재훈련하려면 같은 조건으로 새 훈련을 시작하세요.</span>`;
   }
 
   // 이전 훈련 기록 조회
@@ -3267,6 +3392,7 @@ initLogin();
 
 <footer style="text-align:center;padding:28px 20px;border-top:1px solid #e0ddd5;margin-top:20px">
   <div style="font-size:13px;font-weight:700;color:#555;letter-spacing:.5px">© 2026 DREX · Disaster Response EXercise · Powered by Mr.Kim PhD</div>
+  <div style="font-size:11px;color:#999;margin-top:4px;letter-spacing:.3px">DREX · Disaster Response EXercise</div>
   <div style="font-size:11px;color:#aaa;margin-top:5px">재난훈련 AI 평가지원 플랫폼</div>
 </footer>
 </body>
