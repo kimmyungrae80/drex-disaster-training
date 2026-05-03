@@ -11,7 +11,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 /* ── HEADER ── */
-.hd{background:var(--navy);color:#fff;padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
+.hd{background:var(--navy);color:#fff;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
 .hd-logo{display:flex;align-items:center}
 /* step bar */
 .sbar{display:flex;align-items:center;gap:0}
@@ -236,7 +236,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .badge-poor{background:#fff0f0;color:var(--red)}
 .issue-list-item{padding:10px 14px;border-left:3px solid var(--red);background:#fff5f5;border-radius:0 8px 8px 0;margin-bottom:8px;font-size:14px;color:var(--text)}
 /* ── CHECKLIST (1차 컨설팅) ── */
-.ck-prog-wrap{background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);position:sticky;top:52px;z-index:10}
+.ck-prog-wrap{background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);position:sticky;top:62px;z-index:10}
 .ck-prog-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .ck-prog-title{font-size:14px;font-weight:700;color:var(--navy)}
 .ck-prog-num{font-size:16px;font-weight:700;color:var(--teal)}
@@ -342,6 +342,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 /* ── MOCK EXAM ── */
 .mx-score-lbl:hover{border-color:var(--teal)!important;color:var(--teal)!important}
 @media(max-width:640px){.mx-score-lbl{padding:5px 8px!important;font-size:11px!important}}
+/* ── SOP POPUP ── */
+.sop-popup{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:800;display:none;align-items:center;justify-content:center;padding:16px}
+.sop-popup.open{display:flex}
+.sop-box{background:#fff;border-radius:16px;width:100%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.sop-head{background:var(--navy);color:#fff;padding:14px 18px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:flex-start}
+.sop-body{padding:14px}
+.sop-act{width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border:1.5px solid #e0ddd5;border-radius:8px;background:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;transition:.15s all;display:flex;justify-content:space-between;align-items:center}
+.sop-act:hover{border-color:var(--teal);background:#f0faf8}
+.sop-act-eff{font-size:10px;color:var(--teal);font-weight:600;flex-shrink:0;margin-left:8px}
+.slog-item{padding:4px 6px;border-radius:4px;margin-bottom:3px;font-size:9px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -420,6 +430,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- SOP POPUP -->
+<div class="sop-popup" id="sopPopup">
+  <div class="sop-box">
+    <div class="sop-head">
+      <div>
+        <div id="sopPopupTitle" style="font-weight:700;font-size:15px"></div>
+        <div id="sopPopupRole" style="font-size:11px;opacity:.7;margin-top:2px"></div>
+      </div>
+      <button onclick="document.getElementById('sopPopup').classList.remove('open')" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;flex-shrink:0">×</button>
+    </div>
+    <div class="sop-body">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">현장조치 행동매뉴얼 (SOP)</div>
+      <div id="sopActionList"></div>
+    </div>
+  </div>
+</div>
 
 <!-- MAIN -->
 <div class="main">
@@ -511,10 +537,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
   <!-- 3열 레이아웃 -->
   <div class="ttx-grid">
-    <!-- 좌측: 현황판 -->
-    <div class="ttx-met-wrap">
+    <!-- 좌측: 현황판 + 상황일지 -->
+    <div class="ttx-met-wrap" style="display:flex;flex-direction:column;gap:0">
       <div class="ttx-met-title">📊 현황판</div>
       <div id="ttxMetPanel"></div>
+      <div style="margin-top:12px;border-top:1px solid #e0ddd5;padding-top:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px">📋 상황일지</div>
+        <div id="ttxSituationLog" style="max-height:240px;overflow-y:auto;"></div>
+        <button onclick="ttxDownloadLog()" style="margin-top:6px;width:100%;padding:5px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
+      </div>
     </div>
 
     <!-- 중앙: 상황 + 의사결정 -->
@@ -537,11 +568,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-agencies-wrap">
       <div class="ttx-ag-title">🤝 협업기관 현황</div>
       <div class="ttx-ag-grid" id="ttxAgGrid"></div>
-      <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">카드 클릭 시 상태 변경</div>
-      <div style="margin-top:10px">
-        <div style="font-size:9px;color:var(--muted);font-weight:700;margin-bottom:5px">📋 상황 로그</div>
-        <div id="ttxActivityLog" style="max-height:140px;overflow-y:auto;font-size:9px;line-height:1.7;color:var(--muted);background:var(--bg);border-radius:6px;padding:6px 8px"></div>
-      </div>
+      <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">카드 클릭 → SOP 조치 선택</div>
     </div>
   </div>
 </div>
@@ -1160,6 +1187,22 @@ function chatAutoResize(el) {
 // ═══════════════════════════════════════════════
 // TTX SIMULATOR MODULE (Supabase 연동)
 // ═══════════════════════════════════════════════
+const TTX_SOP = {
+  fire:   { common:[{a:'인명탐색 및 구조 실시',e:{casualties:-2}},{a:'응급처치 후 후송',e:{casualties:-2}},{a:'화재진압',e:{}},{a:'잔불정리 및 안전조치',e:{}}], '홍수/태풍':[{a:'수중구조대 투입',e:{casualties:-3}},{a:'구조정 출동',e:{casualties:-1}},{a:'배수펌프 가동',e:{displaced:-50}}], '지진':[{a:'붕괴건물 인명구조',e:{casualties:-4}},{a:'가스누출 차단 지원',e:{}}] },
+  police: { common:[{a:'현장 접근통제선 설치',e:{}},{a:'교통통제 실시',e:{}},{a:'주민대피 유도',e:{displaced:50}},{a:'실종자 수색',e:{casualties:-1}}], '홍수/태풍':[{a:'침수지역 순찰 강화',e:{}},{a:'대피명령 집행',e:{displaced:100}}], '지진':[{a:'붕괴지역 접근차단',e:{}},{a:'약탈방지 순찰',e:{}}] },
+  army:   { common:[{a:'병력 및 장비 지원 요청',e:{resource_needed:100}},{a:'헬기 지원 요청',e:{casualties:-3}},{a:'임시숙소 설치 지원',e:{displaced:-200}}], '홍수/태풍':[{a:'모래주머니 적재 지원',e:{}},{a:'제방보강 작업',e:{}}] },
+  health: { common:[{a:'현장 응급의료소 설치',e:{casualties:-3}},{a:'부상자 분류(중증도)',e:{casualties:-2}},{a:'의료인력 추가 요청',e:{casualties:-1}},{a:'감염병 예방조치',e:{}}], '감염병':[{a:'역학조사 실시',e:{}},{a:'격리시설 운영',e:{displaced:-100}},{a:'접촉자 추적',e:{}}] },
+  edu:    { common:[{a:'학교 대피소 개방',e:{displaced:-200}},{a:'급식 지원',e:{}},{a:'학생 귀가조치',e:{}},{a:'피해 학교 현황 파악',e:{}}] },
+  env:    { common:[{a:'환경오염 현황 조사',e:{}},{a:'수질 모니터링',e:{}},{a:'폐기물 긴급처리',e:{}}], '화학사고':[{a:'오염물질 확산 방지',e:{}},{a:'제독작업 실시',e:{casualties:-2}}] },
+  mlit:   { common:[{a:'도로 피해현황 조사',e:{infrastructure_damage:-5}},{a:'긴급 도로 복구',e:{infrastructure_damage:-10}},{a:'교량 안전점검',e:{}},{a:'임시도로 개설',e:{}}] },
+  mois:   { common:[{a:'재난수습본부 설치',e:{}},{a:'중앙재난안전대책본부 보고',e:{}},{a:'특별재난지역 검토',e:{}},{a:'정부합동조사단 파견 요청',e:{}}] },
+  kepco:  { common:[{a:'피해지역 전력차단',e:{}},{a:'발전차 투입',e:{}},{a:'전력복구 우선순위 결정',e:{infrastructure_damage:-10}},{a:'감전위험 구역 통제',e:{casualties:-1}}] },
+  kt:     { common:[{a:'통신망 피해 현황 파악',e:{}},{a:'이동기지국 설치',e:{}},{a:'재난안전통신망 가동',e:{}},{a:'위성통신 지원',e:{}}] },
+  gas:    { common:[{a:'가스 공급 긴급차단',e:{casualties:-1}},{a:'가스누출 점검',e:{}},{a:'상수도 피해 복구',e:{}},{a:'임시 급수 실시',e:{displaced:-50}}] },
+  vol:    { common:[{a:'자원봉사자 모집 및 배치',e:{resource_needed:50}},{a:'급식 지원',e:{}},{a:'이재민 생활지원',e:{displaced:-100}},{a:'피해가옥 청소',e:{infrastructure_damage:-5}}] },
+  corp:   { common:[{a:'물자·장비 지원 협의',e:{resource_needed:100}},{a:'임시저장시설 제공',e:{}},{a:'복구 장비 지원',e:{infrastructure_damage:-10}}] },
+};
+
 const TTX_AGENCIES = [
   {id:'fire',    name:'소방본부',    role:'인명구조 및 화재진압'},
   {id:'police',  name:'경찰청',      role:'현장통제 및 교통관리'},
@@ -1479,6 +1522,29 @@ function mxReset() {
 }
 
 // ─── Step Nav ─────────────────────────────────
+function updateNavStep(n) {
+  for (let i = 1; i <= 3; i++) {
+    const sc = document.getElementById('sc'+i);
+    const sl = document.getElementById('sl'+i);
+    if (!sc || !sl) continue;
+    sc.classList.remove('active','done');
+    sl.classList.remove('active','done');
+    if (i < n) {
+      sc.classList.add('done'); sc.textContent = '✓';
+      sl.classList.add('done');
+    } else if (i === n) {
+      sc.classList.add('active'); sc.textContent = String(i);
+      sl.classList.add('active');
+    } else {
+      sc.textContent = String(i);
+    }
+    if (i < 3) {
+      const con = document.getElementById('con'+i);
+      if (con) con.classList.toggle('done', i < n);
+    }
+  }
+}
+
 function showTtxStep(n) {
   ['ttxStep1','ttxStep2','ttxStep3'].forEach((id,i)=>{
     document.getElementById(id).className='ttx-panel'+(i+1===n?' active':'');
@@ -1517,6 +1583,7 @@ function ttxRestoreState() {
         ttxRenderMeetingHeader();
         ttxRenderMetrics();
         ttxRenderAgencies();
+        updateNavStep(3);
         showTtxStep(2);
         ttxStartTimer();
         ttxLoadOptions();
@@ -1615,6 +1682,8 @@ async function ttxGenerateScenario() {
   if(!region){errMsg.textContent='지역 특성을 입력해주세요.';errEl.classList.add('show');return;}
   if(!intensity){errMsg.textContent='훈련 강도를 선택해주세요.';errEl.classList.add('show');return;}
   if(!participants){errMsg.textContent='참여 인원 수를 입력해주세요.';errEl.classList.add('show');return;}
+
+  updateNavStep(2);
 
   ttxState.orgName=orgName; ttxState.disasterType=disaster;
   ttxState.region=region; ttxState.intensity=intensity; ttxState.participants=participants;
@@ -1747,9 +1816,11 @@ JSON으로만 응답 (마크다운 없이):
     ttxRenderMeetingHeader();
     ttxRenderMetrics();
     ttxRenderAgencies();
+    updateNavStep(3);
     showTtxStep(2);
     ttxStartTimer();
     ttxLoadOptions();
+    ttxLogSituation('🔴', 'red', `시나리오 생성 완료 — ${ttxState.disasterType} ${ttxState.intensity} (${ttxState.region})`);
 
   }catch(err){
     errMsg.textContent='오류: '+err.message;
@@ -1851,7 +1922,7 @@ function ttxRenderAgencies() {
     const card = document.createElement('div');
     card.className = 'ttx-ag-card '+cls;
     card.id = 'agCard_'+a.id;
-    card.onclick = () => ttxCycleStatus(a.id);
+    card.onclick = () => ttxShowSopPopup(a.id);
     card.innerHTML = `<div class="ttx-ag-name">${a.name}</div>
       <div style="font-size:9px;color:rgba(255,255,255,.55);margin:2px 0 4px;line-height:1.3">${a.role||''}</div>
       <div class="ttx-ag-status">${st}</div>`;
@@ -1907,6 +1978,101 @@ function ttxStartTimer() {
 function ttxStopTimer() {
   if(ttxState.timerInterval) clearInterval(ttxState.timerInterval);
   ttxState.timerInterval=null;
+}
+
+function ttxGetTimestamp() {
+  const e=ttxState.elapsedSeconds||0;
+  return `${String(Math.floor(e/3600)).padStart(2,'0')}:${String(Math.floor((e%3600)/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+}
+
+function ttxLogSituation(icon, color, text) {
+  const log = document.getElementById('ttxSituationLog');
+  if (!log) return;
+  const item = document.createElement('div');
+  item.className = 'slog-item';
+  item.style.background = color==='red' ? '#fff0f0' : color==='blue' ? '#eff6ff' : color==='green' ? '#f0fdf4' : '#f9f8f5';
+  item.style.borderLeft = `3px solid ${color==='red'?'var(--red)':color==='blue'?'#3b82f6':color==='green'?'var(--teal)':'#aaa'}`;
+  item.innerHTML = `<span style="font-family:monospace;opacity:.6">[${ttxGetTimestamp()}]</span> ${icon} ${text}`;
+  log.prepend(item);
+}
+
+function ttxDownloadLog() {
+  const log = document.getElementById('ttxSituationLog');
+  if (!log) return;
+  const lines = [...log.querySelectorAll('.slog-item')].reverse().map(el=>el.textContent.trim());
+  const blob = new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `DREX_상황일지_${ttxState.orgName||'훈련'}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+}
+
+function ttxShowSopPopup(agId) {
+  const ag = TTX_AGENCIES.find(a=>a.id===agId);
+  if (!ag) return;
+  const disaster = ttxState.disasterType || '';
+  const sopData = TTX_SOP[agId] || {};
+  const actions = [...(sopData.common||[]), ...(sopData[disaster]||[])];
+
+  document.getElementById('sopPopupTitle').textContent = ag.name;
+  document.getElementById('sopPopupRole').textContent = ag.role || '';
+
+  const list = document.getElementById('sopActionList');
+  list.innerHTML = '';
+  if (!actions.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0">조치 항목이 없습니다.</div>';
+  } else {
+    actions.forEach(item => {
+      const effKeys = Object.keys(item.e||{}).filter(k=>item.e[k]!==0);
+      const effText = effKeys.map(k=>{
+        const v=item.e[k]; const n={'casualties':'인명','displaced':'이재민','infrastructure_damage':'시설피해','resource_needed':'자원'}[k]||k;
+        return (v>0?'+':'')+v+' '+n;
+      }).join(' / ');
+      const btn = document.createElement('button');
+      btn.className = 'sop-act';
+      btn.innerHTML = `<span>${item.a}</span>${effText?`<span class="sop-act-eff">${effText}</span>`:''}`;
+      btn.onclick = () => ttxExecuteSop(agId, item.a, item.e||{});
+      list.appendChild(btn);
+    });
+  }
+  document.getElementById('sopPopup').classList.add('open');
+}
+
+function ttxExecuteSop(agId, actionText, effects) {
+  const ag = TTX_AGENCIES.find(a=>a.id===agId);
+  document.getElementById('sopPopup').classList.remove('open');
+
+  // Update agency status to 현장투입
+  ttxState.agencyStatuses[agId] = '현장투입';
+  const card = document.getElementById('agCard_'+agId);
+  if (card) {
+    card.className = 'ttx-ag-card ags-field';
+    const st = card.querySelector('.ttx-ag-status');
+    if (st) st.textContent = '현장투입';
+  }
+
+  // Apply metric effects
+  if (effects && typeof effects === 'object') {
+    Object.keys(effects).forEach(k => {
+      if (ttxState.variables[k] !== undefined)
+        ttxState.variables[k] = Math.max(0, (ttxState.variables[k]||0) + (effects[k]||0));
+    });
+    ttxRenderMetrics();
+  }
+
+  // Log to situation log
+  const agIcons={fire:'🚒',police:'🚓',army:'🪖',health:'🏥',edu:'🏫',env:'🌿',mlit:'🛣️',mois:'🏛️',kepco:'⚡',kt:'📡',gas:'🔧',vol:'🤝',corp:'🏭'};
+  ttxLogSituation(agIcons[agId]||'📌', 'green', `${ag?.name||agId} — ${actionText} 실시`);
+
+  // Also log to old ttxActivityLog if still exists (backward compat)
+  const oldLog = document.getElementById('ttxActivityLog');
+  if (oldLog) {
+    const line = document.createElement('div');
+    line.textContent = `[${ttxGetTimestamp()}] ${ag?.name||agId} - ${actionText}`;
+    oldLog.prepend(line);
+  }
+
+  ttxSaveState();
 }
 
 // ─── Load Options ─────────────────────────────
@@ -1979,6 +2145,8 @@ async function ttxSelectOption(label) {
   const option=ttxState.currentOptions?.find(o=>o.label===label);
   if(!option) return;
 
+  ttxLogSituation('🔵', 'blue', `${ttxState.phase}단계 의사결정 — ${label}안 선택: ${option?.action||''}`);
+
   // 돌발 불확실성 이벤트 트리거
   let unexpectedFired=false;
   if(option.unexpected_prob && Math.random()*100 < option.unexpected_prob) {
@@ -1992,6 +2160,7 @@ async function ttxSelectOption(label) {
     ttxState.variables.casualties=Math.max(0,(ttxState.variables.casualties||0)+Math.ceil((ttxState.variables.casualties||10)*0.15));
     ttxState.variables.displaced=Math.max(0,(ttxState.variables.displaced||0)+Math.ceil((ttxState.variables.displaced||100)*0.15));
     ttxRenderMetrics();
+    ttxLogSituation('⚡', 'red', `돌발변수 발생! ${option.unexpected_event||''}`);
   }
 
   const ob=document.getElementById('ttxOutcomeBox');
@@ -2058,6 +2227,7 @@ async function ttxSelectOption(label) {
             line.textContent = `[${ts}] ${agName} → 출동중 (자동)`;
             log.prepend(line);
           }
+          ttxLogSituation('🔔', 'green', `${agName} 자동 출동 지령`);
         }
       });
     }
@@ -2096,6 +2266,7 @@ function ttxNextPhase() {
     document.getElementById('ttxNextWrap').style.display='none';
     document.getElementById('ttxOutcomeBox').classList.remove('show');
     ttxSaveState();
+    ttxLogSituation('🟡', 'red', `${ttxState.phase}단계 상황 시작`);
     ttxLoadOptions();
   }else{
     ttxStopTimer();
@@ -2401,6 +2572,7 @@ function ttxReset() {
   document.getElementById('ttxRptBox').style.display='none';
   const hc=document.getElementById('ttxHistoryCard');
   if(hc) hc.style.display='none';
+  updateNavStep(1);
   showTtxStep(1);
 }
 
