@@ -292,7 +292,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-alert-banner{background:#ef4444;color:#fff;border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;font-weight:600;display:none;animation:alertPop .4s ease}
 .ttx-alert-banner.show{display:block}
 @keyframes alertPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.ttx-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ttx-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 @media(max-width:600px){.ttx-opts{grid-template-columns:1fr}}
 .ttx-opt{padding:13px;border-radius:10px;border:2px solid #e0ddd5;background:#fff;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-align:left;transition:.2s all;width:100%}
 .ttx-opt:hover:not(:disabled){border-color:var(--teal);background:#f0faf8}
@@ -314,11 +314,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-ag-card:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .ttx-ag-icon{font-size:16px;margin-bottom:2px}
 .ttx-ag-name{font-size:8.5px;color:var(--navy);font-weight:600;line-height:1.3;word-break:keep-all;margin-bottom:3px}
-.ttx-ag-st{font-size:8px;font-weight:700;padding:2px 5px;border-radius:6px;display:inline-block}
-.ags-standby{border-color:#e4e7ed}.ags-standby .ttx-ag-st{background:#e4e7ed;color:#555}
-.ags-dispatch{border-color:#93c5fd;background:#eff6ff}.ags-dispatch .ttx-ag-st{background:#dbeafe;color:#1d4ed8}
-.ags-field{border-color:#fdba74;background:#fff7ed}.ags-field .ttx-ag-st{background:#fed7aa;color:#c2410c}
-.ags-done{border-color:#86efac;background:#f0fdf4}.ags-done .ttx-ag-st{background:#bbf7d0;color:#065f46}
+.ttx-ag-st,.ttx-ag-status{font-size:8px;font-weight:700;padding:2px 5px;border-radius:6px;display:inline-block}
+.ags-standby{border-color:#e4e7ed}.ags-standby .ttx-ag-st,.ags-standby .ttx-ag-status{background:#e4e7ed;color:#555}
+.ags-dispatch{border-color:#93c5fd;background:#eff6ff}.ags-dispatch .ttx-ag-st,.ags-dispatch .ttx-ag-status{background:#dbeafe;color:#1d4ed8}
+.ags-field{border-color:#fdba74;background:#fff7ed}.ags-field .ttx-ag-st,.ags-field .ttx-ag-status{background:#fed7aa;color:#c2410c}
+.ags-done{border-color:#86efac;background:#f0fdf4}.ags-done .ttx-ag-st,.ags-done .ttx-ag-status{background:#bbf7d0;color:#065f46}
 .ttx-score-ring{width:110px;height:110px;border-radius:50%;border:8px solid var(--teal);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 12px}
 .ttx-score-num{font-size:32px;font-weight:700;color:var(--navy)}
 .ttx-score-unit{font-size:11px;color:var(--muted)}
@@ -395,16 +395,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- HEADER -->
 <header class="hd">
   <div class="hd-logo">
-    <svg width="180" height="52" viewBox="0 0 180 52">
-  <rect x="0" y="0" width="180" height="52" fill="#f7f6f2" rx="6"/>
-  <text x="10" y="36" fill="#0a1628" font-size="30" font-weight="700"
-    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">DR</text>
-  <text x="76" y="36" fill="#0e8a76" font-size="30" font-weight="700"
-    font-family="'Helvetica Neue',Arial,sans-serif" letter-spacing="2">EX</text>
-  <rect x="10" y="40" width="158" height="0.8" fill="#0a1628" opacity="0.1"/>
-  <text x="10" y="50" fill="#0e8a76" font-size="6"
-    font-family="'Helvetica Neue',Arial,sans-serif"
-    letter-spacing="1.5">DISASTER RESPONSE EXERCISE</text>
+    <svg width="180" height="48" viewBox="0 0 180 48" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="48" fill="#0f1e35" rx="4"/>
+  <polygon points="0,0 42,0 28,48 0,48" fill="#0e8a76" opacity="0.9"/>
+  <polygon points="38,0 48,0 34,48 24,48" fill="#0e8a76" opacity="0.4"/>
+  <text x="54" y="22" fill="#ffffff" font-size="17" font-weight="700"
+        font-family="Arial,sans-serif" letter-spacing="4">DREX</text>
+  <text x="54" y="34" fill="#0e8a76" font-size="5"
+        font-family="Arial,sans-serif" letter-spacing="1.4">DISASTER RESPONSE EXERCISE</text>
+  <text x="54" y="43" fill="#ffffff" font-size="4.5"
+        font-family="Arial,sans-serif" opacity="0.5">재난훈련 AI 평가지원 플랫폼</text>
 </svg>
   </div>
   <nav class="sbar">
@@ -449,7 +449,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </div>
     <div class="fg">
       <label class="fl">재난유형 <span style="color:var(--red)">*</span></label>
-      <select class="fi" id="ttxDisasterType">
+      <select class="fi" id="ttxDisasterType" onchange="ttxDisasterTypeChange(this)">
         <option value="">— 선택하세요 —</option>
         <option value="홍수/태풍">🌊 홍수/태풍</option>
         <option value="지진">🏔️ 지진</option>
@@ -457,7 +457,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
         <option value="화학사고">⚗️ 화학사고</option>
         <option value="감염병">🦠 감염병</option>
         <option value="복합재난">⚡ 복합재난</option>
+        <option value="기타">🔧 기타</option>
       </select>
+      <input type="text" class="fi" id="ttxDisasterCustom" placeholder="재난유형 직접 입력 (예: 폭발사고, 항공사고)" style="display:none;margin-top:8px;max-width:400px">
     </div>
     <div class="fg">
       <label class="fl">지역 특성 <span style="color:var(--red)">*</span></label>
@@ -511,26 +513,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <!-- 좌측: 현황판 -->
     <div class="ttx-met-wrap">
       <div class="ttx-met-title">📊 현황판</div>
-      <div class="ttx-met-card" onclick="ttxEditMetric('casualties')">
-        <div class="ttx-met-label">인명피해</div>
-        <div class="ttx-met-val" id="metCasualties">0</div>
-        <div class="ttx-met-unit">명</div>
-      </div>
-      <div class="ttx-met-card" onclick="ttxEditMetric('displaced')">
-        <div class="ttx-met-label">이재민</div>
-        <div class="ttx-met-val" id="metDisplaced">0</div>
-        <div class="ttx-met-unit">명</div>
-      </div>
-      <div class="ttx-met-card" onclick="ttxEditMetric('infrastructure_damage')">
-        <div class="ttx-met-label">시설피해</div>
-        <div class="ttx-met-val" id="metInfra">0</div>
-        <div class="ttx-met-unit">건</div>
-      </div>
-      <div class="ttx-met-card" onclick="ttxEditMetric('resource_needed')">
-        <div class="ttx-met-label">투입자원</div>
-        <div class="ttx-met-val" id="metResource">0</div>
-        <div class="ttx-met-unit">단위</div>
-      </div>
+      <div id="ttxMetPanel"></div>
     </div>
 
     <!-- 중앙: 상황 + 의사결정 -->
@@ -554,6 +537,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div class="ttx-ag-title">🤝 협업기관 현황</div>
       <div class="ttx-ag-grid" id="ttxAgGrid"></div>
       <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">카드 클릭 시 상태 변경</div>
+      <div style="margin-top:10px">
+        <div style="font-size:9px;color:var(--muted);font-weight:700;margin-bottom:5px">📋 상황 로그</div>
+        <div id="ttxActivityLog" style="max-height:140px;overflow-y:auto;font-size:9px;line-height:1.7;color:var(--muted);background:var(--bg);border-radius:6px;padding:6px 8px"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -616,6 +603,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Supabase에서 조회한 최근 5회 TTX 훈련 이력입니다.</div>
     <div id="ttxHistoryContent"></div>
   </div>
+
+  <!-- 자동 자가진단 -->
+  <div class="card" id="ttxDiagSection" style="display:none"></div>
 </div>
 
 </div><!-- /ttxMainPanel -->
@@ -624,126 +614,106 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <div id="mockExamPanel" style="display:none">
 
 <div class="ptitle">
-  <h2>🎯 훈련 자가진단 모의평가</h2>
-  <p>훈련 참여자가 직접 입력하면 AI가 안전한국훈련 기준으로 채점합니다</p>
+  <h2>🎯 모의평가 (평가관 기준 자가진단)</h2>
+  <p>안전한국훈련 평가관이 보는 기준으로 우리 기관의 준비 수준을 스스로 점검합니다.<br>실제 평가를 받기 전 취약점을 미리 파악하세요.</p>
 </div>
 
-<!-- 섹션 1: 기본정보 -->
 <div class="card">
-  <div class="ct">📋 기본정보 입력</div>
-  <div class="fg">
-    <label class="fl">기관명 <span style="color:var(--red)">*</span></label>
-    <input type="text" class="fi" id="mxOrgName" placeholder="예: 충청북도 청주시">
-  </div>
-  <div class="fg">
-    <label class="fl">훈련일자</label>
-    <input type="date" class="fi" id="mxDate" style="max-width:220px">
-  </div>
-  <div class="fg">
-    <label class="fl">훈련유형 <span style="color:var(--red)">*</span></label>
-    <select class="fi" id="mxType">
-      <option value="">— 선택하세요 —</option>
-      <option value="안전한국훈련">안전한국훈련</option>
-      <option value="을지연습">을지연습</option>
-      <option value="민방위훈련">민방위훈련</option>
-      <option value="자체훈련">자체훈련</option>
-      <option value="기타">기타</option>
-    </select>
-  </div>
-  <div class="fg">
-    <label class="fl">훈련규모 <span style="color:var(--red)">*</span></label>
-    <div class="rg" id="mxScaleGroup">
-      <button class="rb" data-v="소규모" onclick="mxSelectScale(this)">소규모<br><small style="font-weight:400;font-size:11px">~30명</small></button>
-      <button class="rb" data-v="중규모" onclick="mxSelectScale(this)">중규모<br><small style="font-weight:400;font-size:11px">31~100명</small></button>
-      <button class="rb" data-v="대규모" onclick="mxSelectScale(this)">대규모<br><small style="font-weight:400;font-size:11px">100명 이상</small></button>
+  <div class="ct">📋 기본정보</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="fg">
+      <label class="fl">기관명 <span style="color:var(--red)">*</span></label>
+      <input type="text" class="fi" id="mxOrgName" placeholder="예: 충청북도 청주시">
+    </div>
+    <div class="fg">
+      <label class="fl">훈련일자</label>
+      <input type="date" class="fi" id="mxDate">
+    </div>
+    <div class="fg">
+      <label class="fl">훈련유형 <span style="color:var(--red)">*</span></label>
+      <select class="fi" id="mxType">
+        <option value="">— 선택 —</option>
+        <option value="안전한국훈련">안전한국훈련</option>
+        <option value="을지연습">을지연습</option>
+        <option value="민방위훈련">민방위훈련</option>
+        <option value="자체훈련">자체훈련</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">담당자명 <span style="color:var(--muted);font-weight:400">(선택)</span></label>
+      <input type="text" class="fi" id="mxManager" placeholder="홍길동">
     </div>
   </div>
-  <div class="fg" style="margin-bottom:0">
-    <label class="fl">담당자 직급 <span style="color:var(--muted);font-weight:400">(선택)</span></label>
-    <input type="text" class="fi" id="mxPosition" placeholder="예: 사무관, 팀장, 주임" style="max-width:280px">
-  </div>
 </div>
 
-<!-- 섹션 2: 자가진단 -->
+<div id="mxDomainsWrap"></div>
+
 <div class="card">
-  <div class="ct">📊 훈련 수행 자가진단</div>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:18px">각 항목을 1점(매우미흡) ~ 5점(매우우수)으로 평가해주세요</div>
-  <div id="mxDomains"></div>
+  <div class="ct">💬 종합의견</div>
+  <textarea class="fi" id="mxOverall" rows="3" placeholder="이번 훈련에 대한 종합 의견을 자유롭게 작성하세요" style="resize:vertical"></textarea>
 </div>
 
-<!-- 섹션 3: 자유서술 -->
-<div class="card">
-  <div class="ct">✍️ 자유서술</div>
-  <div class="fg">
-    <label class="fl">이번 훈련의 가장 잘된 점</label>
-    <textarea class="fi" id="mxGood" rows="3" placeholder="잘 수행된 부분을 구체적으로 입력해주세요" style="resize:vertical"></textarea>
-  </div>
-  <div class="fg">
-    <label class="fl">이번 훈련의 가장 아쉬운 점</label>
-    <textarea class="fi" id="mxBad" rows="3" placeholder="아쉬웠던 부분을 구체적으로 입력해주세요" style="resize:vertical"></textarea>
-  </div>
-  <div class="fg" style="margin-bottom:0">
-    <label class="fl">다음 훈련 전 반드시 개선하고 싶은 것</label>
-    <textarea class="fi" id="mxImprove" rows="3" placeholder="다음 훈련에서 반드시 개선하고 싶은 사항을 입력해주세요" style="resize:vertical"></textarea>
-  </div>
-</div>
-
-<!-- 실시간 합계 바 -->
-<div id="mxScoreBar" style="position:sticky;bottom:0;background:var(--navy);color:#fff;padding:12px 20px;border-radius:0;display:none;z-index:50;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-  <div style="font-size:13px;font-weight:600">📊 현재 자가진단 점수</div>
-  <div id="mxScoreBarText" style="font-size:16px;font-weight:700;color:#7ec8e3">0점 / 100점</div>
+<!-- 실시간 합계 고정 바 -->
+<div id="mxScoreBar" style="position:sticky;bottom:0;background:var(--navy);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;z-index:50;border-radius:8px;margin-bottom:8px">
+  <div style="font-size:13px;font-weight:600">📊 자가채점 합계</div>
+  <div id="mxScoreBarText" style="font-size:18px;font-weight:700;color:#7ec8e3">0 / 100점</div>
 </div>
 
 <div class="errbox" id="mxErr">⚠️ <span id="mxErrMsg"></span></div>
-<button class="btn-p" style="width:100%;justify-content:center;font-size:16px;padding:16px;margin-bottom:22px" onclick="mxRunEval()" id="mxRunBtn">🤖 AI 모의평가 결과 보기</button>
+<button class="btn-p" style="width:100%;justify-content:center;font-size:16px;padding:16px;margin-bottom:22px" onclick="mxRunEval()" id="mxRunBtn">🎯 평가관 시각으로 AI 피드백 받기</button>
 
-<!-- 결과 영역 -->
 <div id="mxResultArea" style="display:none">
   <div class="card" style="text-align:center">
-    <div class="ct" style="justify-content:center">종합 평가 결과</div>
-    <div style="margin:16px auto;width:120px;height:120px;border-radius:50%;border:8px solid #e0ddd5;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative" id="mxScoreRing">
-      <div style="font-size:36px;font-weight:700;color:var(--navy)" id="mxTotalScore">-</div>
-      <div style="font-size:12px;color:var(--muted)">/ 100</div>
+    <div class="ct" style="justify-content:center">AI 조정 평가 결과</div>
+    <div style="margin:16px auto;width:110px;height:110px;border-radius:50%;border:8px solid #e0ddd5;display:flex;align-items:center;justify-content:center;flex-direction:column" id="mxScoreRing">
+      <div style="font-size:32px;font-weight:700;color:var(--navy)" id="mxTotalScore">-</div>
+      <div style="font-size:11px;color:var(--muted)">/ 100</div>
     </div>
-    <div style="font-size:20px;font-weight:700;margin-bottom:6px" id="mxGradeLabel">-</div>
-    <div style="font-size:13px;color:var(--muted)" id="mxResultMeta">-</div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px" id="mxGradeLabel">-</div>
+    <div style="font-size:12px;color:var(--muted)" id="mxResultMeta">-</div>
   </div>
 
-  <!-- 영역별 점수 -->
   <div class="card">
-    <div class="ct">📊 영역별 평가 결과</div>
+    <div class="ct">📊 영역별 비교 (자가 vs AI조정)</div>
     <div id="mxDomainResults"></div>
   </div>
 
-  <!-- 강점/약점 -->
+  <div id="mxOverratedWrap" style="display:none">
+    <div class="card" style="border:2px solid var(--amber)">
+      <div class="ct" style="color:var(--amber)">⚠️ 과대평가 항목 주의</div>
+      <div id="mxOverrated"></div>
+    </div>
+  </div>
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
     <div class="card" style="margin-bottom:0;border-left:4px solid var(--teal)">
       <div class="ct" style="color:var(--teal)">✅ 강점</div>
       <div id="mxStrengths"></div>
     </div>
     <div class="card" style="margin-bottom:0;border-left:4px solid var(--red)">
-      <div class="ct" style="color:var(--red)">⚠️ 개선사항</div>
-      <div id="mxWeaknesses"></div>
+      <div class="ct" style="color:var(--red)">⚠️ 지적사항</div>
+      <div id="mxIssues"></div>
     </div>
   </div>
 
-  <!-- 우선조치 -->
   <div class="card">
-    <div class="ct">🚨 우선 조치 사항</div>
-    <div id="mxPriorityActions"></div>
+    <div class="ct">🚨 권고사항</div>
+    <div id="mxRecs"></div>
   </div>
 
-  <!-- 종합 코멘트 -->
   <div class="card" style="background:#0d1b2a;border:none">
     <div class="ct" style="color:#7ec8e3">💬 종합 평가 코멘트</div>
-    <div id="mxComment" style="font-size:14px;line-height:1.9;color:#b8d4e8;white-space:pre-line"></div>
+    <div id="mxComment" style="font-size:13px;line-height:1.9;color:#b8d4e8;white-space:pre-line"></div>
   </div>
 
-  <!-- TTX 연계 -->
   <div class="card" style="border:2px solid var(--teal)">
-    <div class="ct">🏛️ TTX 시뮬레이터 연계 훈련 권고</div>
-    <div id="mxNextTtx" style="font-size:14px;color:var(--text);margin-bottom:16px"></div>
-    <button class="btn-p" onclick="mxGoTtx()">🏛️ TTX 시뮬레이터로 이어서 훈련하기 →</button>
+    <div class="ct">🏛️ TTX 연계 훈련 권고</div>
+    <div id="mxNextTtx" style="font-size:13px;color:var(--text);margin-bottom:14px"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-p" onclick="mxGoTtx()">🏛️ TTX 시뮬레이터로 취약점 훈련하기 →</button>
+      <button class="btn-s" onclick="window.print()">🖨️ PDF 출력</button>
+    </div>
   </div>
 
   <div style="text-align:center;margin-bottom:22px">
@@ -1190,19 +1160,19 @@ function chatAutoResize(el) {
 // TTX SIMULATOR MODULE (Supabase 연동)
 // ═══════════════════════════════════════════════
 const TTX_AGENCIES = [
-  {id:'fire',   name:'소방본부',    icon:'🚒'},
-  {id:'police', name:'경찰청',      icon:'🚓'},
-  {id:'mil',    name:'군부대',      icon:'🪖'},
-  {id:'health', name:'보건소/병원', icon:'🏥'},
-  {id:'edu',    name:'교육청',      icon:'🏫'},
-  {id:'env',    name:'환경부',      icon:'🌿'},
-  {id:'land',   name:'국토교통부',  icon:'🏗️'},
-  {id:'mois',   name:'행안부',      icon:'📋'},
-  {id:'kepco',  name:'전기(한전)',  icon:'⚡'},
-  {id:'telecom',name:'통신(KT)',    icon:'📡'},
-  {id:'util',   name:'수도/가스',   icon:'🔧'},
-  {id:'vol',    name:'자원봉사',    icon:'🤝'},
-  {id:'biz',    name:'민간기업',    icon:'🏢'},
+  {id:'fire',    name:'소방본부',    role:'인명구조 및 화재진압'},
+  {id:'police',  name:'경찰청',      role:'현장통제 및 교통관리'},
+  {id:'army',    name:'군부대',      role:'인력지원 및 장비지원'},
+  {id:'health',  name:'보건소/병원', role:'부상자 응급처치'},
+  {id:'edu',     name:'교육청',      role:'대피소(학교) 개방'},
+  {id:'env',     name:'환경부',      role:'오염조사 및 방제'},
+  {id:'mlit',    name:'국토교통부',  role:'도로·시설 응급복구'},
+  {id:'mois',    name:'행안부',      role:'재난수습본부 운영'},
+  {id:'kepco',   name:'전기(한전)',  role:'전력복구'},
+  {id:'kt',      name:'통신(KT)',    role:'통신망 복구'},
+  {id:'gas',     name:'수도/가스',   role:'상하수도·가스 안전조치'},
+  {id:'vol',     name:'자원봉사',    role:'생활지원 및 급식'},
+  {id:'corp',    name:'민간기업',    role:'물자·장비 지원'},
 ];
 const TTX_STATUS_CYCLE = ['대기중','출동중','현장투입','완료'];
 const TTX_STATUS_CLS   = {'대기중':'standby','출동중':'dispatch','현장투입':'field','완료':'done'};
@@ -1244,264 +1214,266 @@ function switchOrgTab(tab) {
   } else {
     ttx.style.display='none'; mx.style.display='block';
     if (sbar) sbar.style.display='none';
-    mxInitDomains();
+    mxBuildDomains();
   }
 }
 
-// ─── Mock Exam (모의평가) ──────────────────────
+// ─── Mock Exam v2 (모의평가 – 평가관 기준) ────────
 const MX_DOMAINS = [
-  { id:'prep',  title:'1. 사전준비', items:['훈련계획서 수립 및 배포','유관기관 사전 협조 요청','훈련 장비·자원 준비'] },
-  { id:'alert', title:'2. 상황전파', items:['재난상황 전파 신속성','유관기관 연락체계 가동','CBS/재난문자 발령 절차'] },
-  { id:'init',  title:'3. 초동대응', items:['비상대응체계 가동','현장 지휘체계 확립','인명구조 우선 조치'] },
-  { id:'collab',title:'4. 기관협업', items:['13개 유관기관 연락 및 요청','협업 회의체 운영','임무분담 명확성'] },
-  { id:'res',   title:'5. 자원관리', items:['인력·장비 투입 현황','자원 요청 및 배분','소요자원 추적관리'] },
-  { id:'rec',   title:'6. 복구대응', items:['이재민 지원 조치','시설 응급복구 계획','재난수습본부 운영'] },
+  { id:'prep',   title:'영역1. 사전준비',   max:20, items:[
+    {label:'훈련계획서 수립·배포',     max:5},
+    {label:'유관기관 사전협조 요청',   max:5},
+    {label:'훈련 장비·자원 준비',      max:5},
+    {label:'교육·사전훈련 실시',       max:5},
+  ]},
+  { id:'alert',  title:'영역2. 상황전파',   max:15, items:[
+    {label:'재난상황 전파 신속성',     max:5},
+    {label:'CBS·재난문자 발령 절차',   max:5},
+    {label:'유관기관 연락체계 가동',   max:5},
+  ]},
+  { id:'init',   title:'영역3. 초동대응',   max:20, items:[
+    {label:'비상대응체계 가동',        max:5},
+    {label:'현장 지휘체계 확립',       max:5},
+    {label:'인명구조 우선조치',        max:5},
+    {label:'긴급대피 실시',            max:5},
+  ]},
+  { id:'collab', title:'영역4. 기관협업',   max:15, items:[
+    {label:'유관기관 연락·협조',       max:5},
+    {label:'협업 회의체 운영',         max:5},
+    {label:'임무분담 명확성',          max:5},
+  ]},
+  { id:'res',    title:'영역5. 자원관리',   max:15, items:[
+    {label:'인력·장비 투입 적시성',    max:5},
+    {label:'자원 요청·배분',           max:5},
+    {label:'소요자원 추적관리',        max:5},
+  ]},
+  { id:'rec',    title:'영역6. 복구대응',   max:15, items:[
+    {label:'이재민 지원조치',          max:5},
+    {label:'시설 응급복구 계획',       max:5},
+    {label:'재난수습본부 운영',        max:5},
+  ]},
 ];
-const mxState = { orgName:'', type:'', scale:'', scores:{}, good:'', bad:'', improve:'' };
 
-function mxSelectScale(btn) {
-  document.querySelectorAll('#mxScaleGroup .rb').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  mxState.scale = btn.dataset.v;
-}
+const mxState = { orgName:'', type:'', scores:{}, memos:{}, overall:'', weakDomain:'' };
 
-function mxInitDomains() {
-  const container = document.getElementById('mxDomains');
-  if (!container || container.dataset.built) return;
-  container.dataset.built = '1';
-  container.innerHTML = MX_DOMAINS.map(d => `
-    <div style="margin-bottom:22px">
-      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;padding:8px 12px;background:#f5f3ee;border-radius:8px;border-left:4px solid var(--teal)">${d.title}</div>
-      ${d.items.map((item,ii) => `
-        <div style="margin-bottom:12px">
-          <div style="font-size:13px;color:var(--text);margin-bottom:6px">${item}</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${[1,2,3,4,5].map(v=>`
-              <label style="display:flex;align-items:center;gap:4px;padding:6px 12px;border:2px solid #e0ddd5;border-radius:7px;cursor:pointer;font-size:12px;transition:.15s all;white-space:nowrap" class="mx-score-lbl" id="mxLbl_${d.id}_${ii}_${v}">
-                <input type="radio" name="mx_${d.id}_${ii}" value="${v}" style="display:none" onchange="mxScoreChange('${d.id}',${ii},${v})">
-                ${v}점 ${v===1?'매우미흡':v===2?'미흡':v===3?'보통':v===4?'우수':'매우우수'}
-              </label>`).join('')}
+function mxBuildDomains() {
+  const wrap = document.getElementById('mxDomainsWrap');
+  if (!wrap || wrap.dataset.built) return;
+  wrap.dataset.built = '1';
+  wrap.innerHTML = MX_DOMAINS.map(d => `
+    <div class="card" style="margin-bottom:14px">
+      <div class="ct">${d.title} <span style="font-size:12px;color:var(--muted);font-weight:400">(${d.max}점)</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;background:#f5f3ee;border-radius:6px;padding:8px 10px;line-height:1.6">
+        <b>점수 기준:</b> 5점 완벽이행 · 4점 대부분이행 · 3점 보통 · 2점 미흡 · 1점 매우미흡 · 0점 미실시
+      </div>
+      ${d.items.map((it,ii)=>`
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0ede7">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:600;color:var(--navy)">${it.label} <span style="font-weight:400;color:var(--muted)">(/${it.max}점)</span></span>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              ${[0,1,2,3,4,5].filter(v=>v<=it.max).map(v=>`
+                <label style="display:flex;align-items:center;gap:3px;padding:5px 9px;border:2px solid #e0ddd5;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap;transition:.15s all" id="mxLbl_${d.id}_${ii}_${v}">
+                  <input type="radio" name="mx_${d.id}_${ii}" value="${v}" style="display:none" onchange="mxScore('${d.id}',${ii},${v},${it.max})">
+                  ${v}점
+                </label>`).join('')}
+            </div>
           </div>
+          <input type="text" class="fi" style="font-size:12px;padding:7px 10px" placeholder="특이사항 메모 (선택)" oninput="mxMemo('${d.id}',${ii},this.value)">
         </div>`).join('')}
     </div>`).join('');
 }
 
-function mxScoreChange(domainId, itemIdx, val) {
-  if (!mxState.scores[domainId]) mxState.scores[domainId] = {};
-  mxState.scores[domainId][itemIdx] = val;
-  // Update label styles
-  const d = MX_DOMAINS.find(x=>x.id===domainId);
-  if (d) {
-    [1,2,3,4,5].forEach(v => {
-      const lbl = document.getElementById(`mxLbl_${domainId}_${itemIdx}_${v}`);
-      if (lbl) {
-        const sel = v===val;
-        lbl.style.background = sel ? 'var(--teal)' : '';
-        lbl.style.borderColor = sel ? 'var(--teal)' : '#e0ddd5';
-        lbl.style.color = sel ? '#fff' : '';
-        lbl.style.fontWeight = sel ? '700' : '';
-      }
-    });
-  }
-  mxUpdateScoreBar();
+function mxScore(domId, itemIdx, val, maxVal) {
+  const key = domId+'_'+itemIdx;
+  mxState.scores[key] = {val, max:maxVal};
+  [0,1,2,3,4,5].forEach(v => {
+    const lbl = document.getElementById(`mxLbl_${domId}_${itemIdx}_${v}`);
+    if (!lbl) return;
+    const sel = v===val;
+    lbl.style.background = sel?(val>=4?'var(--teal)':val>=2?'var(--amber)':'var(--red)'):'';
+    lbl.style.borderColor = sel?(val>=4?'var(--teal)':val>=2?'var(--amber)':'var(--red)'):'#e0ddd5';
+    lbl.style.color = sel?'#fff':'';
+    lbl.style.fontWeight = sel?'700':'';
+  });
+  mxUpdateBar();
 }
 
-function mxUpdateScoreBar() {
-  let total=0, count=0;
-  MX_DOMAINS.forEach(d => {
-    d.items.forEach((_,ii) => {
-      const v = mxState.scores[d.id]?.[ii];
-      if (v) { total+=v; count++; }
-    });
-  });
-  const bar = document.getElementById('mxScoreBar');
+function mxMemo(domId, itemIdx, val) {
+  mxState.memos[domId+'_'+itemIdx] = val;
+}
+
+function mxUpdateBar() {
+  let total=0;
+  Object.values(mxState.scores).forEach(s=>{ total+=s.val; });
+  const maxTotal = MX_DOMAINS.reduce((a,d)=>a+d.max,0);
   const txt = document.getElementById('mxScoreBarText');
-  if (bar && txt) {
-    const pct = count ? Math.round(total/count/5*100) : 0;
-    bar.style.display = 'flex';
-    txt.textContent = `${pct}점 / 100점 (${count}/${MX_DOMAINS.reduce((a,d)=>a+d.items.length,0)}항목 입력)`;
-  }
+  if (txt) txt.textContent = `${total} / ${maxTotal}점`;
 }
 
 async function mxRunEval() {
   const orgName = document.getElementById('mxOrgName').value.trim();
   const type    = document.getElementById('mxType').value;
-  const good    = document.getElementById('mxGood').value.trim();
-  const bad     = document.getElementById('mxBad').value.trim();
-  const improve = document.getElementById('mxImprove').value.trim();
   const errEl   = document.getElementById('mxErr');
   const errMsg  = document.getElementById('mxErrMsg');
   errEl.classList.remove('show');
-
   if (!orgName) { errMsg.textContent='기관명을 입력해주세요.'; errEl.classList.add('show'); return; }
   if (!type)    { errMsg.textContent='훈련유형을 선택해주세요.'; errEl.classList.add('show'); return; }
-  if (!mxState.scale) { errMsg.textContent='훈련규모를 선택해주세요.'; errEl.classList.add('show'); return; }
 
-  // Build score text
-  let scoreText = '';
-  let totalItems = 0, totalScore = 0;
-  MX_DOMAINS.forEach(d => {
-    scoreText += `\n[${d.title}]\n`;
-    d.items.forEach((item, ii) => {
-      const v = mxState.scores[d.id]?.[ii] || 0;
-      scoreText += `- ${item}: ${v}점/5점\n`;
-      totalScore += v; totalItems++;
+  let scoreText='';
+  let lowestScore=999, weakDomain='';
+  MX_DOMAINS.forEach(d=>{
+    let domTotal=0;
+    scoreText+=`\n[${d.title}]\n`;
+    d.items.forEach((it,ii)=>{
+      const key=d.id+'_'+ii;
+      const s=mxState.scores[key]?.val||0;
+      const memo=mxState.memos[key]||'';
+      scoreText+=`- ${it.label}: ${s}/${it.max}점${memo?' ('+memo+')':''}\n`;
+      domTotal+=s;
     });
+    const pct=domTotal/d.max;
+    if(pct<lowestScore){ lowestScore=pct; weakDomain=d.title; }
+    scoreText+=`  소계: ${domTotal}/${d.max}점\n`;
   });
+  mxState.weakDomain = weakDomain;
 
+  const overall = document.getElementById('mxOverall').value.trim();
   const btn = document.getElementById('mxRunBtn');
-  btn.disabled = true; btn.textContent = '🤖 AI 분석 중...';
+  btn.disabled=true; btn.textContent='🤖 AI 분석 중...';
 
-  const prompt = `아래 훈련 자가진단 결과를 안전한국훈련 평가 기준으로 분석해주세요.
-
-기관: ${orgName}
+  const prompt = `기관: ${orgName}
 훈련유형: ${type}
-훈련규모: ${mxState.scale}
 
-[6개 영역 자가진단 점수]
+[영역별 자가채점]
 ${scoreText}
-[자유서술]
-잘된 점: ${good||'(없음)'}
-아쉬운 점: ${bad||'(없음)'}
-개선 희망: ${improve||'(없음)'}
+종합의견: ${overall||'(없음)'}
 
-JSON으로만 응답 (다른 텍스트 없이):
+JSON으로만 응답:
 {
   "total_score": 72,
   "grade": "양호",
-  "domain_scores": [
-    {"domain": "사전준비", "score": 75, "feedback": "피드백 1문장"},
-    {"domain": "상황전파", "score": 60, "feedback": "피드백 1문장"},
-    {"domain": "초동대응", "score": 80, "feedback": "피드백 1문장"},
-    {"domain": "기관협업", "score": 70, "feedback": "피드백 1문장"},
-    {"domain": "자원관리", "score": 65, "feedback": "피드백 1문장"},
-    {"domain": "복구대응", "score": 55, "feedback": "피드백 1문장"}
+  "domain_results": [
+    {"domain":"사전준비","self_score":18,"adjusted_score":15,"gap":-3,"comment":"피드백"},
+    {"domain":"상황전파","self_score":12,"adjusted_score":12,"gap":0,"comment":"피드백"},
+    {"domain":"초동대응","self_score":16,"adjusted_score":14,"gap":-2,"comment":"피드백"},
+    {"domain":"기관협업","self_score":13,"adjusted_score":11,"gap":-2,"comment":"피드백"},
+    {"domain":"자원관리","self_score":12,"adjusted_score":12,"gap":0,"comment":"피드백"},
+    {"domain":"복구대응","self_score":10,"adjusted_score":8,"gap":-2,"comment":"피드백"}
   ],
-  "strengths": ["강점1", "강점2", "강점3"],
-  "weaknesses": ["약점1", "약점2", "약점3"],
-  "priority_actions": ["우선조치1", "우선조치2"],
-  "evaluator_comment": "종합 평가 코멘트 3~4문장",
-  "next_ttx_focus": "TTX 연계 권고사항"
+  "overrated_items": [],
+  "strengths": ["강점1","강점2","강점3"],
+  "issues": ["지적1","지적2","지적3"],
+  "overall_comment": "종합 코멘트 3~4문장",
+  "recommendations": ["권고1","권고2"],
+  "next_ttx_focus": "TTX 연계 권고"
 }`;
 
   try {
-    const body = {
-      model:'claude-sonnet-4-6', max_tokens:1800, stream:true,
-      system:'당신은 행정안전부 안전한국훈련 평가 전문가입니다. 피평가 기관이 제출한 자가진단 결과를 분석하여 객관적이고 건설적인 평가 피드백을 제공하세요.',
-      messages:[{role:'user', content:prompt}]
-    };
-    const resp = await fetch('/api/generate', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-Session-ID':getSessionId()},
-      body:JSON.stringify(body)
-    });
-    if (!resp.ok) throw new Error('HTTP '+resp.status);
-    const reader = resp.body.getReader();
-    const dec = new TextDecoder();
-    let full='', buf='';
+    const body={model:'claude-sonnet-4-6',max_tokens:1600,stream:true,
+      system:'당신은 행안부 안전한국훈련 평가관입니다. 기관 담당자가 자가진단한 결과를 보고 실제 평가관 입장에서 냉정하고 건설적인 피드백을 제공하세요. 자가점수가 과대평가된 항목이 있다면 반드시 지적하고 근거를 설명하세요.',
+      messages:[{role:'user',content:prompt}]};
+    const resp=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json','X-Session-ID':getSessionId()},body:JSON.stringify(body)});
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const reader=resp.body.getReader();const dec=new TextDecoder();
+    let full='',buf='';
     while(true){
-      const {done,value}=await reader.read(); if(done) break;
+      const{done,value}=await reader.read();if(done)break;
       buf+=dec.decode(value,{stream:true});
-      const lines=buf.split('\n'); buf=lines.pop();
+      const lines=buf.split('\n');buf=lines.pop();
       for(const line of lines){
-        if(!line.startsWith('data:')) continue;
-        const data=line.slice(5).trim();
-        if(data==='[DONE]') continue;
+        if(!line.startsWith('data:'))continue;
+        const data=line.slice(5).trim();if(data==='[DONE]')continue;
         try{const e=JSON.parse(data);if(e.type==='content_block_delta'&&e.delta?.text)full+=e.delta.text;}catch{}
       }
     }
-    const result = ttxParseJSON(full);
-    if (!result||!result.total_score) throw new Error('결과 파싱 실패');
-    mxState.orgName = orgName; mxState.type = type;
+    const result=ttxParseJSON(full);
+    if(!result||!result.domain_results) throw new Error('결과 파싱 실패');
+    mxState.orgName=orgName; mxState.type=type;
     mxRenderResult(result, orgName, type);
-
-    // Supabase 저장
     ttxSb(()=>supabaseClient.from('ttx_sessions').insert({
-      organization_name: orgName,
-      disaster_type: '모의평가_'+type,
-      difficulty: mxState.scale,
-      total_score: result.total_score,
-      grade: result.grade,
-      completed_at: new Date().toISOString()
+      organization_name:orgName,disaster_type:'모의평가_'+type,
+      total_score:result.total_score,grade:result.grade,
+      completed_at:new Date().toISOString()
     }));
   } catch(err) {
-    errMsg.textContent = 'AI 분석 실패: '+err.message;
-    errEl.classList.add('show');
+    errMsg.textContent='AI 분석 실패: '+err.message; errEl.classList.add('show');
   } finally {
-    btn.disabled=false; btn.textContent='🤖 AI 모의평가 결과 보기';
+    btn.disabled=false; btn.textContent='🎯 평가관 시각으로 AI 피드백 받기';
   }
 }
 
 function mxRenderResult(result, orgName, type) {
-  const gradeColor = {우수:'var(--teal)',양호:'#27ae60',보통:'var(--amber)',미흡:'var(--red)',불량:'#7c0000'}[result.grade]||'var(--navy)';
-  const ring = document.getElementById('mxScoreRing');
-  ring.style.borderColor = gradeColor;
-  document.getElementById('mxTotalScore').textContent = result.total_score;
-  document.getElementById('mxTotalScore').style.color = gradeColor;
-  document.getElementById('mxGradeLabel').textContent = result.grade;
-  document.getElementById('mxGradeLabel').style.color = gradeColor;
-  document.getElementById('mxResultMeta').textContent = orgName+' · '+type+' · '+mxState.scale;
+  const gradeColor={우수:'var(--teal)',양호:'#27ae60',보통:'var(--amber)',미흡:'var(--red)'}[result.grade]||'var(--navy)';
+  const ring=document.getElementById('mxScoreRing');
+  if(ring) ring.style.borderColor=gradeColor;
+  document.getElementById('mxTotalScore').textContent=result.total_score;
+  document.getElementById('mxTotalScore').style.color=gradeColor;
+  document.getElementById('mxGradeLabel').textContent=result.grade;
+  document.getElementById('mxGradeLabel').style.color=gradeColor;
+  document.getElementById('mxResultMeta').textContent=orgName+' · '+type;
 
-  // Domain results
-  const dr = document.getElementById('mxDomainResults');
-  dr.innerHTML = (result.domain_scores||[]).map(d=>{
-    const pct = d.score;
-    const col = pct>=80?'var(--teal)':pct>=60?'var(--amber)':'var(--red)';
-    return `<div style="margin-bottom:14px">
+  const maxMap={사전준비:20,상황전파:15,초동대응:20,기관협업:15,자원관리:15,복구대응:15};
+  document.getElementById('mxDomainResults').innerHTML=(result.domain_results||[]).map(d=>{
+    const maxV=maxMap[d.domain]||20;
+    const selfPct=Math.round(d.self_score/maxV*100);
+    const adjPct=Math.round(d.adjusted_score/maxV*100);
+    const gap=d.gap||0;
+    const gapCol=gap<-2?'var(--red)':gap<0?'var(--amber)':'var(--teal)';
+    return `<div style="margin-bottom:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span style="font-size:13px;font-weight:600;color:var(--navy)">${d.domain}</span>
-        <span style="font-size:14px;font-weight:700;color:${col}">${d.score}점</span>
+        <span style="font-size:13px;font-weight:600">${d.domain}</span>
+        <span style="font-size:12px;color:${gapCol};font-weight:700">${gap>0?'+':''}${gap}점 조정</span>
       </div>
-      <div style="height:7px;background:#e0ddd5;border-radius:4px;overflow:hidden;margin-bottom:5px">
-        <div style="height:100%;width:${pct}%;background:${col};border-radius:4px;transition:.6s width"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="font-size:11px;color:var(--muted);width:48px">자가평가</span>
+        <div style="flex:1;height:6px;background:#e0ddd5;border-radius:3px"><div style="height:100%;width:${selfPct}%;background:#aaa;border-radius:3px"></div></div>
+        <span style="font-size:11px;font-weight:600;width:30px;text-align:right">${d.self_score}점</span>
       </div>
-      <div style="font-size:12px;color:var(--muted)">${d.feedback||''}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+        <span style="font-size:11px;color:var(--teal);width:48px">AI조정</span>
+        <div style="flex:1;height:6px;background:#e0ddd5;border-radius:3px"><div style="height:100%;width:${adjPct}%;background:var(--teal);border-radius:3px"></div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--teal);width:30px;text-align:right">${d.adjusted_score}점</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">${d.comment||''}</div>
     </div>`;
   }).join('');
 
-  // Strengths
-  document.getElementById('mxStrengths').innerHTML = (result.strengths||[]).map(s=>
-    `<div style="padding:8px 12px;background:#e8f8f0;border-radius:7px;font-size:13px;margin-bottom:7px;color:#1a5c35">✅ ${s}</div>`).join('');
+  const overrated=result.overrated_items||[];
+  const orWrap=document.getElementById('mxOverratedWrap');
+  const orEl=document.getElementById('mxOverrated');
+  if(overrated.length && orWrap && orEl){
+    orWrap.style.display='block';
+    orEl.innerHTML=overrated.map(o=>`<div style="padding:7px 11px;background:#fff5e5;border-radius:7px;font-size:12px;margin-bottom:6px;color:#7c4000;border-left:3px solid var(--amber)">⚠️ ${o}</div>`).join('');
+  } else if(orWrap) orWrap.style.display='none';
 
-  // Weaknesses
-  document.getElementById('mxWeaknesses').innerHTML = (result.weaknesses||[]).map(w=>
-    `<div style="padding:8px 12px;background:#fff0f0;border-radius:7px;font-size:13px;margin-bottom:7px;color:#7c0000">⚠️ ${w}</div>`).join('');
-
-  // Priority actions
-  document.getElementById('mxPriorityActions').innerHTML = (result.priority_actions||[]).map((a,i)=>
-    `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#fff5e5;border-radius:8px;margin-bottom:8px;border-left:4px solid var(--amber)">
-      <span style="font-size:13px;font-weight:700;color:var(--amber);flex-shrink:0">${i+1}</span>
-      <span style="font-size:13px;color:var(--text)">${a}</span>
-    </div>`).join('');
-
-  document.getElementById('mxComment').textContent = result.evaluator_comment||'';
-  document.getElementById('mxNextTtx').textContent = result.next_ttx_focus||'';
-  document.getElementById('mxResultArea').style.display = 'block';
-  document.getElementById('mxResultArea').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('mxStrengths').innerHTML=(result.strengths||[]).map(s=>`<div style="padding:7px 11px;background:#e8f8f0;border-radius:7px;font-size:12px;margin-bottom:6px;color:#1a5c35">✅ ${s}</div>`).join('');
+  document.getElementById('mxIssues').innerHTML=(result.issues||[]).map(w=>`<div style="padding:7px 11px;background:#fff0f0;border-radius:7px;font-size:12px;margin-bottom:6px;color:#7c0000">⚠️ ${w}</div>`).join('');
+  document.getElementById('mxRecs').innerHTML=(result.recommendations||[]).map((r,i)=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#fff5e5;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--amber)"><span style="font-weight:700;color:var(--amber);flex-shrink:0">${i+1}</span><span style="font-size:13px">${r}</span></div>`).join('');
+  document.getElementById('mxComment').textContent=result.overall_comment||'';
+  document.getElementById('mxNextTtx').textContent=result.next_ttx_focus||'';
+  document.getElementById('mxResultArea').style.display='block';
+  document.getElementById('mxResultArea').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function mxGoTtx() {
   switchOrgTab(1);
-  const inp = document.getElementById('ttxOrgName');
-  if (inp && mxState.orgName) inp.value = mxState.orgName;
+  const inp=document.getElementById('ttxOrgName');
+  if(inp&&mxState.orgName) inp.value=mxState.orgName;
 }
 
 function mxReset() {
-  mxState.scores = {}; mxState.orgName=''; mxState.type=''; mxState.scale='';
-  document.getElementById('mxOrgName').value = '';
-  document.getElementById('mxType').value = '';
-  document.getElementById('mxDate').value = '';
-  document.getElementById('mxPosition').value = '';
-  document.getElementById('mxGood').value = '';
-  document.getElementById('mxBad').value = '';
-  document.getElementById('mxImprove').value = '';
-  document.querySelectorAll('#mxScaleGroup .rb').forEach(b=>b.classList.remove('sel'));
-  document.getElementById('mxResultArea').style.display = 'none';
-  const bar = document.getElementById('mxScoreBar');
-  if(bar) bar.style.display='none';
-  const container = document.getElementById('mxDomains');
-  if(container) { container.innerHTML=''; delete container.dataset.built; }
-  mxInitDomains();
+  mxState.scores={}; mxState.memos={}; mxState.orgName=''; mxState.type=''; mxState.weakDomain='';
+  document.getElementById('mxOrgName').value='';
+  document.getElementById('mxType').value='';
+  document.getElementById('mxDate').value='';
+  document.getElementById('mxManager').value='';
+  document.getElementById('mxOverall').value='';
+  document.getElementById('mxResultArea').style.display='none';
+  const wrap=document.getElementById('mxDomainsWrap');
+  if(wrap){wrap.innerHTML='';delete wrap.dataset.built;}
+  mxBuildDomains();
+  const txt=document.getElementById('mxScoreBarText');
+  if(txt) txt.textContent='0 / 100점';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1511,6 +1483,11 @@ function showTtxStep(n) {
     document.getElementById(id).className='ttx-panel'+(i+1===n?' active':'');
   });
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function ttxDisasterTypeChange(sel) {
+  const custom = document.getElementById('ttxDisasterCustom');
+  if (custom) custom.style.display = sel.value === '기타' ? 'block' : 'none';
 }
 
 function ttxSelectIntensity(btn) {
@@ -1622,6 +1599,8 @@ function ttxParseJSON(text) {
 async function ttxGenerateScenario() {
   const orgName=document.getElementById('ttxOrgName').value.trim();
   const disaster=document.getElementById('ttxDisasterType').value;
+  const disasterCustomInput=document.getElementById('ttxDisasterCustom');
+  const disasterForPrompt=(disaster==='기타' && disasterCustomInput?.value.trim()) ? disasterCustomInput.value.trim() : disaster;
   const region=document.getElementById('ttxRegion').value.trim();
   const intensity=ttxState.intensity;
   const participants=parseInt(document.getElementById('ttxParticipants').value)||0;
@@ -1667,11 +1646,11 @@ async function ttxGenerateScenario() {
   // ③ Claude API 호출 (웹 검색 + 과거 지적사항 반영)
   const prompt=`당신은 행안부 안전한국훈련 TTX 전문가입니다.
 
-먼저 web_search 도구로 "${disaster} 실제 사례 한국 최근 3년" 을 검색하여 현실적인 레퍼런스를 파악한 뒤, 아래 조건으로 TTX 시나리오를 생성하세요.
+먼저 web_search 도구로 "${disasterForPrompt} 실제 사례 한국 최근 3년" 을 검색하여 현실적인 레퍼런스를 파악한 뒤, 아래 조건으로 TTX 시나리오를 생성하세요.
 
 [훈련 조건]
 - 기관: ${orgName}
-- 재난: ${disaster}
+- 재난: ${disasterForPrompt}
 - 지역: ${region}
 - 강도: ${intensity}
 - 참여인원: ${participants}명
@@ -1723,6 +1702,12 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.scenario=sc;
     ttxState.realCaseRef=sc.real_case_reference||'';
     ttxState.variables={...sc.key_variables};
+    // Initialize sub-variables with sensible defaults from MC sample
+    ttxState.variables.dead = Math.floor((ttxState.variables.casualties||0)*0.2);
+    ttxState.variables.missing = Math.floor((ttxState.variables.casualties||0)*0.1);
+    ttxState.variables.serious = Math.floor((ttxState.variables.casualties||0)*0.4);
+    ttxState.variables.minor = Math.floor((ttxState.variables.casualties||0)*0.3);
+    // infra and resource sub-fields default to 0 (user or Claude updates them)
     ttxState.phase=1;
     ttxState.decisions=[];
     ttxState.totalScore=0;
@@ -1790,60 +1775,116 @@ function ttxRenderMeetingHeader() {
 }
 
 function ttxRenderMetrics() {
-  const v=ttxState.variables;
-  document.getElementById('metCasualties').textContent=(v.casualties||0).toLocaleString();
-  document.getElementById('metDisplaced').textContent=(v.displaced||0).toLocaleString();
-  document.getElementById('metInfra').textContent=(v.infrastructure_damage||0).toLocaleString();
-  document.getElementById('metResource').textContent=(v.resource_needed||0).toLocaleString();
+  const v = ttxState.variables;
+  const dt = ttxState.disasterType || '';
+  const panel = document.getElementById('ttxMetPanel');
+  if (!panel) return;
+
+  // Casualty breakdown always shown
+  const casualtyItems = [
+    {key:'dead',    label:'사망',   unit:'명'},
+    {key:'missing', label:'실종',   unit:'명'},
+    {key:'serious', label:'중상',   unit:'명'},
+    {key:'minor',   label:'경상',   unit:'명'},
+  ];
+
+  // Infrastructure by disaster type
+  const infraMap = {
+    '홍수/태풍': [{key:'flooded_homes',label:'침수주택',unit:'세대'},{key:'farmland',label:'농경지',unit:'ha'},{key:'road_damage',label:'도로유실',unit:'개소'},{key:'power_cut',label:'전기차단',unit:'세대'}],
+    '지진':      [{key:'collapsed',label:'건물붕괴',unit:'동'},{key:'gas_leak',label:'가스누출',unit:'개소'},{key:'bridge',label:'교량손상',unit:'개'},{key:'temp_shelter',label:'임시주거필요',unit:'세대'}],
+    '산불':      [{key:'burned_area',label:'소실면적',unit:'ha'},{key:'danger_bldg',label:'위험건물',unit:'동'},{key:'evacuees',label:'대피주민',unit:'명'}],
+    '화학사고':  [{key:'contam_radius',label:'오염반경',unit:'m'},{key:'evac_zone',label:'대피구역',unit:'개소'},{key:'hazmat',label:'위험물질',unit:'톤'}],
+    '감염병':    [{key:'confirmed',label:'확진',unit:'명'},{key:'quarantine',label:'격리',unit:'명'},{key:'contacts',label:'접촉자',unit:'명'}],
+  };
+  const infraItems = infraMap[dt] || [{key:'damaged_bldg',label:'피해건물',unit:'동'},{key:'displaced_hh',label:'이재민',unit:'세대'},{key:'road_block',label:'도로차단',unit:'개소'}];
+
+  // Resources by disaster type
+  const resourceMap = {
+    '홍수/태풍': [{key:'boats',label:'구조정',unit:'척'},{key:'pumps',label:'양수기',unit:'대'},{key:'helicopters',label:'헬기',unit:'대'},{key:'ambulances',label:'구급차',unit:'대'},{key:'meal_trucks',label:'급식차',unit:'대'}],
+    '지진':      [{key:'heavy_equip',label:'중장비',unit:'대'},{key:'rescue_dogs',label:'구조견',unit:'마리'},{key:'med_teams',label:'의료반',unit:'팀'},{key:'rescue_teams',label:'구조대',unit:'팀'}],
+    '산불':      [{key:'fire_trucks',label:'소방차',unit:'대'},{key:'helicopters',label:'헬기',unit:'대'},{key:'drones',label:'드론',unit:'대'},{key:'firefighters',label:'진화대원',unit:'명'}],
+    '화학사고':  [{key:'chem_trucks',label:'화학차',unit:'대'},{key:'hazmat_suits',label:'방호복',unit:'벌'},{key:'decon_equip',label:'제독장비',unit:'대'},{key:'med_teams',label:'의료반',unit:'팀'}],
+    '감염병':    [{key:'screening',label:'선별진료소',unit:'개소'},{key:'epi_teams',label:'역학조사팀',unit:'팀'},{key:'iso_facilities',label:'격리시설',unit:'개소'}],
+  };
+  const resourceItems = resourceMap[dt] || [{key:'rescue_teams',label:'구조대',unit:'팀'},{key:'ambulances',label:'구급차',unit:'대'},{key:'support_staff',label:'지원인력',unit:'명'},{key:'equipment',label:'장비',unit:'대'}];
+
+  function renderGroup(title, items) {
+    return `<div style="margin-bottom:10px">
+      <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">${title}</div>
+      ${items.map(it=>`
+        <div class="ttx-met-card" onclick="ttxEditMetricKey('${it.key}')">
+          <div class="ttx-met-label">${it.label}</div>
+          <div class="ttx-met-val" id="met_${it.key}">${(v[it.key]||0).toLocaleString()}</div>
+          <div class="ttx-met-unit">${it.unit}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  panel.innerHTML =
+    renderGroup('🩺 인명피해', casualtyItems) +
+    renderGroup('🏗️ 시설피해', infraItems) +
+    renderGroup('🚒 투입자원', resourceItems);
 }
 
 function ttxEditMetric(key) {
-  const labels={casualties:'인명피해(명)',displaced:'이재민(명)',infrastructure_damage:'시설피해(건)',resource_needed:'투입자원(단위)'};
-  const cur=ttxState.variables[key]||0;
-  const val=prompt(labels[key]+' 수치를 입력하세요 (현재: '+cur+')',cur);
-  if(val!==null&&!isNaN(parseInt(val))){
-    ttxState.variables[key]=Math.max(0,parseInt(val));
+  ttxEditMetricKey(key);
+}
+
+function ttxEditMetricKey(key) {
+  const cur = ttxState.variables[key]||0;
+  const v = prompt(`${key} 값 입력:`, cur);
+  if (v !== null && !isNaN(parseInt(v))) {
+    ttxState.variables[key] = Math.max(0, parseInt(v));
     ttxRenderMetrics();
     ttxSaveState();
   }
 }
 
 function ttxRenderAgencies() {
-  const grid=document.getElementById('ttxAgGrid');
-  grid.innerHTML='';
-  TTX_AGENCIES.forEach(a=>{
-    const st=ttxState.agencyStatuses[a.id]||'대기중';
-    const cls=TTX_STATUS_CLS[st]||'standby';
-    const card=document.createElement('div');
-    card.className='ttx-ag-card ags-'+cls;
-    card.id='ag_'+a.id;
-    card.onclick=()=>ttxCycleStatus(a.id);
-    card.innerHTML=`<div class="ttx-ag-icon">${a.icon}</div>
-      <div class="ttx-ag-name">${a.name}</div>
-      <div class="ttx-ag-st">${st}</div>`;
+  const grid = document.getElementById('ttxAgGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  TTX_AGENCIES.forEach(a => {
+    const st = ttxState.agencyStatuses[a.id] || '대기중';
+    const cls = {대기중:'ags-standby',출동중:'ags-dispatch',현장투입:'ags-field',완료:'ags-done'}[st]||'ags-standby';
+    const card = document.createElement('div');
+    card.className = 'ttx-ag-card '+cls;
+    card.id = 'agCard_'+a.id;
+    card.onclick = () => ttxCycleStatus(a.id);
+    card.innerHTML = `<div class="ttx-ag-name">${a.name}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.55);margin:2px 0 4px;line-height:1.3">${a.role||''}</div>
+      <div class="ttx-ag-status">${st}</div>`;
     grid.appendChild(card);
   });
 }
 
 function ttxCycleStatus(id) {
-  const cur=ttxState.agencyStatuses[id]||'대기중';
-  const idx=TTX_STATUS_CYCLE.indexOf(cur);
-  const next=TTX_STATUS_CYCLE[(idx+1)%TTX_STATUS_CYCLE.length];
-  ttxState.agencyStatuses[id]=next;
-  const cls=TTX_STATUS_CLS[next];
-  const card=document.getElementById('ag_'+id);
-  if(card){
-    card.className='ttx-ag-card ags-'+cls;
-    const st=card.querySelector('.ttx-ag-st');
+  const cycle=['대기중','출동중','현장투입','완료'];
+  const cur = ttxState.agencyStatuses[id]||'대기중';
+  const next = cycle[(cycle.indexOf(cur)+1)%cycle.length];
+  ttxState.agencyStatuses[id] = next;
+  const card = document.getElementById('agCard_'+id);
+  if (card) {
+    const clsMap={대기중:'ags-standby',출동중:'ags-dispatch',현장투입:'ags-field',완료:'ags-done'};
+    card.className='ttx-ag-card '+(clsMap[next]||'ags-standby');
+    const st=card.querySelector('.ttx-ag-status');
     if(st) st.textContent=next;
   }
-  // Supabase: 기관 상태 변경 기록
+  // log
+  const agency = TTX_AGENCIES.find(a=>a.id===id);
+  const elapsed = ttxState.elapsedSeconds||0;
+  const h=Math.floor(elapsed/3600), m=Math.floor((elapsed%3600)/60), s=elapsed%60;
+  const ts=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const log = document.getElementById('ttxActivityLog');
+  if (log) {
+    const line = document.createElement('div');
+    line.textContent = `[${ts}] ${agency?.name||id} → ${next}`;
+    log.prepend(line);
+  }
+  // Supabase (keep existing)
   if(ttxState.sessionId){
-    const agency=TTX_AGENCIES.find(a=>a.id===id);
     ttxSb(()=>supabaseClient.from('ttx_agency_status').insert({
-      session_id:ttxState.sessionId,
-      agency_name:agency?.name||id,
-      final_status:next
+      session_id:ttxState.sessionId,agency_name:agency?.name||id,final_status:next
     }));
   }
   ttxSaveState();
@@ -1895,13 +1936,12 @@ async function ttxLoadOptions() {
 기관: ${ttxState.orgName}, 재난: ${ttxState.disasterType}
 인명피해: ${ttxState.variables.casualties}명, 이재민: ${ttxState.variables.displaced}명
 
-의사결정 선택지 4개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수, 위험도 높을수록 높게 설정):
+의사결정 선택지 3개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수):
 {
   "options": [
-    {"label": "A", "action": "대응 행동 (25자 이내)", "risk": "높음", "unexpected_prob": 30, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
-    {"label": "B", "action": "대응 행동 (25자 이내)", "risk": "중간", "unexpected_prob": 18, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
-    {"label": "C", "action": "대응 행동 (25자 이내)", "risk": "낮음", "unexpected_prob": 8, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"},
-    {"label": "D", "action": "대응 행동 (25자 이내)", "risk": "중간", "unexpected_prob": 22, "unexpected_event": "이 선택으로 인한 예상치 못한 부작용 (1문장)"}
+    {"label":"A","action":"대응 행동 (25자 이내)","risk":"높음","unexpected_prob":30,"unexpected_event":"부작용 1문장","related_agencies":["소방본부","경찰청"]},
+    {"label":"B","action":"대응 행동 (25자 이내)","risk":"중간","unexpected_prob":15,"unexpected_event":"부작용 1문장","related_agencies":["보건소/병원","행안부"]},
+    {"label":"C","action":"대응 행동 (25자 이내)","risk":"낮음","unexpected_prob":8,"unexpected_event":"부작용 1문장","related_agencies":["자원봉사","민간기업"]}
   ]
 }`;
 
@@ -1994,6 +2034,32 @@ async function ttxSelectOption(label) {
     ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
 
     ob.textContent=`[${label}안 선택 결과]\n${parsed.outcome}\n\n📊 이번 단계 점수: ${score}점 (누적 평균: ${ttxState.totalScore}점)`;
+
+    // Auto-dispatch related agencies
+    if (parsed.related_agencies && Array.isArray(parsed.related_agencies)) {
+      parsed.related_agencies.forEach(agName => {
+        const ag = TTX_AGENCIES.find(a => a.name === agName);
+        if (ag && ttxState.agencyStatuses[ag.id] === '대기중') {
+          ttxState.agencyStatuses[ag.id] = '출동중';
+          const card = document.getElementById('agCard_'+ag.id);
+          if (card) {
+            card.className = 'ttx-ag-card ags-dispatch';
+            const st=card.querySelector('.ttx-ag-status');
+            if(st) st.textContent='출동중';
+          }
+          const elapsed = ttxState.elapsedSeconds||0;
+          const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=elapsed%60;
+          const ts=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+          const log = document.getElementById('ttxActivityLog');
+          if (log) {
+            const line = document.createElement('div');
+            line.style.color='var(--amber)';
+            line.textContent = `[${ts}] ${agName} → 출동중 (자동)`;
+            log.prepend(line);
+          }
+        }
+      });
+    }
 
     // Supabase: 의사결정 저장
     if(ttxState.sessionId){
@@ -2105,6 +2171,7 @@ function ttxRenderResults() {
 
   // 이전 훈련 기록 조회
   ttxLoadHistory();
+  ttxAutoSelfDiagnosis();
 }
 
 // ─── History ──────────────────────────────────
@@ -2154,6 +2221,93 @@ async function ttxLoadHistory() {
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
+}
+
+async function ttxAutoSelfDiagnosis() {
+  const diagEl = document.getElementById('ttxDiagSection');
+  if (!diagEl) return;
+  diagEl.style.display = 'block';
+  diagEl.innerHTML = `<div class="ct">🤖 훈련 자가진단 (AI 자동 생성)</div>
+    <div class="ttx-spin-wrap"><div class="ttx-spin"></div><div class="ttx-spin-text">AI가 훈련 이력을 분석 중입니다...</div></div>`;
+
+  const decText = ttxState.decisions.map((d,i)=>
+    `${i+1}단계: ${d.option}안 (점수 ${d.score}점) - ${d.outcome||''}`).join('\n');
+  const agencyText = TTX_AGENCIES.map(a=>
+    `${a.name}: ${ttxState.agencyStatuses[a.id]||'대기중'}`).join(', ');
+
+  const prompt = `기관: ${ttxState.orgName}
+총점: ${ttxState.totalScore}점
+의사결정 이력:
+${decText}
+최종 피해: 인명 ${ttxState.variables.casualties||0}명, 이재민 ${ttxState.variables.displaced||0}명, 자원 ${ttxState.variables.resource_needed||0}단위
+협업기관 투입 현황: ${agencyText}
+
+JSON으로만 응답:
+{
+  "domain_scores":[
+    {"domain":"사전준비","score":0,"max":20,"comment":"코멘트"},
+    {"domain":"상황전파","score":0,"max":15,"comment":"코멘트"},
+    {"domain":"초동대응","score":0,"max":20,"comment":"코멘트"},
+    {"domain":"기관협업","score":0,"max":15,"comment":"코멘트"},
+    {"domain":"자원관리","score":0,"max":15,"comment":"코멘트"},
+    {"domain":"복구대응","score":0,"max":15,"comment":"코멘트"}
+  ],
+  "total":0,
+  "grade":"보통",
+  "strengths":["강점1","강점2","강점3"],
+  "weaknesses":["약점1","약점2","약점3"],
+  "evaluator_perspective":"평가관 관점 종합 코멘트 2~3문장"
+}`;
+
+  try {
+    const text = await ttxStreamAPI([{role:'user',content:prompt}],
+      '당신은 행안부 안전한국훈련 평가 전문가입니다. 피평가 기관이 제출한 자가진단 결과를 분석하여 객관적이고 건설적인 평가 피드백을 제공하세요.',
+      1400);
+    const r = ttxParseJSON(text);
+    if (!r||!r.domain_scores) throw new Error('파싱 실패');
+
+    const gradeColor={우수:'var(--teal)',양호:'#27ae60',보통:'var(--amber)',미흡:'var(--red)'}[r.grade]||'var(--navy)';
+    const barsHtml = r.domain_scores.map(d=>{
+      const pct=Math.round(d.score/d.max*100);
+      const col=pct>=80?'var(--teal)':pct>=60?'var(--amber)':'var(--red)';
+      return `<div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:12px;font-weight:600;color:var(--navy)">${d.domain} (/${d.max}점)</span>
+          <span style="font-size:13px;font-weight:700;color:${col}">${d.score}점</span>
+        </div>
+        <div style="height:7px;background:#e0ddd5;border-radius:4px;overflow:hidden;margin-bottom:4px">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:4px"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted)">${d.comment}</div>
+      </div>`;
+    }).join('');
+
+    const strengthsHtml=(r.strengths||[]).map(s=>`<div style="padding:7px 11px;background:#e8f8f0;border-radius:7px;font-size:12px;margin-bottom:6px;color:#1a5c35">✅ ${s}</div>`).join('');
+    const weaknessesHtml=(r.weaknesses||[]).map(w=>`<div style="padding:7px 11px;background:#fff0f0;border-radius:7px;font-size:12px;margin-bottom:6px;color:#7c0000">⚠️ ${w}</div>`).join('');
+
+    diagEl.innerHTML=`
+      <div class="ct">🤖 훈련 자가진단 (AI 자동 생성)</div>
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:32px;font-weight:700;color:${gradeColor}">${r.total}점</div>
+        <div style="font-size:16px;font-weight:700;color:${gradeColor};margin-bottom:4px">${r.grade}</div>
+        <div style="font-size:12px;color:var(--muted)">6개 영역 평가지표 기준 자동 산출</div>
+      </div>
+      <div style="margin-bottom:18px">${barsHtml}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px">강점</div>${strengthsHtml}</div>
+        <div><div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px">취약점</div>${weaknessesHtml}</div>
+      </div>
+      <div style="background:#f5f3ee;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.8;color:var(--text);border-left:3px solid var(--teal)">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">💬 평가관 시각 코멘트</div>
+        ${r.evaluator_perspective||''}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-s" onclick="window.print()">🖨️ PDF 출력</button>
+        <button class="btn-s" onclick="switchOrgTab(2)">📋 모의평가로 상세 점검하기</button>
+      </div>`;
+  } catch(err) {
+    diagEl.innerHTML=`<div class="ct">🤖 훈련 자가진단</div><div style="color:var(--muted);font-size:13px">자가진단 생성 실패: ${err.message}</div>`;
+  }
 }
 
 async function ttxGenerateReport() {
