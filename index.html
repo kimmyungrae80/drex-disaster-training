@@ -418,6 +418,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
         font-family="Arial,sans-serif" opacity="0.5">재난훈련 AI 평가지원 플랫폼</text>
 </svg>
   </div>
+  <button onclick="drexDownloadManual()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:5px 11px;border-radius:6px;font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;margin-right:12px;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.1)'">📖 매뉴얼</button>
   <nav class="sbar">
     <div class="si"><div class="sc active" id="sc1">1</div><span class="sl active" id="sl1">기관 입력</span></div>
     <div class="scon" id="con1"></div>
@@ -2574,6 +2575,499 @@ function ttxReset() {
   if(hc) hc.style.display='none';
   updateNavStep(1);
   showTtxStep(1);
+}
+
+// ═══════════════════════════════════════════════
+// MANUAL DOWNLOAD
+// ═══════════════════════════════════════════════
+function drexDownloadManual() {
+  const html = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DREX 플랫폼 기능 설명서</title>
+<style>
+  :root{--navy:#12213a;--teal:#0e8a76;--amber:#c47d1a;--red:#a82020;--bg:#f5f3ee}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#fff;color:#2c2c2c;line-height:1.7;font-size:14px}
+  .cover{background:var(--navy);color:#fff;padding:60px 48px 48px;min-height:220px}
+  .cover h1{font-size:36px;font-weight:700;letter-spacing:2px;margin-bottom:8px}
+  .cover h1 span{color:#0e8a76}
+  .cover p{font-size:14px;opacity:.65;margin-top:6px}
+  .cover .meta{margin-top:24px;font-size:12px;opacity:.5;border-top:1px solid rgba(255,255,255,.15);padding-top:16px}
+  .toc{background:var(--bg);padding:32px 48px;border-bottom:2px solid #e0ddd5}
+  .toc h2{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px}
+  .toc ol{padding-left:20px}
+  .toc li{margin-bottom:5px;font-size:13px;color:#444}
+  .toc li a{color:var(--teal);text-decoration:none}
+  .body{max-width:900px;margin:0 auto;padding:40px 48px 80px}
+  h2.section{font-size:20px;font-weight:700;color:var(--navy);margin:48px 0 16px;padding-bottom:8px;border-bottom:3px solid var(--teal);display:flex;align-items:center;gap:10px}
+  h2.section .num{background:var(--teal);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  h3{font-size:15px;font-weight:700;color:var(--navy);margin:24px 0 10px;padding-left:10px;border-left:4px solid var(--teal)}
+  h4{font-size:13px;font-weight:700;color:#555;margin:16px 0 6px}
+  p{margin-bottom:10px;font-size:13.5px;line-height:1.75}
+  ul,ol{padding-left:20px;margin-bottom:12px}
+  li{margin-bottom:5px;font-size:13.5px;line-height:1.7}
+  .box{background:var(--bg);border-radius:10px;padding:16px 20px;margin:14px 0;border-left:4px solid var(--teal)}
+  .box.warn{border-color:var(--amber);background:#fffbf0}
+  .box.red{border-color:var(--red);background:#fff5f5}
+  .box.dark{background:#0d1b2a;color:#b8d4e8;border-color:#1e3a5a;font-family:monospace;font-size:12px;line-height:1.8}
+  .box-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;opacity:.7}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+  td{padding:8px 12px;border-bottom:1px solid #e8e4dc;vertical-align:top}
+  tr:nth-child(even) td{background:#fafaf8}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-right:4px}
+  .badge-teal{background:#e8f4f2;color:var(--teal)}
+  .badge-red{background:#ffe4e4;color:var(--red)}
+  .badge-amber{background:#fff4e0;color:var(--amber)}
+  .badge-navy{background:#e8ecf0;color:var(--navy)}
+  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .flow-step{background:var(--navy);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600}
+  .flow-arrow{color:var(--teal);font-size:18px;font-weight:700}
+  .formula{background:#0d1b2a;color:#7ec8e3;font-family:monospace;font-size:12px;padding:12px 16px;border-radius:8px;margin:10px 0;line-height:1.9;overflow-x:auto}
+  .agency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+  .agency-card{background:var(--bg);border-radius:8px;padding:10px;border:1px solid #ddd}
+  .agency-card .name{font-weight:700;font-size:12px;color:var(--navy)}
+  .agency-card .role{font-size:11px;color:#666;margin-top:2px}
+  .domain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+  .domain-card{border:2px solid #e0ddd5;border-radius:10px;padding:12px}
+  .domain-card .title{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:6px}
+  .domain-card .max{float:right;background:var(--teal);color:#fff;padding:1px 8px;border-radius:8px;font-size:11px}
+  @media(max-width:640px){.agency-grid,.domain-grid{grid-template-columns:1fr}.body{padding:24px 20px}.cover{padding:36px 20px 28px}.toc{padding:20px}}
+  @media print{.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}.box.dark{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1><span>DREX</span> 플랫폼</h1>
+  <h1 style="font-size:22px;font-weight:400;margin-top:6px;opacity:.85">기능 설명서 및 로직 가이드</h1>
+  <p>Disaster Response EXercise · 재난훈련 AI 평가지원 플랫폼</p>
+  <div class="meta">
+    버전 2.0 · 발행일: ${new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'})} · Powered by Mr.Kim PhD × Claude AI
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>📋 목차</h2>
+  <ol>
+    <li><a href="#s1">플랫폼 개요</a></li>
+    <li><a href="#s2">시스템 아키텍처</a></li>
+    <li><a href="#s3">로그인 및 세션 관리</a></li>
+    <li><a href="#s4">TTX 시뮬레이터 — 전체 흐름</a></li>
+    <li><a href="#s5">몬테카를로 시나리오 엔진 (로직)</a></li>
+    <li><a href="#s6">Claude AI 시나리오 생성 (로직)</a></li>
+    <li><a href="#s7">TTX 2단계: 의사결정 진행</a></li>
+    <li><a href="#s8">SOP 기반 협업기관 조치 시스템</a></li>
+    <li><a href="#s9">상황일지 시스템</a></li>
+    <li><a href="#s10">TTX 3단계: 결과 분석 및 AI 보고서</a></li>
+    <li><a href="#s11">모의평가 시스템</a></li>
+    <li><a href="#s12">AI 상담 채널</a></li>
+    <li><a href="#s13">데이터 저장 구조</a></li>
+    <li><a href="#s14">반응형 레이아웃 구조</a></li>
+  </ol>
+</div>
+
+<div class="body">
+
+<!-- S1 -->
+<h2 class="section" id="s1"><span class="num">1</span> 플랫폼 개요</h2>
+<p>
+  DREX(Disaster Response EXercise)는 행정안전부 「안전한국훈련」을 지원하는 AI 기반 재난대응 훈련 플랫폼입니다.
+  지방자치단체·공공기관 담당자가 <strong>TTX(도상훈련)</strong>를 실시하고, AI가 실시간으로 시나리오를 생성하며,
+  훈련 결과를 자동 평가·보고서화합니다.
+</p>
+<div class="box">
+  <div class="box-title">핵심 기능 요약</div>
+  <ul>
+    <li>🤖 <strong>AI 시나리오 자동 생성</strong> — Claude API + 실시간 웹 검색으로 현실 기반 TTX 시나리오 생성</li>
+    <li>🎲 <strong>몬테카를로 불확실성 엔진</strong> — Box-Muller 정규분포 샘플링으로 매 훈련마다 다른 피해 규모</li>
+    <li>🏢 <strong>13개 협업기관 SOP</strong> — 현장조치 행동매뉴얼 기반 기관별 조치 선택 및 피해변수 반영</li>
+    <li>📊 <strong>실시간 피해현황판</strong> — 인명·시설·자원 피해가 의사결정에 따라 동적으로 변화</li>
+    <li>📋 <strong>상황일지 자동 기록</strong> — 모든 결정·조치·돌발상황이 타임스탬프와 함께 기록, TXT 다운로드</li>
+    <li>🎯 <strong>6영역 모의평가</strong> — 사전준비~복구대응 자기채점 + AI 조정점수 비교</li>
+    <li>💬 <strong>AI 상담 채널</strong> — 안전한국훈련 전문 AI 상담사 24시간 운영</li>
+  </ul>
+</div>
+
+<!-- S2 -->
+<h2 class="section" id="s2"><span class="num">2</span> 시스템 아키텍처</h2>
+<table>
+  <tr><th>구성요소</th><th>기술스택</th><th>역할</th></tr>
+  <tr><td>프론트엔드</td><td>HTML5 + CSS3 + Vanilla JS (단일 파일)</td><td>전체 UI/UX, 상태관리, 로컬스토리지 저장</td></tr>
+  <tr><td>AI 엔진</td><td>Claude claude-sonnet-4-6 (Anthropic API)</td><td>시나리오 생성, 의사결정 평가, 결과 분석, 모의평가 AI 피드백</td></tr>
+  <tr><td>웹 검색</td><td>web_search_20250305 (Anthropic 내장)</td><td>실제 재난 사례 검색 후 현실적 시나리오 생성</td></tr>
+  <tr><td>백엔드 프록시</td><td>Vercel Serverless Functions (/api/generate)</td><td>Claude API 키 보호, SSE 스트리밍 중계</td></tr>
+  <tr><td>데이터베이스</td><td>Supabase (PostgreSQL)</td><td>훈련 세션, 의사결정 이력, 기관 지적사항 저장</td></tr>
+  <tr><td>호스팅</td><td>Vercel (자동 CI/CD)</td><td>GitHub 푸시 시 자동 배포</td></tr>
+</table>
+
+<div class="box dark">
+<div class="box-title" style="color:#7ec8e3">API 요청 흐름 (SSE 스트리밍)</div>
+브라우저 → POST /api/generate
+  body: { model, messages, system, max_tokens, stream:true, tools:[web_search] }
+
+Vercel Function → Anthropic API (스트리밍)
+  event: content_block_delta → 텍스트 청크를 브라우저로 즉시 전달
+
+브라우저 ← SSE 청크 수신 → UI 실시간 업데이트
+</div>
+
+<!-- S3 -->
+<h2 class="section" id="s3"><span class="num">3</span> 로그인 및 세션 관리</h2>
+<h3>입력 항목</h3>
+<ul>
+  <li><strong>기관명</strong>: 훈련을 실시하는 기관 (시나리오 개인화에 사용)</li>
+  <li><strong>담당자명</strong>: 훈련 담당자 (보고서 및 평가에 기록)</li>
+  <li><strong>지역</strong>: 가나다 순 시·도 선택 (시나리오 지역 특성 반영)</li>
+  <li><strong>부서</strong>: 안전관리과, 재난대응과 등 (컨텍스트 반영)</li>
+</ul>
+<h3>세션 로직</h3>
+<div class="box">
+  로그인 성공 시 <code>sessionId</code>(타임스탬프+랜덤 문자열)를 생성하여
+  <code>localStorage['drex_session']</code>에 저장합니다.
+  Supabase <code>visitors</code> 테이블에 방문 기록을 INSERT하며, 오프라인 환경에서도 null-safe로 동작합니다.
+</div>
+
+<!-- S4 -->
+<h2 class="section" id="s4"><span class="num">4</span> TTX 시뮬레이터 — 전체 흐름</h2>
+<div class="flow">
+  <div class="flow-step">① 기관 설정</div><div class="flow-arrow">→</div>
+  <div class="flow-step">② 몬테카를로 샘플링</div><div class="flow-arrow">→</div>
+  <div class="flow-step">③ Supabase 지적사항 조회</div><div class="flow-arrow">→</div>
+  <div class="flow-step">④ Claude 시나리오 생성</div><div class="flow-arrow">→</div>
+  <div class="flow-step">⑤ 의사결정 × 3단계</div><div class="flow-arrow">→</div>
+  <div class="flow-step">⑥ 결과 분석 + AI 보고서</div>
+</div>
+<h3>1단계: 기관 설정 항목</h3>
+<table>
+  <tr><th>항목</th><th>값</th><th>용도</th></tr>
+  <tr><td>재난유형</td><td>홍수/태풍, 지진, 산불, 화학사고, 감염병, 복합재난, 기타(직접입력)</td><td>몬테카를로 파라미터 선택, SOP 조치 필터링</td></tr>
+  <tr><td>지역 특성</td><td>자유 텍스트 (예: 해안도시, 산악지역)</td><td>Claude 시나리오 지역화</td></tr>
+  <tr><td>훈련 강도</td><td>초급(×0.6) / 중급(×1.0) / 고급(×1.6)</td><td>몬테카를로 피해규모 배율</td></tr>
+  <tr><td>참여 인원</td><td>숫자 (명)</td><td>시나리오 규모 조정</td></tr>
+</table>
+<h3>단계 진행 표시 (네비게이션 스텝바)</h3>
+<ul>
+  <li><strong>1단계 (기관입력)</strong>: 초기 상태, 활성화</li>
+  <li><strong>2단계 (취약점분석)</strong>: [시나리오 생성] 클릭 시 활성화 — Supabase 조회 + 몬테카를로 실행 중</li>
+  <li><strong>3단계 (AI시나리오)</strong>: Claude API 응답 완료 시 활성화, 이후 유지</li>
+</ul>
+
+<!-- S5 -->
+<h2 class="section" id="s5"><span class="num">5</span> 몬테카를로 시나리오 엔진 (로직)</h2>
+<p>
+  버튼 클릭 시마다 <strong>Box-Muller 변환</strong>을 이용한 정규분포 샘플링으로
+  4개 피해 변수(인명피해, 이재민, 시설피해, 투입자원)를 생성합니다.
+  매 실행 시 5자리 난수 시드(seed)를 저장해 재현 가능합니다.
+</p>
+<h3>Box-Muller 변환</h3>
+<div class="formula">
+z = √(-2·ln(u₁)) × cos(2π·u₂)
+sampled_value = round( max(0, mean + z × std) ) × multiplier
+
+여기서: u₁, u₂ ~ Uniform(0,1), multiplier: 초급=0.6, 중급=1.0, 고급=1.6
+</div>
+<h3>재난유형별 파라미터 테이블</h3>
+<table>
+  <tr><th>재난유형</th><th>인명피해 (mean±std)</th><th>이재민 (mean±std)</th><th>시설피해 (mean±std)</th><th>투입자원 (mean±std)</th></tr>
+  <tr><td>홍수/태풍</td><td>10 ± 12</td><td>800 ± 600</td><td>40 ± 35</td><td>80 ± 60</td></tr>
+  <tr><td>지진</td><td>40 ± 50</td><td>3,000 ± 2,000</td><td>200 ± 150</td><td>400 ± 200</td></tr>
+  <tr><td>산불</td><td>3 ± 5</td><td>400 ± 300</td><td>80 ± 70</td><td>120 ± 80</td></tr>
+  <tr><td>화학사고</td><td>15 ± 20</td><td>1,200 ± 800</td><td>60 ± 50</td><td>150 ± 100</td></tr>
+  <tr><td>감염병</td><td>30 ± 60</td><td>100 ± 150</td><td>5 ± 10</td><td>500 ± 400</td></tr>
+  <tr><td>복합재난</td><td>60 ± 70</td><td>2,500 ± 2,000</td><td>180 ± 150</td><td>500 ± 300</td></tr>
+</table>
+<div class="box warn">
+  <div class="box-title">불확실성 팩터</div>
+  추가로 3개의 불확실성 팩터 (0.8~1.2 사이 랜덤값)를 생성하여 시나리오 설명에 포함합니다.
+  이는 실제 재난의 불확실성을 훈련에 반영하기 위한 메커니즘입니다.
+</div>
+
+<!-- S6 -->
+<h2 class="section" id="s6"><span class="num">6</span> Claude AI 시나리오 생성 (로직)</h2>
+<h3>3단계 파이프라인</h3>
+<ol>
+  <li><strong>몬테카를로 사전 샘플링</strong> — 피해 규모 수치 확정</li>
+  <li><strong>Supabase 과거 지적사항 조회</strong> — 해당 기관의 이전 훈련 지적사항 최대 10건 조회</li>
+  <li><strong>Claude API 호출</strong> — 웹 검색 도구 포함, 아래 정보를 프롬프트에 주입</li>
+</ol>
+<div class="box dark">
+<div class="box-title" style="color:#7ec8e3">Claude API 요청 구조 (tools 포함)</div>
+{
+  model: "claude-sonnet-4-6",
+  max_tokens: 2000,
+  stream: true,
+  tools: [{ type: "web_search_20250305", name: "web_search" }],
+  messages: [{ role: "user", content: prompt }]
+}
+
+prompt 포함 정보:
+  - 기관명, 재난유형, 지역, 강도, 참여인원
+  - 몬테카를로 수치 (casualties, displaced, infra, resource, seed)
+  - 과거 지적사항 목록
+  - 불확실성 팩터 3개
+
+지시사항:
+  먼저 web_search로 "{재난유형} 실제 사례 한국 최근 3년" 검색
+  → 검색 결과를 반영하여 현실적 시나리오 생성
+</div>
+<h3>시나리오 JSON 응답 구조</h3>
+<div class="box dark">
+{
+  "situation_title": "상황 제목",
+  "situation_description": "초기 상황 설명 (3~4문장)",
+  "time_pressure": "대응 시간 제한",
+  "weakness_applied": "반영된 취약점 (과거 지적사항 기반)",
+  "monte_carlo_summary": "몬테카를로 수치 요약",
+  "web_search_ref": "참조한 실제 사례",
+  "initial_metrics": {
+    "casualties": 숫자,
+    "displaced": 숫자,
+    "infrastructure_damage": 숫자,
+    "resource_needed": 숫자
+  }
+}
+</div>
+
+<!-- S7 -->
+<h2 class="section" id="s7"><span class="num">7</span> TTX 2단계: 의사결정 진행</h2>
+<h3>3패널 레이아웃</h3>
+<table>
+  <tr><th>패널</th><th>너비</th><th>내용</th></tr>
+  <tr><td>좌측: 현황판 + 상황일지</td><td>20%</td><td>4개 피해변수 실시간 표시 + 상황일지 스크롤</td></tr>
+  <tr><td>중앙: 상황판단</td><td>~50%</td><td>현재 상황 텍스트 + 의사결정 선택지 A/B/C</td></tr>
+  <tr><td>우측: 협업기관</td><td>30%</td><td>13개 기관 상태 카드, 클릭 시 SOP 팝업</td></tr>
+</table>
+<h3>의사결정 선택지 생성 로직</h3>
+<p>매 단계마다 Claude API가 A/B/C 3개 선택지를 생성합니다:</p>
+<div class="box dark">
+각 선택지 구조:
+{
+  "label": "A",
+  "action": "조치 내용",
+  "risk": "높음|중간|낮음",
+  "unexpected_prob": 30,        // 돌발사건 발생 확률 (%)
+  "unexpected_event": "설명",   // 실제 발생 시 표시할 돌발 내용
+  "related_agencies": ["소방본부","경찰청"]  // 자동 출동 기관
+}
+
+A안: 공격적 조치 (위험도 높음, 돌발확률 높음)
+B안: 균형적 조치 (위험도 중간)
+C안: 보수적 조치 (위험도 낮음, 돌발확률 낮음)
+</div>
+<h3>돌발사건 트리거 로직</h3>
+<div class="box red">
+  <div class="box-title">돌발변수 발생 조건</div>
+  선택지 클릭 시 <code>Math.random() × 100 &lt; unexpected_prob</code> 조건으로 판정.<br>
+  발생 시: 인명피해 × 1.15, 이재민 × 1.15 (15% 악화) + 상황일지에 ⚡ 기록.
+</div>
+<h3>의사결정 결과 평가</h3>
+<p>선택 후 Claude API가 결과를 JSON으로 반환:</p>
+<div class="box dark">
+{
+  "outcome": "결과 설명",
+  "variable_changes": {
+    "casualties": +5 또는 -3,
+    "displaced": -100,
+    "infrastructure_damage": +2,
+    "resource_needed": +30
+  },
+  "score": 72,                    // 0~100점
+  "next_situation": "다음 단계 브리핑"
+}
+</div>
+<p>3단계 점수의 <strong>산술 평균</strong>이 최종 TTX 종합점수가 됩니다.</p>
+
+<!-- S8 -->
+<h2 class="section" id="s8"><span class="num">8</span> SOP 기반 협업기관 조치 시스템</h2>
+<p>우측 패널의 기관 카드를 클릭하면 해당 기관의 현장조치 행동매뉴얼(SOP) 팝업이 열립니다.</p>
+<h3>13개 협업기관</h3>
+<div class="agency-grid">
+  <div class="agency-card"><div class="name">🚒 소방본부</div><div class="role">인명구조 및 화재진압</div></div>
+  <div class="agency-card"><div class="name">🚓 경찰청</div><div class="role">현장통제 및 교통관리</div></div>
+  <div class="agency-card"><div class="name">🪖 군부대</div><div class="role">인력지원 및 장비지원</div></div>
+  <div class="agency-card"><div class="name">🏥 보건소/병원</div><div class="role">부상자 응급처치</div></div>
+  <div class="agency-card"><div class="name">🏫 교육청</div><div class="role">대피소(학교) 개방</div></div>
+  <div class="agency-card"><div class="name">🌿 환경부</div><div class="role">오염조사 및 방제</div></div>
+  <div class="agency-card"><div class="name">🛣️ 국토교통부</div><div class="role">도로·시설 응급복구</div></div>
+  <div class="agency-card"><div class="name">🏛️ 행안부</div><div class="role">재난수습본부 운영</div></div>
+  <div class="agency-card"><div class="name">⚡ 전기(한전)</div><div class="role">전력복구</div></div>
+  <div class="agency-card"><div class="name">📡 통신(KT)</div><div class="role">통신망 복구</div></div>
+  <div class="agency-card"><div class="name">🔧 수도/가스</div><div class="role">상하수도·가스 안전조치</div></div>
+  <div class="agency-card"><div class="name">🤝 자원봉사</div><div class="role">생활지원 및 급식</div></div>
+  <div class="agency-card"><div class="name">🏭 민간기업</div><div class="role">물자·장비 지원</div></div>
+</div>
+<h3>SOP 조치 선택 처리 흐름</h3>
+<div class="flow">
+  <div class="flow-step">카드 클릭</div><div class="flow-arrow">→</div>
+  <div class="flow-step">SOP 팝업 표시</div><div class="flow-arrow">→</div>
+  <div class="flow-step">조치 선택</div><div class="flow-arrow">→</div>
+  <div class="flow-step">상태 → 현장투입</div><div class="flow-arrow">→</div>
+  <div class="flow-step">피해변수 반영</div><div class="flow-arrow">→</div>
+  <div class="flow-step">상황일지 기록</div>
+</div>
+<h3>SOP 조치의 피해변수 영향 예시</h3>
+<table>
+  <tr><th>기관</th><th>조치</th><th>피해변수 영향</th></tr>
+  <tr><td>소방본부</td><td>인명탐색 및 구조 실시</td><td>인명피해 -2</td></tr>
+  <tr><td>소방본부</td><td>응급처치 후 후송</td><td>인명피해 -2</td></tr>
+  <tr><td>소방본부 (홍수)</td><td>수중구조대 투입</td><td>인명피해 -3</td></tr>
+  <tr><td>보건소</td><td>현장 응급의료소 설치</td><td>인명피해 -3</td></tr>
+  <tr><td>교육청</td><td>학교 대피소 개방</td><td>이재민 -200</td></tr>
+  <tr><td>군부대</td><td>임시숙소 설치 지원</td><td>이재민 -200</td></tr>
+  <tr><td>국토교통부</td><td>긴급 도로 복구</td><td>시설피해 -10</td></tr>
+  <tr><td>한전</td><td>전력복구 우선순위 결정</td><td>시설피해 -10</td></tr>
+  <tr><td>군부대</td><td>병력 및 장비 지원 요청</td><td>투입자원 +100</td></tr>
+</table>
+<p>재난유형에 따라 기관별 추가 SOP가 팝업에 표시됩니다 (예: 소방본부는 홍수 시 수중구조대, 지진 시 붕괴건물 구조 추가 제공).</p>
+
+<!-- S9 -->
+<h2 class="section" id="s9"><span class="num">9</span> 상황일지 시스템</h2>
+<p>좌측 패널 현황판 아래에 실시간 상황일지가 기록됩니다. 모든 항목은 <strong>최신순</strong>으로 표시됩니다.</p>
+<h3>자동 기록 이벤트</h3>
+<table>
+  <tr><th>이벤트</th><th>아이콘</th><th>색상</th><th>기록 내용</th></tr>
+  <tr><td>시나리오 생성 완료</td><td>🔴</td><td>빨강</td><td>재난유형 + 강도 + 지역</td></tr>
+  <tr><td>단계 전환</td><td>🟡</td><td>빨강</td><td>X단계 상황 시작</td></tr>
+  <tr><td>의사결정 선택</td><td>🔵</td><td>파랑</td><td>단계 + 선택안 + 조치내용</td></tr>
+  <tr><td>돌발변수 발생</td><td>⚡</td><td>빨강</td><td>돌발 내용</td></tr>
+  <tr><td>기관 자동출동 (AI)</td><td>🔔</td><td>초록</td><td>기관명 + 자동 출동 지령</td></tr>
+  <tr><td>기관 SOP 조치 실시</td><td>기관 아이콘</td><td>초록</td><td>기관명 + 조치내용 실시</td></tr>
+</table>
+<h3>다운로드 형식</h3>
+<div class="box dark">
+[HH:MM:SS] 🔴 시나리오 생성 완료 — 홍수/태풍 고급 (해안도시)
+[HH:MM:SS] 🟡 2단계 상황 시작
+[HH:MM:SS] 🔵 2단계 의사결정 — B안 선택: 긴급대피 명령 발령
+[HH:MM:SS] 🔔 소방본부 자동 출동 지령
+[HH:MM:SS] 🚒 소방본부 — 수중구조대 투입 실시
+[HH:MM:SS] ⚡ 돌발변수 발생! 제방 붕괴로 침수 구역 확산
+</div>
+<p>📥 <strong>전체 일지 다운로드</strong> 버튼 클릭 시 위 형식의 <code>.txt</code> 파일로 저장됩니다.</p>
+
+<!-- S10 -->
+<h2 class="section" id="s10"><span class="num">10</span> TTX 3단계: 결과 분석 및 AI 보고서</h2>
+<h3>종합 점수 산출</h3>
+<div class="formula">
+종합점수 = round( Σ(단계별 점수) ÷ 3 )
+
+등급 기준:
+  80점 이상 → 우수 ⭐
+  60~79점   → 보통 ✅
+  60점 미만  → 미흡 ⚠️
+</div>
+<h3>결과 대시보드 구성</h3>
+<ul>
+  <li>종합점수 링(원형 그래프) + 등급 라벨</li>
+  <li>최종 피해현황 4개 지표 (의사결정 누적 반영값)</li>
+  <li>단계별 의사결정 이력 테이블</li>
+  <li>RTO(Recovery Time Objective) 계산: <code>인명피해×0.5 + 시설피해×2</code> 기반 추정</li>
+</ul>
+<h3>AI 보고서 생성 (Claude)</h3>
+<p>훈련 데이터 전체를 Claude에 전달하여 구조화된 보고서를 스트리밍으로 생성합니다:</p>
+<ul>
+  <li>훈련 개요 (기관, 재난유형, 일시, 참여인원)</li>
+  <li>단계별 의사결정 분석 (선택안·점수·결과)</li>
+  <li>잘한 점 / 미흡한 점 분석</li>
+  <li>최종 피해현황 평가</li>
+  <li>향후 개선 권고사항</li>
+</ul>
+
+<!-- S11 -->
+<h2 class="section" id="s11"><span class="num">11</span> 모의평가 시스템</h2>
+<p>
+  TTX와 별개로 운영되는 자기평가 도구입니다. 평가관 시각으로 훈련 과정을 채점하고,
+  AI가 현실적인 조정점수를 제안합니다.
+</p>
+<h3>6개 평가 영역 (총 100점)</h3>
+<div class="domain-grid">
+  <div class="domain-card"><div class="max">20점</div><div class="title">영역1. 사전준비</div>훈련계획서 수립·배포, 유관기관 협조, 장비·자원 준비, 교육 실시</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">영역2. 상황전파</div>전파 신속성, CBS·재난문자, 연락체계 가동</div>
+  <div class="domain-card"><div class="max">20점</div><div class="title">영역3. 초동대응</div>비상대응체계 가동, 지휘체계, 인명구조, 긴급대피</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">영역4. 기관협업</div>유관기관 연락·협조, 협업 회의체, 임무분담</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">영역5. 자원관리</div>인력·장비 투입 적시성, 자원 요청·배분, 추적관리</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">영역6. 복구대응</div>이재민 지원, 시설 응급복구 계획, 재난수습본부 운영</div>
+</div>
+<h3>AI 평가 처리 로직</h3>
+<ol>
+  <li>담당자가 각 항목을 5점 척도로 자기 채점</li>
+  <li>훈련 내용 설명(선택)을 함께 Claude에 전달</li>
+  <li>Claude가 평가관 시각에서 조정점수 + 영역별 피드백 반환</li>
+  <li>자기점수 vs AI 조정점수 비교 막대그래프 표시</li>
+  <li>자기점수가 AI 조정점수보다 현저히 높은 영역 → "과대평가 경고" 표시</li>
+</ol>
+
+<!-- S12 -->
+<h2 class="section" id="s12"><span class="num">12</span> AI 상담 채널</h2>
+<p>
+  화면 우하단 채팅 버튼(로그인 후 표시)을 통해 24시간 AI 상담이 가능합니다.
+  행정안전부 안전한국훈련 전문 AI로 설정되어 있습니다.
+</p>
+<div class="box">
+  <div class="box-title">상담 가능 주제</div>
+  <ul>
+    <li>1차/2차/3차 컨설팅 체크리스트 항목</li>
+    <li>재난유형별 훈련 시나리오 절차</li>
+    <li>평가 미흡 항목 대응 방법</li>
+    <li>13개 협업기능(기관) 역할 및 임무</li>
+    <li>TTX·FTX 훈련 방법론 전반</li>
+  </ul>
+</div>
+
+<!-- S13 -->
+<h2 class="section" id="s13"><span class="num">13</span> 데이터 저장 구조</h2>
+<h3>localStorage 저장 (오프라인 포함)</h3>
+<table>
+  <tr><th>키</th><th>내용</th></tr>
+  <tr><td>drex_ttx</td><td>TTX 전체 상태 (기관정보, 시나리오, 피해변수, 의사결정이력, 점수, 기관상태, 타이머)</td></tr>
+  <tr><td>drex_session</td><td>로그인 세션 정보 (기관명, 담당자명, 지역, 부서)</td></tr>
+</table>
+<h3>Supabase 테이블</h3>
+<table>
+  <tr><th>테이블</th><th>저장 내용</th><th>시점</th></tr>
+  <tr><td>visitors</td><td>로그인 기관·담당자 방문 기록</td><td>로그인 시</td></tr>
+  <tr><td>ttx_sessions</td><td>훈련 세션 전체 정보</td><td>시나리오 생성 완료 시</td></tr>
+  <tr><td>ttx_decisions</td><td>단계별 의사결정 (선택안, 점수, 결과, 피해변화)</td><td>의사결정 선택 시</td></tr>
+  <tr><td>ttx_agency_status</td><td>기관별 최종 상태</td><td>기관 상태 변경 시</td></tr>
+  <tr><td>issues</td><td>기관별 훈련 지적사항</td><td>컨설팅 입력 시</td></tr>
+</table>
+<div class="box warn">
+  <div class="box-title">오프라인 동작</div>
+  Supabase 연결 불가 시 모든 Supabase 호출은 null-safe wrapper <code>ttxSb()</code>를 통해 자동으로 스킵됩니다.
+  코어 기능(시나리오 생성, 의사결정, 평가)은 인터넷 없이도 동작합니다. (Claude API 제외)
+</div>
+
+<!-- S14 -->
+<h2 class="section" id="s14"><span class="num">14</span> 반응형 레이아웃 구조</h2>
+<table>
+  <tr><th>화면 너비</th><th>TTX 패널 레이아웃</th><th>기타</th></tr>
+  <tr><td>1200px 이상 (데스크탑)</td><td>현황판 20% / 상황판단 ~50% / 협업기관 30%</td><td>3열 가로 배치</td></tr>
+  <tr><td>768~1199px (태블릿)</td><td>현재상황 전체 너비 (상단) → 현황판 + 협업기관 2열 (하단)</td><td>협업기관 3열 유지</td></tr>
+  <tr><td>767px 이하 (모바일)</td><td>현황판 → 상황판단 → 협업기관 세로 스택</td><td>협업기관 카드 2열</td></tr>
+</table>
+
+<div style="margin-top:60px;padding-top:24px;border-top:2px solid #e0ddd5;text-align:center;color:#999;font-size:12px">
+  © 2026 DREX · Disaster Response EXercise · Powered by Mr.Kim PhD<br>
+  이 문서는 DREX 플랫폼에서 자동 생성되었습니다.
+</div>
+
+</div><!-- /body -->
+</body>
+</html>`;
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `DREX_기능설명서_${new Date().toISOString().slice(0,10)}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('📖 설명서 다운로드 완료');
 }
 
 // ═══════════════════════════════════════════════
