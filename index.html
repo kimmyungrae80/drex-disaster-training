@@ -348,6 +348,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sop-box{background:#fff;border-radius:16px;width:100%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.3)}
 .sop-head{background:var(--navy);color:#fff;padding:14px 18px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:flex-start}
 .sop-body{padding:14px}
+/* ── KEY AGENCY BADGE ── */
+.ttx-ag-card.key-required::after{content:'판단필요';position:absolute;top:4px;right:4px;background:var(--amber);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;animation:kpulse 1.4s ease-in-out infinite}
+@keyframes kpulse{0%,100%{opacity:1}50%{opacity:.45}}
+.ttx-ag-card{position:relative}
+.auto-done-badge{position:absolute;top:4px;right:4px;background:#444;color:#ccc;font-size:8px;font-weight:600;padding:2px 5px;border-radius:4px}
+#keyAgBanner{background:#fff5e0;border:1.5px solid var(--amber);border-radius:8px;padding:10px 14px;font-size:12px;color:#7c4000;margin-bottom:10px;display:none}
 .sop-act{width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border:1.5px solid #e0ddd5;border-radius:8px;background:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;transition:.15s all;display:flex;justify-content:space-between;align-items:center}
 .sop-act:hover{border-color:var(--teal);background:#f0faf8}
 .sop-act-eff{font-size:10px;color:var(--teal);font-weight:600;flex-shrink:0;margin-left:8px}
@@ -469,6 +475,74 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <h2>🏛️ TTX 상황판단회의 시뮬레이터</h2>
     <p>훈련 조건을 입력하면 Claude AI가 실전적인 TTX 시나리오를 자동 생성합니다.</p>
   </div>
+
+  <!-- 사용설명서 -->
+  <div style="border:2px solid var(--teal);border-radius:12px;margin-bottom:20px;overflow:hidden">
+    <button onclick="(function(b,p){p.style.display=p.style.display==='none'?'block':'none';b.querySelector('.guide-arr').textContent=p.style.display==='none'?'▶':'▼'})(this,document.getElementById('guideBody'))" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--teal);border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif">
+      <span style="font-size:14px;font-weight:700;color:#fff">📖 사용 설명서 — 처음 이용하시면 먼저 읽어보세요</span>
+      <span class="guide-arr" style="color:#fff;font-size:12px;font-weight:700">▼</span>
+    </button>
+    <div id="guideBody" style="padding:20px 22px;background:#fff;display:block">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div style="background:#f0faf8;border-radius:10px;padding:14px 16px;border-left:4px solid var(--teal)">
+          <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px">🎯 이 훈련은 무엇인가요?</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--text)">
+            <b>TTX(Tabletop Exercise)</b>는 실제 재난 발생을 가정하고 의사결정 절차를 토론·연습하는 상황판단회의입니다.<br>
+            AI가 실전 시나리오를 생성하고, 3단계 의사결정을 거쳐 대응 역량을 평가받습니다.
+          </div>
+        </div>
+        <div style="background:#fff5e0;border-radius:10px;padding:14px 16px;border-left:4px solid var(--amber)">
+          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px">⏱️ 소요 시간</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--text)">
+            · 시나리오 생성: <b>약 30초</b><br>
+            · 3단계 의사결정: <b>단계당 5~10분</b><br>
+            · 최종 보고서: <b>약 1분</b><br>
+            <span style="color:var(--amber);font-weight:600">총 20~35분 소요</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">📋 훈련 진행 순서</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
+          <span style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">1단계</span>
+          <div style="font-size:12px;line-height:1.7"><b>훈련 조건 입력</b> — 기관명, 재난유형, 지역, 훈련강도, 참여인원을 입력하고 시나리오를 생성합니다.</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
+          <span style="background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">2단계</span>
+          <div style="font-size:12px;line-height:1.7"><b>3회 상황판단회의</b> — 돌발상황마다 A·B·C 중 대응안을 선택합니다. <span style="color:var(--amber);font-weight:600">깜빡이는 기관 카드(3~4개)는 직접 SOP를 선택</span>하고, 나머지 기관은 자동 처리됩니다.</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
+          <span style="background:var(--amber);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">3단계</span>
+          <div style="font-size:12px;line-height:1.7"><b>AI 결과 분석</b> — 3단계 의사결정 점수와 협업기관 운영 결과를 종합한 훈련 보고서를 받습니다.</div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">🔑 핵심 기관 판단 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:20px">
+        <div style="padding:10px 12px;background:#f9f8f5;border-radius:8px;font-size:11px;line-height:1.7"><b style="color:var(--teal)">🌊 홍수/태풍</b><br>소방본부 · 경찰청 · 보건소 · 교육청</div>
+        <div style="padding:10px 12px;background:#f9f8f5;border-radius:8px;font-size:11px;line-height:1.7"><b style="color:var(--teal)">🏔️ 지진</b><br>소방본부 · 군부대 · 보건소 · 한전</div>
+        <div style="padding:10px 12px;background:#f9f8f5;border-radius:8px;font-size:11px;line-height:1.7"><b style="color:var(--teal)">⚗️ 화학사고</b><br>소방본부 · 환경부 · 보건소 · 경찰청</div>
+        <div style="padding:10px 12px;background:#f9f8f5;border-radius:8px;font-size:11px;line-height:1.7"><b style="color:var(--teal)">🦠 감염병</b><br>보건소 · 행안부 · 환경부 · 경찰청</div>
+      </div>
+
+      <div style="background:#fff0f0;border-radius:8px;padding:12px 15px;border-left:4px solid var(--red)">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ 주의 사항</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--text)">
+          · 시나리오 생성 시 인터넷 연결이 필요합니다 (AI API 호출)<br>
+          · 브라우저 뒤로가기 사용 시 진행 상황이 초기화될 수 있습니다<br>
+          · 훈련 결과는 자동 저장되며 마지막 세션이 복원됩니다<br>
+          · 훈련 강도 <b>고급</b>은 피해 규모가 1.6배 증폭되어 자원 부족 상황이 연출됩니다
+        </div>
+      </div>
+
+      <div style="text-align:right;margin-top:14px">
+        <button onclick="document.getElementById('guideBody').style.display='none';document.querySelector('.guide-arr').textContent='▶'" style="padding:8px 18px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:600;cursor:pointer">확인, 시작할게요 →</button>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="ct">훈련 조건 입력</div>
     <div class="fg">
@@ -568,8 +642,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <!-- 우측: 13개 협업기관 -->
     <div class="ttx-agencies-wrap">
       <div class="ttx-ag-title">🤝 협업기관 현황</div>
+      <div id="keyAgBanner"></div>
       <div class="ttx-ag-grid" id="ttxAgGrid"></div>
-      <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">카드 클릭 → SOP 조치 선택</div>
+      <div class="ttx-ag-hint" style="font-size:9px;color:var(--muted);margin-top:8px;text-align:center">🟡 깜빡이는 기관 = 직접 판단 필요 &nbsp;|&nbsp; 나머지는 자동 조치</div>
     </div>
   </div>
 </div>
@@ -1202,6 +1277,17 @@ const TTX_SOP = {
   gas:    { common:[{a:'가스 공급 긴급차단',e:{casualties:-1}},{a:'가스누출 점검',e:{}},{a:'상수도 피해 복구',e:{}},{a:'임시 급수 실시',e:{displaced:-50}}] },
   vol:    { common:[{a:'자원봉사자 모집 및 배치',e:{resource_needed:50}},{a:'급식 지원',e:{}},{a:'이재민 생활지원',e:{displaced:-100}},{a:'피해가옥 청소',e:{infrastructure_damage:-5}}] },
   corp:   { common:[{a:'물자·장비 지원 협의',e:{resource_needed:100}},{a:'임시저장시설 제공',e:{}},{a:'복구 장비 지원',e:{infrastructure_damage:-10}}] },
+};
+
+// 재난유형별 핵심 판단 기관 (수동 선택 필요)
+const KEY_AGENCIES = {
+  '홍수/태풍': ['fire','police','health','edu'],
+  '지진':      ['fire','army','health','kepco'],
+  '산불':      ['fire','police','env','army'],
+  '화학사고':  ['fire','env','health','police'],
+  '감염병':    ['health','mois','env','police'],
+  '복합재난':  ['fire','police','army','health'],
+  '기타':      ['fire','police','health','mois'],
 };
 
 const TTX_AGENCIES = [
@@ -1917,11 +2003,19 @@ function ttxRenderAgencies() {
   const grid = document.getElementById('ttxAgGrid');
   if (!grid) return;
   grid.innerHTML = '';
+  const keySet = new Set(KEY_AGENCIES[ttxState.disasterType] || KEY_AGENCIES['기타']);
+  const banner = document.getElementById('keyAgBanner');
+  if (banner) {
+    const keyNames = TTX_AGENCIES.filter(a=>keySet.has(a.id)).map(a=>a.name).join(', ');
+    banner.innerHTML = `⚠️ <b>핵심 판단 기관 (${keySet.size}개)</b>은 직접 선택하세요 → <span style="color:var(--amber);font-weight:700">${keyNames}</span><br><span style="font-size:11px;opacity:.8">나머지 기관은 의사결정 선택 후 자동 조치됩니다.</span>`;
+    banner.style.display = 'block';
+  }
   TTX_AGENCIES.forEach(a => {
     const st = ttxState.agencyStatuses[a.id] || '대기중';
     const cls = {대기중:'ags-standby',출동중:'ags-dispatch',현장투입:'ags-field',완료:'ags-done'}[st]||'ags-standby';
+    const isKey = keySet.has(a.id);
     const card = document.createElement('div');
-    card.className = 'ttx-ag-card '+cls;
+    card.className = 'ttx-ag-card '+cls+(isKey?' key-required':'');
     card.id = 'agCard_'+a.id;
     card.onclick = () => ttxShowSopPopup(a.id);
     card.innerHTML = `<div class="ttx-ag-name">${a.name}</div>
@@ -1929,6 +2023,42 @@ function ttxRenderAgencies() {
       <div class="ttx-ag-status">${st}</div>`;
     grid.appendChild(card);
   });
+}
+
+function ttxAutoExecuteNonKey() {
+  const keySet = new Set(KEY_AGENCIES[ttxState.disasterType] || KEY_AGENCIES['기타']);
+  const disaster = ttxState.disasterType || '';
+  TTX_AGENCIES.forEach(a => {
+    if (keySet.has(a.id)) return;
+    if ((ttxState.agencyStatuses[a.id]||'대기중') !== '대기중') return;
+    const sopData = TTX_SOP[a.id] || {};
+    const actions = [...(sopData.common||[]), ...(sopData[disaster]||[])];
+    if (!actions.length) return;
+    const act = actions[0];
+    // apply effects
+    if (act.e) {
+      Object.keys(act.e).forEach(k => {
+        if (ttxState.variables[k] !== undefined)
+          ttxState.variables[k] = Math.max(0, (ttxState.variables[k]||0) + (act.e[k]||0));
+      });
+    }
+    ttxState.agencyStatuses[a.id] = '현장투입';
+    const card = document.getElementById('agCard_'+a.id);
+    if (card) {
+      card.className = 'ttx-ag-card ags-field';
+      const st = card.querySelector('.ttx-ag-status');
+      if (st) st.textContent = '현장투입';
+      // 자동처리 배지
+      const badge = document.createElement('span');
+      badge.className = 'auto-done-badge';
+      badge.textContent = '자동';
+      card.appendChild(badge);
+    }
+    const agIcons = {fire:'🚒',police:'🚓',army:'🪖',health:'🏥',edu:'🏫',env:'🌿',mlit:'🛣️',mois:'🏛️',kepco:'⚡',kt:'📡',gas:'🔧',vol:'🤝',corp:'🏭'};
+    ttxLogSituation(agIcons[a.id]||'📌','green',`[자동] ${a.name} — ${act.a}`);
+  });
+  ttxRenderMetrics();
+  ttxSaveState();
 }
 
 function ttxCycleStatus(id) {
@@ -2249,6 +2379,7 @@ async function ttxSelectOption(label) {
       }));
     }
 
+    ttxAutoExecuteNonKey();
     ttxSaveState();
 
     const nw=document.getElementById('ttxNextWrap');
