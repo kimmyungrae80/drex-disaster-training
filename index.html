@@ -1328,7 +1328,16 @@ let ttxState = {
   uncertaintyFactors:[],
   realCaseRef:'',
   unexpectedEventsCount:0,
+  lastNextSituation:'',
 };
+
+// ─── 의사결정 이력 요약 (프롬프트 맥락 전달용) ──
+function ttxDecisionHistory() {
+  if(!ttxState.decisions.length) return '아직 의사결정 없음 (첫 단계)';
+  return ttxState.decisions.map(d=>
+    `- ${d.phase}단계: ${d.option}안 「${d.action||''}」 → ${(d.outcome||'').slice(0,80)} [${d.score}점]`
+  ).join('\n');
+}
 
 // ─── Supabase helper (오프라인 폴백) ──────────
 async function ttxSb(fn) {
@@ -1892,6 +1901,7 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.decisions=[];
     ttxState.totalScore=0;
     ttxState.elapsedSeconds=0;
+    ttxState.lastNextSituation='';
     TTX_AGENCIES.forEach(a=>{ttxState.agencyStatuses[a.id]='대기중';});
 
     // 생성 정보 표시
@@ -2242,8 +2252,9 @@ async function ttxLoadOptions() {
   const ub=document.getElementById('ttxUnexpectedBanner');
   if(ub) ub.style.display='none';
 
-  // Show situation
-  document.getElementById('ttxSituationText').textContent=sc.initial_report;
+  // Show situation — 직전 결정의 next_situation이 있으면 그것을 표시 (맥락 연결)
+  document.getElementById('ttxSituationText').textContent=
+    ttxState.lastNextSituation || sc.initial_report;
 
   // Alert banner
   const ab=document.getElementById('ttxAlertBanner');
@@ -2254,9 +2265,13 @@ async function ttxLoadOptions() {
   const prompt=`재난 상황: ${sc.situation_title}
 현재 돌발상황(${ttxState.phase}단계): ${curEvt}
 기관: ${ttxState.orgName}, 재난: ${ttxState.disasterType}
-인명피해: ${ttxState.variables.casualties}명, 이재민: ${ttxState.variables.displaced}명
+현재 피해: 인명 ${ttxState.variables.casualties}명, 이재민 ${ttxState.variables.displaced}명, 시설 ${ttxState.variables.infrastructure_damage}건
 
-의사결정 선택지 3개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수):
+[지금까지의 의사결정 이력 — 선택지는 반드시 이 이력의 결과와 논리적으로 이어져야 함]
+${ttxDecisionHistory()}
+${ttxState.lastNextSituation?`\n[직전 결정 이후 상황]\n${ttxState.lastNextSituation}\n`:''}
+의사결정 선택지 3개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수).
+이전 단계에서 이미 취한 조치를 반복하는 선택지는 금지. related_agencies는 다음 13개 중에서만: 소방본부, 경찰청, 군부대, 보건소/병원, 교육청, 환경부, 국토교통부, 행안부, 전기(한전), 통신(KT), 수도/가스, 자원봉사, 민간기업
 {
   "options": [
     {"label":"A","action":"대응 행동 (25자 이내)","risk":"높음","unexpected_prob":30,"unexpected_event":"부작용 1문장","related_agencies":["소방본부","경찰청"]},
@@ -2325,8 +2340,11 @@ async function ttxSelectOption(label) {
   const prompt=`선택한 의사결정: ${label}안 - ${option.action} (위험도: ${option.risk})
 현재 피해 현황: 인명피해 ${ttxState.variables.casualties}명, 이재민 ${ttxState.variables.displaced}명, 시설피해 ${ttxState.variables.infrastructure_damage}건, 투입자원 ${ttxState.variables.resource_needed}
 재난: ${ttxState.disasterType} ${ttxState.phase}단계
+${unexpectedFired?`⚡ 방금 돌발변수 발생: ${option.unexpected_event||'예상치 못한 사태'} — outcome에 반드시 반영\n`:''}
+[지금까지의 의사결정 이력 — 결과는 이 흐름과 일관되어야 함]
+${ttxDecisionHistory()}
 
-결과를 JSON으로만 생성하세요:
+결과를 JSON으로만 생성하세요. related_agencies는 이 결정으로 출동이 필요한 기관 (소방본부, 경찰청, 군부대, 보건소/병원, 교육청, 환경부, 국토교통부, 행안부, 전기(한전), 통신(KT), 수도/가스, 자원봉사, 민간기업 중에서만):
 {
   "outcome": "이 결정의 결과 설명 (2~3문장, 현실적 결과)",
   "variable_changes": {
@@ -2336,7 +2354,8 @@ async function ttxSelectOption(label) {
     "resource_needed": 30
   },
   "score": 72,
-  "next_situation": "다음 단계로 이어지는 상황 브리핑 (1~2문장)"
+  "related_agencies": ["소방본부"],
+  "next_situation": "다음 단계로 이어지는 상황 브리핑 (1~2문장, 이번 결정의 여파가 드러나게)"
 }`;
 
   try{
@@ -2353,7 +2372,8 @@ async function ttxSelectOption(label) {
     }
 
     const score=Math.min(100,Math.max(0,parsed.score||50));
-    ttxState.decisions.push({phase:ttxState.phase,option:label,outcome:parsed.outcome,score});
+    ttxState.decisions.push({phase:ttxState.phase,option:label,action:option.action,outcome:parsed.outcome,score});
+    ttxState.lastNextSituation=parsed.next_situation||'';
     ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
 
     ob.textContent=`[${label}안 선택 결과]\n${parsed.outcome}\n\n📊 이번 단계 점수: ${score}점 (누적 평균: ${ttxState.totalScore}점)`;
@@ -2746,6 +2766,8 @@ function ttxReset() {
     agencyStatuses:{},
     variables:{casualties:0,displaced:0,infrastructure_damage:0,resource_needed:0},
     decisions:[],totalScore:0,sessionId:null,
+    monteCarloSeed:null,uncertaintyFactors:[],realCaseRef:'',
+    unexpectedEventsCount:0,lastNextSituation:'',
   };
   localStorage.removeItem('drex_ttx');
   document.getElementById('ttxOrgName').value='';
