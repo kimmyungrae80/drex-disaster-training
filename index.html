@@ -25,7 +25,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .scon{width:36px;height:2px;background:rgba(255,255,255,.15);margin:0 6px;transition:.3s background}
 .scon.done{background:var(--teal)}
 /* ── MAIN ── */
-.main{width:100%;padding:24px 16px 60px}
+.main{width:100%;padding:12px 16px 16px}
 /* panels */
 .panel{display:none;animation:fadeUp .35s ease}
 .panel.active{display:block}
@@ -266,9 +266,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 /* ── TTX SIMULATOR ── */
 .ttx-panel{display:none}
 .ttx-panel.active{display:block;animation:fadeUp .35s ease}
-.ttx-hd{background:var(--navy);color:#fff;border-radius:14px;padding:18px 22px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.ttx-hd-title{font-size:16px;font-weight:700;flex:1;min-width:160px}
-.ttx-hd-title small{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.5;font-weight:400}
+.ttx-hd{background:var(--navy);color:#fff;border-radius:12px;padding:12px 18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ttx-hd-title{font-size:15px;font-weight:700;flex:1;min-width:160px}
+.ttx-hd-title small{display:inline;font-size:10px;color:rgba(255,255,255,.5);margin-left:8px;font-weight:400}
 .ttx-hd-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .sev-badge{padding:5px 13px;border-radius:16px;font-size:12px;font-weight:700;flex-shrink:0}
 .sev-red{background:#ef4444;color:#fff}
@@ -276,30 +276,34 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sev-yellow{background:#eab308;color:#1a1a1a}
 .ttx-timer{font-size:22px;font-weight:700;color:#ef4444;font-family:monospace;flex-shrink:0;min-width:80px;text-align:right}
 .ttx-phase-badge{font-size:12px;font-weight:600;background:rgba(255,255,255,.15);padding:5px 13px;border-radius:16px;flex-shrink:0;color:#fff}
-.ttx-grid{display:grid;grid-template-columns:20% 1fr 30%;gap:14px;margin-bottom:18px}
-@media(min-width:768px) and (max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}.ttx-met-wrap{grid-column:1;grid-row:2}.ttx-center-wrap{grid-column:1/-1;grid-row:1}.ttx-agencies-wrap{grid-column:2;grid-row:2}}
-@media(max-width:767px){.ttx-grid{grid-template-columns:1fr}}
-.ttx-met-wrap{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
-.ttx-met-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-align:center}
-.ttx-met-card{background:var(--bg);border-radius:10px;padding:12px 8px;text-align:center;border:2px solid transparent;transition:.2s;cursor:pointer;margin-bottom:6px}
-.ttx-met-card:last-child{margin-bottom:0}
-.ttx-met-card:hover{border-color:var(--teal);transform:translateY(-1px)}
-.ttx-met-label{font-size:10px;color:var(--muted);font-weight:500;margin-bottom:4px}
-.ttx-met-val{font-size:20px;font-weight:700;color:var(--navy)}
-.ttx-met-unit{font-size:10px;color:var(--muted);margin-top:2px}
-.ttx-center-wrap{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
-.ttx-situation-box{background:#f5f3ee;border-radius:10px;padding:14px;font-size:13px;line-height:1.8;margin-bottom:12px;min-height:70px;white-space:pre-line;border-left:3px solid var(--teal)}
-.ttx-alert-banner{background:#ef4444;color:#fff;border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;font-weight:600;display:none;animation:alertPop .4s ease}
+/* ── TTX 한화면 레이아웃 ── */
+.ttx-grid{display:grid;grid-template-columns:200px 1fr 240px;gap:10px;height:calc(100vh - 160px);margin-bottom:0}
+@media(min-width:768px) and (max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;height:auto}.ttx-met-wrap{grid-column:1;grid-row:2}.ttx-center-wrap{grid-column:1/-1;grid-row:1}.ttx-agencies-wrap{grid-column:2;grid-row:2}}
+@media(max-width:767px){.ttx-grid{grid-template-columns:1fr;height:auto}}
+.ttx-met-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
+.ttx-met-title{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+/* 현황판 2열 그리드로 변경 */
+.ttx-met-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.ttx-met-card{background:var(--bg);border-radius:8px;padding:7px 5px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
+.ttx-met-card:hover{border-color:var(--teal)}
+.ttx-met-label{font-size:9px;color:var(--muted);font-weight:500;margin-bottom:2px;line-height:1.2}
+.ttx-met-val{font-size:16px;font-weight:700;color:var(--navy);line-height:1}
+.ttx-met-unit{font-size:9px;color:var(--muted);margin-top:1px}
+/* 현황판 섹션 제목 */
+.ttx-met-sec{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 3px;grid-column:1/-1;padding-left:2px}
+.ttx-center-wrap{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
+.ttx-situation-box{background:#f5f3ee;border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.7;margin-bottom:8px;min-height:56px;white-space:pre-line;border-left:3px solid var(--teal)}
+.ttx-alert-banner{background:#ef4444;color:#fff;border-radius:7px;padding:8px 12px;margin-bottom:8px;font-size:13px;font-weight:600;display:none;animation:alertPop .4s ease}
 .ttx-alert-banner.show{display:block}
 @keyframes alertPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.ttx-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.ttx-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
 @media(max-width:600px){.ttx-opts{grid-template-columns:1fr}}
-.ttx-opt{padding:13px;border-radius:10px;border:2px solid #e0ddd5;background:#fff;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-align:left;transition:.2s all;width:100%}
+.ttx-opt{padding:10px 11px;border-radius:9px;border:2px solid #e0ddd5;background:#fff;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-align:left;transition:.2s all;width:100%}
 .ttx-opt:hover:not(:disabled){border-color:var(--teal);background:#f0faf8}
 .ttx-opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
 .ttx-opt:disabled{cursor:not-allowed;opacity:.75}
-.ttx-opt-lbl{font-weight:700;font-size:14px;margin-bottom:3px}
-.ttx-opt-txt{font-size:12.5px;line-height:1.5;margin-top:3px}
+.ttx-opt-lbl{font-weight:700;font-size:13px;margin-bottom:2px}
+.ttx-opt-txt{font-size:12px;line-height:1.45;margin-top:2px}
 .ttx-risk{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:6px}
 .risk-h{background:#ffe4e4;color:#ef4444}
 .risk-m{background:#fff4e4;color:#f97316}
@@ -307,15 +311,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-opt.sel .ttx-risk{background:rgba(255,255,255,.2);color:#fff}
 .ttx-outcome{background:#0d1b2a;color:#b8d4e8;border-radius:10px;padding:16px;font-size:13px;line-height:1.8;white-space:pre-line;display:none;margin-top:10px}
 .ttx-outcome.show{display:block}
-.ttx-agencies-wrap{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
-.ttx-ag-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-align:center}
-.ttx-ag-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.ttx-agencies-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
+.ttx-ag-title{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+.ttx-ag-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
 @media(max-width:767px){.ttx-ag-grid{grid-template-columns:1fr 1fr}}
-.ttx-ag-card{border-radius:8px;padding:7px 3px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s all;background:#fafafa}
+.ttx-ag-card{border-radius:7px;padding:6px 2px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s all;background:#fafafa}
 .ttx-ag-card:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
-.ttx-ag-icon{font-size:16px;margin-bottom:2px}
-.ttx-ag-name{font-size:8.5px;color:var(--navy);font-weight:600;line-height:1.3;word-break:keep-all;margin-bottom:3px}
-.ttx-ag-st,.ttx-ag-status{font-size:8px;font-weight:700;padding:2px 5px;border-radius:6px;display:inline-block}
+.ttx-ag-icon{font-size:14px;margin-bottom:1px}
+.ttx-ag-name{font-size:8px;color:var(--navy);font-weight:600;line-height:1.2;word-break:keep-all;margin-bottom:2px}
+.ttx-ag-st,.ttx-ag-status{font-size:7.5px;font-weight:700;padding:1px 4px;border-radius:5px;display:inline-block}
 .ags-standby{border-color:#e4e7ed}.ags-standby .ttx-ag-st,.ags-standby .ttx-ag-status{background:#e4e7ed;color:#555}
 .ags-dispatch{border-color:#93c5fd;background:#eff6ff}.ags-dispatch .ttx-ag-st,.ags-dispatch .ttx-ag-status{background:#dbeafe;color:#1d4ed8}
 .ags-field{border-color:#fdba74;background:#fff7ed}.ags-field .ttx-ag-st,.ags-field .ttx-ag-status{background:#fed7aa;color:#c2410c}
@@ -616,10 +620,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-met-wrap" style="display:flex;flex-direction:column;gap:0">
       <div class="ttx-met-title">📊 현황판</div>
       <div id="ttxMetPanel"></div>
-      <div style="margin-top:12px;border-top:1px solid #e0ddd5;padding-top:10px">
-        <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px">📋 상황일지</div>
-        <div id="ttxSituationLog" style="max-height:240px;overflow-y:auto;"></div>
-        <button onclick="ttxDownloadLog()" style="margin-top:6px;width:100%;padding:5px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
+      <div style="margin-top:8px;border-top:1px solid #e0ddd5;padding-top:8px;flex:1;display:flex;flex-direction:column;min-height:0">
+        <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px">📋 상황일지</div>
+        <div id="ttxSituationLog" style="flex:1;overflow-y:auto;min-height:0"></div>
+        <button onclick="ttxDownloadLog()" style="margin-top:5px;width:100%;padding:4px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
       </div>
     </div>
 
@@ -675,8 +679,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <!-- RTO 시뮬레이션 -->
   <div class="rto-section">
     <div class="rto-h">⏱️ 복구목표시간(RTO) 시뮬레이션</div>
-    <div class="rto-formula" id="rtoFormula">RTO = 기준시간(48h) × 피해계수 × 자원계수 × 의사결정계수</div>
-    <div class="rto-val" id="rtoResult">산출 중...</div>
+    <div class="rto-formula" id="rtoFormula">RTO = 기준시간(48h) × 피해계수 × AHP복합계수</div>
+    <div class="rto-val" id="rtoResult" style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">산출 중...</div>
     <div class="rto-cmp" id="rtoCmp">행안부 권고 기준(48시간) 대비 분석 중</div>
   </div>
 
@@ -1094,6 +1098,7 @@ async function submitLogin() {
   }
   const sid = getSessionId();
   sessionStorage.setItem("drex_visitor", JSON.stringify({role:"organization", name, dept, inst, phone}));
+  localStorage.removeItem('drex_ttx'); // 신규 로그인 시 이전 훈련 초기화
   await sbPost("visitors", {name, organization:inst, position:dept, phone, session_id:sid});
   document.getElementById("loginOverlay").classList.add("hidden");
   enterOrgMode();
@@ -1711,6 +1716,24 @@ function monteCarloSample(disasterType, difficulty) {
   };
 }
 
+// ─── 몬테카를로 RTO 시뮬레이션 (10,000회 로그정규분포) ────────────────
+function monteCarloRTO(baseRTO, dmgFactor, resFactor, decFactor, N=10000) {
+  const mu = Math.log(baseRTO * dmgFactor * resFactor * decFactor);
+  const sigma = 0.35;
+  const samples = [];
+  for (let i = 0; i < N; i++) {
+    const u1 = Math.random(), u2 = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    samples.push(Math.exp(mu + sigma * z));
+  }
+  samples.sort((a, b) => a - b);
+  return {
+    p50:  Math.round(samples[Math.floor(N * 0.50)]),
+    p95:  Math.round(samples[Math.floor(N * 0.95)]),
+    mean: Math.round(samples.reduce((s,v)=>s+v,0)/N),
+  };
+}
+
 // ─── API Streaming ────────────────────────────
 async function ttxStreamAPI(messages, system, maxTokens, tools) {
   const body={model:'claude-sonnet-4-6',max_tokens:maxTokens||2000,stream:true,messages};
@@ -1968,21 +1991,20 @@ function ttxRenderMetrics() {
   const resourceItems = resourceMap[dt] || [{key:'rescue_teams',label:'구조대',unit:'팀'},{key:'ambulances',label:'구급차',unit:'대'},{key:'support_staff',label:'지원인력',unit:'명'},{key:'equipment',label:'장비',unit:'대'}];
 
   function renderGroup(title, items) {
-    return `<div style="margin-bottom:10px">
-      <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">${title}</div>
+    return `<div class="ttx-met-sec">${title}</div>
       ${items.map(it=>`
         <div class="ttx-met-card" onclick="ttxEditMetricKey('${it.key}')">
           <div class="ttx-met-label">${it.label}</div>
           <div class="ttx-met-val" id="met_${it.key}">${(v[it.key]||0).toLocaleString()}</div>
           <div class="ttx-met-unit">${it.unit}</div>
-        </div>`).join('')}
-    </div>`;
+        </div>`).join('')}`;
   }
 
-  panel.innerHTML =
-    renderGroup('🩺 인명피해', casualtyItems) +
-    renderGroup('🏗️ 시설피해', infraItems) +
-    renderGroup('🚒 투입자원', resourceItems);
+  panel.innerHTML = `<div class="ttx-met-grid">
+    ${renderGroup('🩺 인명피해', casualtyItems)}
+    ${renderGroup('🏗️ 시설피해', infraItems)}
+    ${renderGroup('🚒 투입자원', resourceItems)}
+  </div>`;
 }
 
 function ttxEditMetric(key) {
@@ -2429,24 +2451,55 @@ function ttxRenderResults() {
   const m=Math.floor((ttxState.elapsedSeconds%3600)/60);
   document.getElementById('resElapsed').textContent=h?h+'시간 '+m+'분':m+'분';
 
-  // RTO 산출 (스펙 공식)
+  // RTO 산출 — BIA-AHP 가중치 + 몬테카를로 10,000회
   const v=ttxState.variables;
   const rtoBase=48;
   const casualties=v.casualties||0;
   const origResourceNeeded=ttxState.scenario?.key_variables?.resource_needed||1;
-  const dmgFactor=casualties>50?1.5:casualties>20?1.2:1.0;
-  const resFactor=(v.resource_needed<origResourceNeeded*0.5)?1.4:1.0;
-  const decFactor=score>=80?0.8:score>=60?1.0:1.3;
-  const rtoMin=Math.round(rtoBase*dmgFactor*resFactor*decFactor*0.85);
-  const rtoMax=Math.round(rtoBase*dmgFactor*resFactor*decFactor*1.15);
-  const rtoMid=Math.round((rtoMin+rtoMax)/2);
-  const rtoPct=Math.round(rtoMid/rtoBase*100);
 
+  // AHP 가중치
+  const w_decision=0.38, w_collab=0.24, w_resource=0.19, w_sop=0.12, w_comms=0.07;
+
+  // 각 변수 정규화 (0~1)
+  const decisionScore = score>=80?1.0 : score>=60?0.7 : 0.4;
+  const doneCount = Object.values(ttxState.agencyStatuses||{}).filter(s=>s==='현장투입'||s==='완료').length;
+  const collabScore = TTX_AGENCIES?.length ? doneCount/TTX_AGENCIES.length : 0.5;
+  const resourceScore = v.resource_needed<origResourceNeeded*0.5 ? 0.4
+                      : v.resource_needed<origResourceNeeded*0.8 ? 0.7 : 1.0;
+  const sopScore = ttxState.decisions?.length ? Math.min(1.0, ttxState.decisions.length/3) : 0.6;
+  const commsScore = ttxState.unexpectedEventsCount===0 ? 1.0
+                   : ttxState.unexpectedEventsCount===1 ? 0.7 : 0.4;
+
+  const ahpScore = w_decision*decisionScore + w_collab*collabScore
+                 + w_resource*resourceScore + w_sop*sopScore + w_comms*commsScore;
+
+  // 피해계수 (BIA 기반)
+  const dmgFactor = casualties>50?1.6 : casualties>20?1.3 : 1.0;
+  const adjFactor = 2.0 - ahpScore; // AHP 낮을수록 RTO 길어짐
+
+  const rtoMC = monteCarloRTO(rtoBase, dmgFactor, adjFactor, 1.0);
+  const {p50, p95} = rtoMC;
+
+  // 화면 표시 (수정 3 — AHP 상세 포함)
   document.getElementById('rtoFormula').textContent=
-    `RTO = ${rtoBase}h × ${dmgFactor.toFixed(1)}(피해계수) × ${resFactor.toFixed(1)}(자원계수) × ${decFactor.toFixed(1)}(의사결정계수)`;
-  document.getElementById('rtoResult').textContent=`예상 복구 소요: ${rtoMin}시간 ~ ${rtoMax}시간`;
-  document.getElementById('rtoCmp').textContent=
-    `행안부 권고 기준(48시간) 대비 ${rtoPct}% 수준 · ${rtoPct<=100?'✅ 기준 이내':'⚠️ 기준 초과'}`;
+    `RTO = ${rtoBase}h × ${dmgFactor.toFixed(1)}(피해계수) × ${adjFactor.toFixed(2)}(AHP복합계수)`;
+  document.getElementById('rtoResult').innerHTML=
+    `<span style="color:var(--teal);font-size:22px;font-weight:700">P50: ${p50}시간</span>`+
+    `<span style="color:rgba(255,255,255,.3);margin:0 10px">|</span>`+
+    `<span style="color:#f59e0b;font-size:22px;font-weight:700">P95: ${p95}시간</span>`;
+  document.getElementById('rtoCmp').innerHTML=
+    `행안부 기준(48h) 대비 P50 ${Math.round(p50/48*100)}% &nbsp;·&nbsp; `+
+    `${p50<=48?'✅ 기준 이내':'⚠️ 기준 초과'}`+
+    `<div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.45);line-height:1.8">`+
+    `BIA-AHP 가중치 기반 · 몬테카를로 10,000회 시뮬레이션<br>`+
+    `<span style="display:inline-flex;gap:14px;flex-wrap:wrap;margin-top:4px">`+
+    `<span>의사결정 <b style="color:#fff">${decisionScore.toFixed(2)}</b></span>`+
+    `<span>협업 <b style="color:#fff">${collabScore.toFixed(2)}</b></span>`+
+    `<span>자원 <b style="color:#fff">${resourceScore.toFixed(2)}</b></span>`+
+    `<span>SOP <b style="color:#fff">${sopScore.toFixed(2)}</b></span>`+
+    `<span>통신 <b style="color:#fff">${commsScore.toFixed(2)}</b></span>`+
+    `<span>→ AHP합산 <b style="color:var(--teal)">${ahpScore.toFixed(3)}</b></span>`+
+    `</span></div>`;
 
   // Supabase: 세션 완료 업데이트
   if(ttxState.sessionId){
@@ -2454,8 +2507,8 @@ function ttxRenderResults() {
       completed_at:new Date().toISOString(),
       total_score:score,
       grade:gradeText,
-      rto_min:rtoMin,
-      rto_max:rtoMax
+      rto_min:p50,
+      rto_max:p95
     }).eq('id',ttxState.sessionId));
   }
 
