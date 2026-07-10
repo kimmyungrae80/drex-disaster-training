@@ -292,6 +292,21 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .tag-chip{font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:5px 12px;border-radius:14px;border:1.5px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:.15s all}
 .tag-chip:hover{border-color:var(--teal)}
 .tag-chip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+/* 상황일지 필터 */
+.log-fbtn{font-family:'Noto Sans KR',sans-serif;font-size:8.5px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer}
+.log-fbtn.sel{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+/* 결과 시각화 */
+.viz-sub{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.viz-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.viz-row-lbl{width:64px;color:var(--muted);flex-shrink:0}
+.viz-bar-track{flex:1;height:10px;background:var(--bg);border-radius:5px;overflow:hidden}
+.viz-bar{height:100%;border-radius:5px;background:var(--teal)}
+.viz-row-val{width:30px;text-align:right;font-weight:700;color:var(--navy);flex-shrink:0}
+.viz-tl-item{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--border);font-size:12.5px}
+.viz-tl-item:last-child{border-bottom:none}
+.viz-tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.viz-tl-score{margin-left:auto;font-weight:700;flex-shrink:0}
+@media(max-width:640px){#ttxVizGrid{grid-template-columns:1fr !important}}
 /* 현황판 2열 그리드로 변경 */
 .ttx-met-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .ttx-met-card{background:var(--bg);border-radius:8px;padding:7px 5px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
@@ -654,6 +669,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div id="ttxMetPanel"></div>
       <div style="margin-top:8px;border-top:1px solid #e0ddd5;padding-top:8px;flex:1;display:flex;flex-direction:column;min-height:0">
         <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px">📋 상황일지</div>
+        <div id="ttxLogFilter" style="display:flex;gap:3px;margin-bottom:4px;flex-wrap:wrap">
+          <button class="log-fbtn sel" data-cat="all" onclick="ttxFilterLog(this)">전체</button>
+          <button class="log-fbtn" data-cat="decision" onclick="ttxFilterLog(this)">의사결정</button>
+          <button class="log-fbtn" data-cat="event" onclick="ttxFilterLog(this)">돌발</button>
+          <button class="log-fbtn" data-cat="agency" onclick="ttxFilterLog(this)">기관</button>
+          <button class="log-fbtn" data-cat="system" onclick="ttxFilterLog(this)">시스템</button>
+        </div>
         <div id="ttxSituationLog" style="flex:1;overflow-y:auto;min-height:0"></div>
         <button onclick="ttxDownloadLog()" style="margin-top:5px;width:100%;padding:4px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
       </div>
@@ -705,6 +727,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div class="ttx-res-card"><div class="ttx-res-val" id="resCasual">0</div><div class="ttx-res-lbl">최종 인명피해(명)</div></div>
       <div class="ttx-res-card"><div class="ttx-res-val" id="resResrc">0</div><div class="ttx-res-lbl">총 투입자원</div></div>
       <div class="ttx-res-card"><div class="ttx-res-val" id="resElapsed">0분</div><div class="ttx-res-lbl">소요시간</div></div>
+    </div>
+  </div>
+
+  <!-- 훈련 분석 시각화 (T3-2) -->
+  <div class="card" id="ttxVizCard" style="display:none">
+    <div class="ct">📈 훈련 분석</div>
+    <div class="viz-sub">의사결정 타임라인</div>
+    <div id="ttxVizTimeline"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px" id="ttxVizGrid">
+      <div><div class="viz-sub">규칙점수 4요소 평균</div><div id="ttxVizRule"></div></div>
+      <div><div class="viz-sub">RTO 분포 (몬테카를로 10,000회)</div><div id="ttxVizRto"></div></div>
     </div>
   </div>
 
@@ -1810,10 +1843,19 @@ function monteCarloRTO(baseRTO, dmgFactor, resFactor, decFactor, N=10000) {
     samples.push(Math.exp(mu + sigma * z));
   }
   samples.sort((a, b) => a - b);
+  // 히스토그램 (T3-2): p99까지 24구간
+  const lo=samples[0], hi=samples[Math.floor(N*0.99)];
+  const nBins=24, counts=new Array(nBins).fill(0);
+  const w=(hi-lo)/nBins||1;
+  for(const s of samples){
+    if(s>hi) continue;
+    counts[Math.min(nBins-1, Math.floor((s-lo)/w))]++;
+  }
   return {
     p50:  Math.round(samples[Math.floor(N * 0.50)]),
     p95:  Math.round(samples[Math.floor(N * 0.95)]),
     mean: Math.round(samples.reduce((s,v)=>s+v,0)/N),
+    hist: {lo, hi, counts},
   };
 }
 
@@ -1930,6 +1972,57 @@ function ttxSparkline(elId, hist, key, color, label, unit) {
     };
     svg.onmouseleave=()=>{tip.style.display='none';};
   }
+}
+
+// ─── 결과 시각화 (T3-2) ────────────────────────
+function ttxRenderViz(rtoMC) {
+  const card=document.getElementById('ttxVizCard');
+  if(!card) return;
+  const ds=ttxState.decisions||[];
+  if(!ds.length){card.style.display='none';return;}
+  card.style.display='block';
+
+  // ① 의사결정 타임라인
+  const dotColor=s=>s>=80?'var(--teal)':s>=60?'var(--amber)':'var(--red)';
+  document.getElementById('ttxVizTimeline').innerHTML=ds.map(d=>`
+    <div class="viz-tl-item">
+      <div class="viz-tl-dot" style="background:${dotColor(d.score)}"></div>
+      <div><b>R${d.phase}</b> [${d.option}안] ${d.action||''}
+        ${d.ruleScore!=null?`<span style="color:var(--muted);font-size:11px"> · 규칙 ${d.ruleScore} / AI ${d.llmScore}</span>`:''}
+      </div>
+      <div class="viz-tl-score" style="color:${dotColor(d.score)}">${d.score}점</div>
+    </div>`).join('')
+    +(ttxState.stabilized?'<div class="viz-tl-item"><div class="viz-tl-dot" style="background:var(--teal)"></div><div>🕊️ 조기 안정화 달성 — 라운드 단축</div><div class="viz-tl-score" style="color:var(--teal)">+5점</div></div>':'')
+    +(ttxState.crisisInserted?'<div class="viz-tl-item"><div class="viz-tl-dot" style="background:var(--red)"></div><div>🚨 피해 폭주 — 위기 라운드 삽입됨</div></div>':'');
+
+  // ② 규칙점수 4요소 평균 막대
+  const parts=[['신속성','timeScore'],['기관투입','agencyScore'],['위험관리','unexpScore'],['피해억제','suppScore']];
+  const withRule=ds.filter(d=>d.ruleParts);
+  document.getElementById('ttxVizRule').innerHTML=withRule.length?parts.map(([lbl,k])=>{
+    const avg=Math.round(withRule.reduce((s,d)=>s+(d.ruleParts[k]||0),0)/withRule.length);
+    return `<div class="viz-row"><div class="viz-row-lbl">${lbl}</div>
+      <div class="viz-bar-track"><div class="viz-bar" style="width:${avg}%"></div></div>
+      <div class="viz-row-val">${avg}</div></div>`;
+  }).join(''):'<div style="font-size:12px;color:var(--muted)">규칙점수 데이터 없음 (구버전 세션)</div>';
+
+  // ③ RTO 분포 히스토그램
+  const el=document.getElementById('ttxVizRto');
+  if(rtoMC&&rtoMC.hist){
+    const {lo,hi,counts}=rtoMC.hist;
+    const W=260,H=90,P=4,bw=(W-2*P)/counts.length;
+    const maxC=Math.max(...counts)||1;
+    const xOf=v=>P+(v-lo)/((hi-lo)||1)*(W-2*P);
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H+14}" style="width:100%;display:block">
+      ${counts.map((c,i)=>{
+        const bh=(H-8)*c/maxC;
+        return `<rect x="${(P+i*bw+0.5).toFixed(1)}" y="${(H-bh).toFixed(1)}" width="${(bw-1).toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5" fill="var(--navy)" opacity="0.3"><title>${Math.round(lo+i*(hi-lo)/counts.length)}~${Math.round(lo+(i+1)*(hi-lo)/counts.length)}시간: ${c}회</title></rect>`;
+      }).join('')}
+      <line x1="${xOf(rtoMC.p50).toFixed(1)}" y1="4" x2="${xOf(rtoMC.p50).toFixed(1)}" y2="${H}" stroke="var(--teal)" stroke-width="2"/>
+      <text x="${xOf(rtoMC.p50).toFixed(1)}" y="${H+11}" font-size="9" fill="var(--teal)" text-anchor="middle" font-weight="700">P50 ${rtoMC.p50}h</text>
+      <line x1="${xOf(rtoMC.p95).toFixed(1)}" y1="4" x2="${xOf(rtoMC.p95).toFixed(1)}" y2="${H}" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="${Math.min(W-24,xOf(rtoMC.p95)).toFixed(1)}" y="${H+11}" font-size="9" fill="var(--amber)" text-anchor="middle" font-weight="700">P95 ${rtoMC.p95}h</text>
+    </svg>`;
+  } else el.innerHTML='';
 }
 
 // ─── 규칙 기반 채점 (T1-3) ─────────────────────
@@ -2226,7 +2319,7 @@ JSON으로만 응답 (마크다운 없이):
     showTtxStep(2);
     ttxStartTimer();
     ttxLoadOptions();
-    ttxLogSituation('🔴', 'red', `시나리오 생성 완료 — ${ttxState.disasterType} ${ttxState.intensity} (${ttxState.region})`);
+    ttxLogSituation('🔴', 'red', `시나리오 생성 완료 — ${ttxState.disasterType} ${ttxState.intensity} (${ttxState.region})`, 'system');
 
   }catch(err){
     errMsg.textContent='오류: '+err.message;
@@ -2435,15 +2528,27 @@ function ttxGetTimestamp() {
   return `${String(Math.floor(e/3600)).padStart(2,'0')}:${String(Math.floor((e%3600)/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
 }
 
-function ttxLogSituation(icon, color, text) {
+function ttxLogSituation(icon, color, text, cat) {
   const log = document.getElementById('ttxSituationLog');
   if (!log) return;
   const item = document.createElement('div');
   item.className = 'slog-item';
+  // 분류 (T3-3): 명시 cat 우선, 없으면 색상으로 추론 (blue=의사결정, green=기관, red=돌발)
+  item.dataset.cat = cat || (color==='blue'?'decision':color==='green'?'agency':color==='red'?'event':'system');
+  const cur=document.querySelector('#ttxLogFilter .log-fbtn.sel')?.dataset.cat||'all';
+  if(cur!=='all'&&item.dataset.cat!==cur) item.style.display='none';
   item.style.background = color==='red' ? '#fff0f0' : color==='blue' ? '#eff6ff' : color==='green' ? '#f0fdf4' : '#f9f8f5';
   item.style.borderLeft = `3px solid ${color==='red'?'var(--red)':color==='blue'?'#3b82f6':color==='green'?'var(--teal)':'#aaa'}`;
   item.innerHTML = `<span style="font-family:monospace;opacity:.6">[${ttxGetTimestamp()}]</span> ${icon} ${text}`;
   log.prepend(item);
+}
+
+function ttxFilterLog(btn) {
+  document.querySelectorAll('#ttxLogFilter .log-fbtn').forEach(b=>b.classList.toggle('sel',b===btn));
+  const cat=btn.dataset.cat;
+  document.querySelectorAll('#ttxSituationLog .slog-item').forEach(it=>{
+    it.style.display=(cat==='all'||it.dataset.cat===cat)?'':'none';
+  });
 }
 
 function ttxDownloadLog() {
@@ -2774,7 +2879,7 @@ function ttxEvaluateProgression() {
      && ttxState.phase>=2 && ttxState.phase<=ttxState.totalRounds-2){
     ttxState.stabilized=true;
     ttxState.totalRounds--;
-    ttxLogSituation('🕊️','green',`조기 안정화 달성 (억제율 ${(supp*100).toFixed(0)}%) — 라운드 단축, 종합점수 +5점 보너스`);
+    ttxLogSituation('🕊️','green',`조기 안정화 달성 (억제율 ${(supp*100).toFixed(0)}%) — 라운드 단축, 종합점수 +5점 보너스`, 'system');
   }
 }
 
@@ -2784,7 +2889,7 @@ function ttxNextPhase() {
     document.getElementById('ttxNextWrap').style.display='none';
     document.getElementById('ttxOutcomeBox').classList.remove('show');
     ttxSaveState();
-    ttxLogSituation('🟡', 'red', `라운드 ${ttxState.phase} 시작 — ${ttxStageName()} 국면`);
+    ttxLogSituation('🟡', 'red', `라운드 ${ttxState.phase} 시작 — ${ttxStageName()} 국면`, 'system');
     ttxLoadOptions();
   }else{
     ttxStopTimer();
@@ -2849,6 +2954,7 @@ function ttxRenderResults() {
 
   const rtoMC = monteCarloRTO(rtoBase, dmgFactor, adjFactor, decFactor);
   const {p50, p95} = rtoMC;
+  ttxRenderViz(rtoMC);
 
   // 화면 표시 (수정 3 — AHP 상세 포함)
   document.getElementById('rtoFormula').textContent=
