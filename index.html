@@ -23,6 +23,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sl.active{color:#fff;font-weight:600}
 .sl.done{color:var(--teal)}
 .scon{width:36px;height:2px;background:rgba(255,255,255,.15);margin:0 6px;transition:.3s background}
+@media(max-width:640px){.hd{padding:0 10px}.sbar .si span{display:none}.sc{width:22px;height:22px;font-size:10px}.scon{width:8px;margin:0 3px}.hd-logo{max-width:150px;overflow:hidden}}
 .scon.done{background:var(--teal)}
 /* ── MAIN ── */
 .main{width:100%;padding:12px 16px 16px}
@@ -262,7 +263,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .tab-btn{padding:16px 20px;background:transparent;border:none;border-bottom:3px solid transparent;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:.2s all;white-space:nowrap;flex-shrink:0}
 .tab-btn:hover{color:rgba(255,255,255,.8)}
 .tab-btn.active{color:#fff;border-bottom-color:var(--teal)}
-@media(max-width:640px){.tab-nav{margin:-20px -16px 6px;padding:0 12px}.tab-btn{padding:10px 10px;font-size:13px}}
+@media(max-width:640px){.tab-nav{margin:-12px -12px 6px;padding:0 12px}.tab-btn{padding:10px 10px;font-size:13px}}
 /* ── TTX SIMULATOR ── */
 .ttx-panel{display:none}
 .ttx-panel.active{display:block;animation:fadeUp .35s ease}
@@ -1131,8 +1132,12 @@ function hideErr(id) {
 // SUPABASE / SESSION
 // ═══════════════════════════════════════════════
 const SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvdWFzcW5zYnhiaWt2anJyZm5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDU1MDksImV4cCI6MjA5MjI4MTUwOX0.9uqx1v12ur54fqKbsQsJxdDw8ke2S0p1B174wpZvRJY";
-const supabaseClient = (window.supabase || window['supabase'])?.createClient(SUPABASE_URL, SUPABASE_KEY) || null;
+// 주의: API 키는 환경변수에서 로드됨 (하드코딩 금지 - 보안위험)
+// Vercel 배포 시 환경변수로 설정되며, 로컬 개발 시 .env.local에서 로드
+const SUPABASE_KEY = typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY
+  ? process.env.SUPABASE_ANON_KEY
+  : null;
+const supabaseClient = SUPABASE_KEY ? (window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_KEY) || null) : null;
 
 function genSessionId() { return "sess_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 function getSessionId() {
