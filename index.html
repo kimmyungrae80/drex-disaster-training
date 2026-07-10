@@ -1671,7 +1671,7 @@ function ttxSelectIntensity(btn) {
 
 // ─── Persist ──────────────────────────────────
 function ttxSaveState() {
-  const s={...ttxState,timerInterval:null,rngState:ttxRngState};
+  const s={...ttxState,timerInterval:null,rngState:ttxRngState,tickRngState:ttxTickRngState};
   try{localStorage.setItem('drex_ttx',JSON.stringify(s));}catch(e){}
 }
 
@@ -1682,7 +1682,8 @@ function ttxRestoreState() {
     ttxState=Object.assign(ttxState,saved,{timerInterval:null});
     if(saved.rngState) ttxRngState=saved.rngState>>>0;
     else if(saved.monteCarloSeed!=null) ttxSeedRng(saved.monteCarloSeed);
-    delete ttxState.rngState;
+    if(saved.tickRngState) ttxTickRngState=saved.tickRngState>>>0;
+    delete ttxState.rngState; delete ttxState.tickRngState;
     if(ttxState.scenario && ttxState.phase<=3){
       switchOrgTab(1);
       if(ttxState.phase===3 && ttxState.decisions.length>=3){
@@ -1704,15 +1705,21 @@ function ttxRestoreState() {
 // ─── Monte Carlo Sampling ─────────────────────
 // ─── 시드 기반 PRNG (mulberry32) ──────────────
 // 동일 시드 → 피해 샘플링·돌발 판정·RTO 분포가 모두 재현됨 (사전/사후 비교 훈련)
-let ttxRngState = 0;
-function ttxSeedRng(seed) { ttxRngState = (seed >>> 0) || 1; }
-function ttxRandom() {
-  ttxRngState = (ttxRngState + 0x6D2B79F5) >>> 0;
-  let t = ttxRngState;
+let ttxRngState = 0;      // 주 스트림: 피해 샘플링·돌발 판정·RTO
+let ttxTickRngState = 0;  // 틱 스트림: 시간 진행 피해 (분리해야 틱 횟수가 돌발 판정 재현성을 깨지 않음)
+function ttxMulberry(state) {
+  state = (state + 0x6D2B79F5) >>> 0;
+  let t = state;
   t = Math.imul(t ^ (t >>> 15), t | 1);
   t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  return [((t ^ (t >>> 14)) >>> 0) / 4294967296, state];
 }
+function ttxSeedRng(seed) {
+  ttxRngState = (seed >>> 0) || 1;
+  ttxTickRngState = ((seed ^ 0x9E3779B9) >>> 0) || 1;
+}
+function ttxRandom()     { const [v,s]=ttxMulberry(ttxRngState);     ttxRngState=s;     return v; }
+function ttxTickRandom() { const [v,s]=ttxMulberry(ttxTickRngState); ttxTickRngState=s; return v; }
 
 function monteCarloSample(disasterType, difficulty, seed) {
   const params = {
@@ -1761,6 +1768,76 @@ function monteCarloRTO(baseRTO, dmgFactor, resFactor, decFactor, N=10000) {
     p95:  Math.round(samples[Math.floor(N * 0.95)]),
     mean: Math.round(samples.reduce((s,v)=>s+v,0)/N),
   };
+}
+
+// ─── 시간 진행 피해 모델 (T1-2) ────────────────
+// 실시간 30초 = 재난시간 10분 (1틱). 피해는 틱마다 진행하고,
+// 현장투입 기관의 억제 기여 합만큼 증가율이 꺾인다 → 신속 투입이 곧 피해 억제.
+const TTX_TICK_REAL_SEC = 30;
+const TTX_TICK_SIM_MIN  = 10;
+// 기관별 피해 억제 기여도 (실무 보정 대상 — docs/UPGRADE-PLAN.md 4장)
+const TTX_AGENCY_SUPPRESS = {fire:.20,police:.10,army:.12,health:.15,edu:.05,env:.06,mlit:.08,mois:.08,kepco:.06,kt:.05,gas:.06,vol:.05,corp:.05};
+const TTX_STATUS_EFFECT = {'대기중':0,'출동중':.4,'현장투입':1,'완료':.6};
+// 재난유형별 틱당 기본 증가율·진행 곡선
+const TTX_PROGRESS = {
+  '홍수/태풍': {curve:'linear',     casualties:.030, displaced:.050, infra:.040},
+  '지진':      {curve:'aftershock', casualties:.020, displaced:.030, infra:.025, spikeProb:.12, spikeMult:3.0},
+  '산불':      {curve:'exp',        casualties:.020, displaced:.060, infra:.070},
+  '화학사고':  {curve:'linear',     casualties:.045, displaced:.045, infra:.015},
+  '감염병':    {curve:'exp',        casualties:.050, displaced:.015, infra:.005},
+  '복합재난':  {curve:'exp',        casualties:.040, displaced:.045, infra:.045},
+};
+
+function ttxSuppression() {
+  let s = 0;
+  TTX_AGENCIES.forEach(a => {
+    s += (TTX_AGENCY_SUPPRESS[a.id]||0) * (TTX_STATUS_EFFECT[ttxState.agencyStatuses[a.id]]||0);
+  });
+  return Math.min(0.9, s);
+}
+
+function ttxCurveFactor(cfg, tick) {
+  if (cfg.curve === 'exp') return Math.min(2.5, 1 + tick*0.06);          // 시간 갈수록 가속
+  if (cfg.curve === 'aftershock') {                                       // 평시 낮음 + 여진 스파이크
+    return (ttxTickRandom() < cfg.spikeProb) ? cfg.spikeMult : 0.7;
+  }
+  return 1; // linear
+}
+
+function ttxSimTick() {
+  if (!ttxState.scenario) return;
+  ttxState.simTick = (ttxState.simTick||0) + 1;
+  const cfg = TTX_PROGRESS[ttxState.disasterType] || TTX_PROGRESS['복합재난'];
+  const supp = ttxSuppression();
+  const cf = ttxCurveFactor(cfg, ttxState.simTick);
+  const v = ttxState.variables;
+  const grow = (val, rate) => Math.max(0, Math.round(Math.max(val, 10) * rate * cf * (1 - supp)));
+  const dC = grow(v.casualties||0,             cfg.casualties);
+  const dD = grow(v.displaced||0,              cfg.displaced);
+  const dI = grow(v.infrastructure_damage||0,  cfg.infra);
+  if (dC > 0) {
+    v.casualties = (v.casualties||0) + dC;
+    v.serious = (v.serious||0) + Math.ceil(dC*0.4);
+    v.minor   = (v.minor||0)   + Math.floor(dC*0.4);
+    v.dead    = (v.dead||0)    + Math.floor(dC*0.15);
+    v.missing = (v.missing||0) + Math.floor(dC*0.05);
+  }
+  v.displaced = (v.displaced||0) + dD;
+  v.infrastructure_damage = (v.infrastructure_damage||0) + dI;
+
+  if (cfg.curve === 'aftershock' && cf === cfg.spikeMult) {
+    ttxLogSituation('🌋', 'red', `여진 발생! 피해 급증 (억제율 ${(supp*100).toFixed(0)}%)`);
+  }
+
+  ttxState.damageHistory = ttxState.damageHistory || [];
+  ttxState.damageHistory.push({
+    t: ttxState.simTick,
+    casualties: v.casualties, displaced: v.displaced,
+    infra: v.infrastructure_damage,
+    suppression: +supp.toFixed(3),
+  });
+  ttxRenderMetrics();
+  ttxSaveState();
 }
 
 // ─── API Streaming ────────────────────────────
@@ -1924,6 +2001,12 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.totalScore=0;
     ttxState.elapsedSeconds=0;
     ttxState.lastNextSituation='';
+    ttxState.simTick=0;
+    ttxState.damageHistory=[{
+      t:0,
+      casualties:ttxState.variables.casualties, displaced:ttxState.variables.displaced,
+      infra:ttxState.variables.infrastructure_damage, suppression:0,
+    }];
     TTX_AGENCIES.forEach(a=>{ttxState.agencyStatuses[a.id]='대기중';});
 
     // 생성 정보 표시
@@ -2157,6 +2240,7 @@ function ttxStartTimer() {
     const s=ttxState.elapsedSeconds%60;
     const el=document.getElementById('ttxTimerDisplay');
     if(el) el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(ttxState.elapsedSeconds % TTX_TICK_REAL_SEC === 0) ttxSimTick();
   },1000);
 }
 
@@ -2790,6 +2874,7 @@ function ttxReset() {
     decisions:[],totalScore:0,sessionId:null,
     monteCarloSeed:null,uncertaintyFactors:[],realCaseRef:'',
     unexpectedEventsCount:0,lastNextSituation:'',
+    simTick:0,damageHistory:[],
   };
   localStorage.removeItem('drex_ttx');
   document.getElementById('ttxOrgName').value='';
