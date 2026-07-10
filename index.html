@@ -1551,95 +1551,141 @@ function switchOrgTab(tab) {
 }
 
 // ─── Mock Exam v2 (모의평가 – 평가관 기준) ────────
+// 2026 재난대응 안전한국훈련 평가지표 (시군구, 행안부 공식) — 20개 지표 100점 + 가점/감점
+const MX_GRADE_LABELS=['매우우수','우수','보통','미흡','매우미흡'];
 const MX_DOMAINS = [
-  { id:'prep',   title:'영역1. 사전준비',   max:20, items:[
-    {label:'훈련계획서 수립·배포',     max:5},
-    {label:'유관기관 사전협조 요청',   max:5},
-    {label:'훈련 장비·자원 준비',      max:5},
-    {label:'교육·사전훈련 실시',       max:5},
+  { id:'plan', title:'1. 훈련 기획 및 설계', stage:'사전평가', max:25, items:[
+    {label:'1-1-1 훈련 준비 과정의 충실성', scores:[5,4,3,2,1], hint:'보여주기식이 아닌 실질적 문제해결 과정으로 기획됐는가 — 기관 취약점·훈련장소 위험요인·과거 환류사항 반영, 복합·신종재난 등 도전 요소 설계'},
+    {label:'1-1-2 훈련 준비 과정의 참여도', scores:[5,4,3,2,1], hint:'13개 협업기능 관련 부서·유관기관·국민이 협력하고 기관장이 주도적 리더십으로 준비했는가, 컨설팅 보완사항 반영'},
+    {label:'1-1-3 훈련 목표 작성의 충실성', scores:[5,4,3,2,1], hint:'목표가 기관 임무·상위계획에 부합하며 명확하고 측정가능하게 작성됐는가'},
+    {label:'1-1-4 훈련 시나리오 내용의 충실성', scores:[5,4,3,2,1], hint:'시나리오에 "무엇을 훈련할 것인가"가 명확하게 작성됐는가'},
+    {label:'1-1-5 훈련 시나리오 실행의 가능성', scores:[5,4,3,2,1], hint:'실제 재난과 유사한 환경·조건이며 참여기관·인원·시간·장소 등 현실 여건에서 실행 가능한가'},
   ]},
-  { id:'alert',  title:'영역2. 상황전파',   max:15, items:[
-    {label:'재난상황 전파 신속성',     max:5},
-    {label:'CBS·재난문자 발령 절차',   max:5},
-    {label:'유관기관 연락체계 가동',   max:5},
+  { id:'disc', title:'2-1. 토론기반 훈련의 적정성', stage:'현장평가', max:15, items:[
+    {label:'2-1-1 재난 발생 상황관리의 적절성', scores:[5,4,3,2,1], hint:'신고에만 의존하지 않는 다양한 경로의 상황 인지, 매뉴얼에 부합하는 보고·전파, 지체 없는 절차'},
+    {label:'2-1-2 상황판단회의 운영의 적절성', scores:[5,4,3,2,1], hint:'자료 충실성, 적절한 주재자, 긴급조치(취약계층 포함) 논의, 매뉴얼 기반 의사결정(위기단계·비상기구 가동·현장연락관)'},
+    {label:'2-1-3 재난대응 단계별 문제해결의 적절성', scores:[5,4,3,2,1], hint:'초기대응~비상대응·수습복구 회의가 단순 상황보고를 넘어 문제점·협업 갈등·해결방안 중심으로 진행됐는가'},
   ]},
-  { id:'init',   title:'영역3. 초동대응',   max:20, items:[
-    {label:'비상대응체계 가동',        max:5},
-    {label:'현장 지휘체계 확립',       max:5},
-    {label:'인명구조 우선조치',        max:5},
-    {label:'긴급대피 실시',            max:5},
+  { id:'exec', title:'2-2. 실행기반 훈련의 적정성', stage:'현장평가', max:25, items:[
+    {label:'2-2-1 재난현장 대응기구 가동의 충실성', scores:[5,4,3,2,1], hint:'현장 대응기구가 운영 규정·편성 기준에 따라 적시에 가동됐는가'},
+    {label:'2-2-2 인명피해 최소화 활동의 적절성', scores:[5,4,3,2,1], hint:'재해위험지구·반지하 등 위험지역 선제 통제, 안내를 넘어 실제 대피 장소로 이동하는 실질적 대피 활동'},
+    {label:'2-2-3 재난현장 대응·수습활동의 적절성', scores:[5,4,3,2,1], hint:'인명구조 최우선 원칙, 2차 피해 예방(확산 방지·오염원 차단), 교통·통신·전력 기반시설 긴급복구'},
+    {label:'2-2-4 재난대응 동원자원의 적절성', scores:[5,4,3,2,1], hint:'자원 목적·수량 산출 근거의 명확성, 부족 자원의 공공·민간 동원 요청, 현장 여건(날씨·지리) 반영'},
+    {label:'2-2-5 재난대응 협업활동의 노력도', scores:[5,4,3,2,1], hint:'유관기관 임무·역할 점검, 부족 자원·인력 지원 요청과 실제 협조 여부'},
   ]},
-  { id:'collab', title:'영역4. 기관협업',   max:15, items:[
-    {label:'유관기관 연락·협조',       max:5},
-    {label:'협업 회의체 운영',         max:5},
-    {label:'임무분담 명확성',          max:5},
+  { id:'part', title:'2-3. 훈련참여 노력도', stage:'현장평가', max:15, items:[
+    {label:'2-3-1 지휘책임자의 역할 충실도', scores:[5,4,3,2,1], hint:'단순 보고 수신자가 아닌 매뉴얼 근거 상황판단·조치지시·기관 간 조정과 중재를 실제 수행'},
+    {label:'2-3-2 통제관의 역할 충실도', scores:[3,2,1,0.5,0], hint:'지휘책임자 지시의 신속·정확한 전달, 부서 간 업무 중복·공백 확인·조정의 실무 리더십'},
+    {label:'2-3-3 대국민 훈련 홍보 노력도', scores:[5,4,3,2,1], hint:'중점사항·지역 특성을 반영한 홍보 기획·개선과 실제 시민참여 성과'},
+    {label:'2-3-4 국민 참여의 적절성', scores:[2,1.5,1,0.5,0], hint:'기획~실행~환류까지 시민(체험단·주민·자율방재단 등) 참여 수준과 훈련 개선 기여'},
   ]},
-  { id:'res',    title:'영역5. 자원관리',   max:15, items:[
-    {label:'인력·장비 투입 적시성',    max:5},
-    {label:'자원 요청·배분',           max:5},
-    {label:'소요자원 추적관리',        max:5},
-  ]},
-  { id:'rec',    title:'영역6. 복구대응',   max:15, items:[
-    {label:'이재민 지원조치',          max:5},
-    {label:'시설 응급복구 계획',       max:5},
-    {label:'재난수습본부 운영',        max:5},
+  { id:'feed', title:'3. 훈련 환류', stage:'사후평가', max:20, items:[
+    {label:'3-1-1 금년도 개선과제 도출의 적절성', scores:[6,4,3,2,1], hint:'실행 미비점 지적을 넘어 지휘체계·기관협력·자원관리·주민대피의 구조적 한계를 개선과제로 도출'},
+    {label:'3-1-2 금년도 개선계획 수립의 적절성', scores:[8,6,4,2,1], hint:'①전년도 환류 ②금년 문제점 반영 ③책임부서 지정 ④조직·예산·일정 ⑤추적관리 절차 — 5요소의 구체성·실행가능성'},
+    {label:'3-2-1 전년도 훈련결과 후속조치 이행률', scores:[6,4,3,2,1], hint:'전년도 도출 개선과제 중 실제 이행된 과제 확인'},
   ]},
 ];
+// 가점·감점 (공식 지표)
+const MX_BONUS=[
+  {label:'훈련 동영상 유튜브 채널 게시', v:1},
+  {label:'훈련 PS-LTE 활용', v:2},
+  {label:'복수기관 간 통합연계 훈련', v:3},
+  {label:'훈련 컨설팅 시 전문가 참여·위험요소 발굴 현장 워크숍', v:4},
+];
+const MX_PENALTY=[
+  {label:'실행-토론 실시간 연계훈련 미실시', v:-5},
+  {label:'보여주기식 훈련 언론보도', v:-5},
+  {label:'허위 평가 자료 적발', v:-5},
+  {label:'회차별 훈련유형 불일치', v:-3},
+  {label:'훈련 시 안전사고 발생', v:-5},
+  {label:'최근 2년 특별재난지역 풍수해·산불 훈련 미실시', v:-5},
+  {label:'3년 이내 동일 재난유형 훈련 반복실시', v:-3},
+];
 
-const mxState = { orgName:'', type:'', scores:{}, memos:{}, overall:'', weakDomain:'' };
+const mxState = { orgName:'', type:'', scores:{}, memos:{}, bonus:{}, penalty:{}, overall:'', weakDomain:'' };
 
 function mxBuildDomains() {
   const wrap = document.getElementById('mxDomainsWrap');
   if (!wrap || wrap.dataset.built) return;
   wrap.dataset.built = '1';
+  const stageBadge={'사전평가':'#3b82f6','현장평가':'#c2410c','사후평가':'#0e8a76'};
   wrap.innerHTML = MX_DOMAINS.map(d => `
     <div class="card" style="margin-bottom:14px">
-      <div class="ct">${d.title} <span style="font-size:12px;color:var(--muted);font-weight:400">(${d.max}점)</span></div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;background:#f5f3ee;border-radius:6px;padding:8px 10px;line-height:1.6">
-        <b>점수 기준:</b> 5점 완벽이행 · 4점 대부분이행 · 3점 보통 · 2점 미흡 · 1점 매우미흡 · 0점 미실시
+      <div class="ct">${d.title}
+        <span style="font-size:12px;color:var(--muted);font-weight:400">(${d.max}점)</span>
+        <span style="font-size:11px;font-weight:700;color:#fff;background:${stageBadge[d.stage]||'var(--navy)'};padding:2px 9px;border-radius:9px;margin-left:6px">${d.stage}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:12px;background:#f5f3ee;border-radius:6px;padding:8px 10px;line-height:1.6">
+        <b>등급 기준 (2026 행안부 평가지표):</b> 매우우수 → 매우미흡 5등급. 지표별 배점이 달라 등급별 점수가 다릅니다.
       </div>
       ${d.items.map((it,ii)=>`
         <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0ede7">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-            <span style="font-size:13px;font-weight:600;color:var(--navy)">${it.label} <span style="font-weight:400;color:var(--muted)">(/${it.max}점)</span></span>
-            <div style="display:flex;gap:4px;flex-wrap:wrap">
-              ${[0,1,2,3,4,5].filter(v=>v<=it.max).map(v=>`
-                <label style="display:flex;align-items:center;gap:3px;padding:5px 9px;border:2px solid #e0ddd5;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap;transition:.15s all" id="mxLbl_${d.id}_${ii}_${v}">
-                  <input type="radio" name="mx_${d.id}_${ii}" value="${v}" style="display:none" onchange="mxScore('${d.id}',${ii},${v},${it.max})">
-                  ${v}점
-                </label>`).join('')}
-            </div>
+          <div style="margin-bottom:6px">
+            <span style="font-size:13.5px;font-weight:700;color:var(--navy)">${it.label} <span style="font-weight:400;color:var(--muted)">(배점 ${it.scores[0]}점)</span></span>
+            <div style="font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:3px">${it.hint||''}</div>
           </div>
-          <input type="text" class="fi" style="font-size:12px;padding:7px 10px" placeholder="특이사항 메모 (선택)" oninput="mxMemo('${d.id}',${ii},this.value)">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
+            ${it.scores.map((sc,gi)=>`
+              <label style="display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 10px;border:2px solid #e0ddd5;border-radius:7px;cursor:pointer;font-size:11.5px;white-space:nowrap;transition:.15s all;line-height:1.3" id="mxLbl_${d.id}_${ii}_${gi}">
+                <input type="radio" name="mx_${d.id}_${ii}" value="${gi}" style="display:none" onchange="mxScore('${d.id}',${ii},${gi})">
+                <b>${MX_GRADE_LABELS[gi]}</b><span style="font-size:10.5px;opacity:.8">${sc}점</span>
+              </label>`).join('')}
+          </div>
+          <input type="text" class="fi" style="font-size:12px;padding:7px 10px" placeholder="평가의견 메모 (선택 — 판단 근거)" oninput="mxMemo('${d.id}',${ii},this.value)">
         </div>`).join('')}
-    </div>`).join('');
+    </div>`).join('')
+  + `
+    <div class="card" style="margin-bottom:14px">
+      <div class="ct">➕ 가점 <span style="font-size:12px;color:var(--muted);font-weight:400">(해당 시 체크)</span></div>
+      ${MX_BONUS.map((b,i2)=>`
+        <label style="display:flex;align-items:center;gap:8px;padding:7px 4px;font-size:13px;cursor:pointer">
+          <input type="checkbox" onchange="mxBonus(${i2},this.checked)" style="width:16px;height:16px;accent-color:var(--teal)">
+          ${b.label} <b style="color:var(--teal);margin-left:auto">+${b.v}점</b>
+        </label>`).join('')}
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="ct">➖ 감점 <span style="font-size:12px;color:var(--muted);font-weight:400">(해당 시 체크)</span></div>
+      ${MX_PENALTY.map((pn,i2)=>`
+        <label style="display:flex;align-items:center;gap:8px;padding:7px 4px;font-size:13px;cursor:pointer">
+          <input type="checkbox" onchange="mxPenalty(${i2},this.checked)" style="width:16px;height:16px;accent-color:var(--red)">
+          ${pn.label} <b style="color:var(--red);margin-left:auto">${pn.v}점</b>
+        </label>`).join('')}
+    </div>`;
 }
 
-function mxScore(domId, itemIdx, val, maxVal) {
-  const key = domId+'_'+itemIdx;
-  mxState.scores[key] = {val, max:maxVal};
-  [0,1,2,3,4,5].forEach(v => {
-    const lbl = document.getElementById(`mxLbl_${domId}_${itemIdx}_${v}`);
-    if (!lbl) return;
-    const sel = v===val;
-    lbl.style.background = sel?(val>=4?'var(--teal)':val>=2?'var(--amber)':'var(--red)'):'';
-    lbl.style.borderColor = sel?(val>=4?'var(--teal)':val>=2?'var(--amber)':'var(--red)'):'#e0ddd5';
-    lbl.style.color = sel?'#fff':'';
-    lbl.style.fontWeight = sel?'700':'';
+function mxScore(domId, itemIdx, gradeIdx) {
+  const dom=MX_DOMAINS.find(d=>d.id===domId);
+  const it=dom.items[itemIdx];
+  const val=it.scores[gradeIdx];
+  mxState.scores[domId+'_'+itemIdx] = {val, max:it.scores[0], gradeIdx, grade:MX_GRADE_LABELS[gradeIdx]};
+  it.scores.forEach((sc,gi)=>{
+    const lbl=document.getElementById(`mxLbl_${domId}_${itemIdx}_${gi}`);
+    if(!lbl) return;
+    const sel=gi===gradeIdx;
+    const col=gi<=1?'var(--teal)':gi===2?'var(--amber)':'var(--red)';
+    lbl.style.background=sel?col:'';
+    lbl.style.borderColor=sel?col:'#e0ddd5';
+    lbl.style.color=sel?'#fff':'';
   });
   mxUpdateBar();
 }
+
+function mxBonus(idx, checked){ mxState.bonus[idx]=checked; mxUpdateBar(); }
+function mxPenalty(idx, checked){ mxState.penalty[idx]=checked; mxUpdateBar(); }
 
 function mxMemo(domId, itemIdx, val) {
   mxState.memos[domId+'_'+itemIdx] = val;
 }
 
 function mxUpdateBar() {
-  let total=0;
-  Object.values(mxState.scores).forEach(s=>{ total+=s.val; });
-  const maxTotal = MX_DOMAINS.reduce((a,d)=>a+d.max,0);
+  let base=0;
+  Object.values(mxState.scores).forEach(s=>{ base+=s.val; });
+  base=Math.round(base*10)/10;
+  let bonus=0; MX_BONUS.forEach((b,i2)=>{ if(mxState.bonus[i2]) bonus+=b.v; });
+  let pen=0; MX_PENALTY.forEach((p2,i2)=>{ if(mxState.penalty[i2]) pen+=p2.v; });
+  const final=Math.max(0, Math.min(100, base+bonus)+pen);
   const txt = document.getElementById('mxScoreBarText');
-  if (txt) txt.textContent = `${total} / ${maxTotal}점`;
+  if (txt) txt.textContent = `${final}점 (본점수 ${base}/100${bonus?` +가점 ${bonus}`:''}${pen?` ${pen}`:''})`;
 }
 
 async function mxRunEval() {
@@ -1655,18 +1701,24 @@ async function mxRunEval() {
   let lowestScore=999, weakDomain='';
   MX_DOMAINS.forEach(d=>{
     let domTotal=0;
-    scoreText+=`\n[${d.title}]\n`;
+    scoreText+=`\n[${d.title} — ${d.stage}, ${d.max}점]\n`;
     d.items.forEach((it,ii)=>{
       const key=d.id+'_'+ii;
-      const s=mxState.scores[key]?.val||0;
+      const sc=mxState.scores[key];
       const memo=mxState.memos[key]||'';
-      scoreText+=`- ${it.label}: ${s}/${it.max}점${memo?' ('+memo+')':''}\n`;
-      domTotal+=s;
+      scoreText+=`- ${it.label}: ${sc?sc.grade+' '+sc.val:'미채점 0'}/${it.scores[0]}점${memo?' (의견: '+memo+')':''}\n`;
+      domTotal+=sc?sc.val:0;
     });
     const pct=domTotal/d.max;
     if(pct<lowestScore){ lowestScore=pct; weakDomain=d.title; }
-    scoreText+=`  소계: ${domTotal}/${d.max}점\n`;
+    scoreText+=`  소계: ${Math.round(domTotal*10)/10}/${d.max}점\n`;
   });
+  let mxBonusSum=0, mxPenSum=0;
+  const bonusList=MX_BONUS.filter((b,i2)=>mxState.bonus[i2]);
+  const penList=MX_PENALTY.filter((p2,i2)=>mxState.penalty[i2]);
+  bonusList.forEach(b=>mxBonusSum+=b.v); penList.forEach(p2=>mxPenSum+=p2.v);
+  if(bonusList.length) scoreText+=`\n[가점] ${bonusList.map(b=>b.label+'(+'+b.v+')').join(', ')} → +${mxBonusSum}점\n`;
+  if(penList.length) scoreText+=`[감점] ${penList.map(p2=>p2.label+'('+p2.v+')').join(', ')} → ${mxPenSum}점\n`;
   mxState.weakDomain = weakDomain;
 
   const overall = document.getElementById('mxOverall').value.trim();
@@ -1685,12 +1737,11 @@ JSON으로만 응답:
   "total_score": 72,
   "grade": "양호",
   "domain_results": [
-    {"domain":"사전준비","self_score":18,"adjusted_score":15,"gap":-3,"comment":"피드백"},
-    {"domain":"상황전파","self_score":12,"adjusted_score":12,"gap":0,"comment":"피드백"},
-    {"domain":"초동대응","self_score":16,"adjusted_score":14,"gap":-2,"comment":"피드백"},
-    {"domain":"기관협업","self_score":13,"adjusted_score":11,"gap":-2,"comment":"피드백"},
-    {"domain":"자원관리","self_score":12,"adjusted_score":12,"gap":0,"comment":"피드백"},
-    {"domain":"복구대응","self_score":10,"adjusted_score":8,"gap":-2,"comment":"피드백"}
+    {"domain":"훈련 기획 및 설계","self_score":20,"adjusted_score":17,"gap":-3,"comment":"피드백"},
+    {"domain":"토론기반 훈련","self_score":12,"adjusted_score":12,"gap":0,"comment":"피드백"},
+    {"domain":"실행기반 훈련","self_score":20,"adjusted_score":18,"gap":-2,"comment":"피드백"},
+    {"domain":"훈련참여 노력도","self_score":12,"adjusted_score":10,"gap":-2,"comment":"피드백"},
+    {"domain":"훈련 환류","self_score":16,"adjusted_score":14,"gap":-2,"comment":"피드백"}
   ],
   "overrated_items": [],
   "strengths": ["강점1","강점2","강점3"],
@@ -1702,7 +1753,7 @@ JSON으로만 응답:
 
   try {
     const body={model:'claude-sonnet-4-6',max_tokens:1600,stream:true,
-      system:'당신은 행안부 안전한국훈련 평가관입니다. 기관 담당자가 자가진단한 결과를 보고 실제 평가관 입장에서 냉정하고 건설적인 피드백을 제공하세요. 자가점수가 과대평가된 항목이 있다면 반드시 지적하고 근거를 설명하세요.',
+      system:'당신은 2026 재난대응 안전한국훈련 평가위원입니다. 평가는 2026 공식 평가지표(시군구) 기준을 따릅니다: 훈련 기획·설계 25점(사전) / 토론기반 15점·실행기반 25점·훈련참여 노력도 15점(현장) / 훈련 환류 20점(사후), 합계 100점에 가점·감점 별도. 정성평가 원칙: 확인사항의 단순 포함이 아니라 실질적 충족 수준을 판단하고, 훈련 전반의 완성도·현실성·실행가능성·개선의지를 종합 고려합니다. 기관 담당자의 자가진단을 평가위원 입장에서 냉정하고 건설적으로 검토하고, 과대평가된 항목은 반드시 지적하며 근거를 설명하세요.',
       messages:[{role:'user',content:prompt}]};
     const resp=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json','X-Session-ID':getSessionId()},body:JSON.stringify(body)});
     if(!resp.ok) throw new Error('HTTP '+resp.status);
@@ -1744,7 +1795,7 @@ function mxRenderResult(result, orgName, type) {
   document.getElementById('mxGradeLabel').style.color=gradeColor;
   document.getElementById('mxResultMeta').textContent=orgName+' · '+type;
 
-  const maxMap={사전준비:20,상황전파:15,초동대응:20,기관협업:15,자원관리:15,복구대응:15};
+  const maxMap={'훈련 기획 및 설계':25,'토론기반 훈련':15,'실행기반 훈련':25,'훈련참여 노력도':15,'훈련 환류':20};
   document.getElementById('mxDomainResults').innerHTML=(result.domain_results||[]).map(d=>{
     const maxV=maxMap[d.domain]||20;
     const selfPct=Math.round(d.self_score/maxV*100);
@@ -3208,12 +3259,11 @@ ${decText}
 JSON으로만 응답:
 {
   "domain_scores":[
-    {"domain":"사전준비","score":0,"max":20,"comment":"코멘트"},
-    {"domain":"상황전파","score":0,"max":15,"comment":"코멘트"},
-    {"domain":"초동대응","score":0,"max":20,"comment":"코멘트"},
-    {"domain":"기관협업","score":0,"max":15,"comment":"코멘트"},
-    {"domain":"자원관리","score":0,"max":15,"comment":"코멘트"},
-    {"domain":"복구대응","score":0,"max":15,"comment":"코멘트"}
+    {"domain":"훈련 기획 및 설계","score":0,"max":25,"comment":"코멘트"},
+    {"domain":"토론기반 훈련","score":0,"max":15,"comment":"코멘트"},
+    {"domain":"실행기반 훈련","score":0,"max":25,"comment":"코멘트"},
+    {"domain":"훈련참여 노력도","score":0,"max":15,"comment":"코멘트"},
+    {"domain":"훈련 환류","score":0,"max":20,"comment":"코멘트"}
   ],
   "total":0,
   "grade":"보통",
@@ -3861,22 +3911,24 @@ AHP복합계수 = 2.0 − AHP합산 (의사결정 38%·협업 24%·자원 19%·S
   TTX와 별개로 운영되는 자기평가 도구입니다. 평가관 시각으로 훈련 과정을 채점하고,
   AI가 현실적인 조정점수를 제안합니다.
 </p>
-<h3>6개 평가 영역 (총 100점)</h3>
+<h3>2026 행안부 공식 평가지표 — 시군구 (20개 지표 100점 + 가점·감점)</h3>
 <div class="domain-grid">
-  <div class="domain-card"><div class="max">20점</div><div class="title">영역1. 사전준비</div>훈련계획서 수립·배포, 유관기관 협조, 장비·자원 준비, 교육 실시</div>
-  <div class="domain-card"><div class="max">15점</div><div class="title">영역2. 상황전파</div>전파 신속성, CBS·재난문자, 연락체계 가동</div>
-  <div class="domain-card"><div class="max">20점</div><div class="title">영역3. 초동대응</div>비상대응체계 가동, 지휘체계, 인명구조, 긴급대피</div>
-  <div class="domain-card"><div class="max">15점</div><div class="title">영역4. 기관협업</div>유관기관 연락·협조, 협업 회의체, 임무분담</div>
-  <div class="domain-card"><div class="max">15점</div><div class="title">영역5. 자원관리</div>인력·장비 투입 적시성, 자원 요청·배분, 추적관리</div>
-  <div class="domain-card"><div class="max">15점</div><div class="title">영역6. 복구대응</div>이재민 지원, 시설 응급복구 계획, 재난수습본부 운영</div>
+  <div class="domain-card"><div class="max">25점</div><div class="title">1. 훈련 기획 및 설계 (사전)</div>준비 충실성·참여도, 목표 작성, 시나리오 내용·실행 가능성 (5개 지표 × 5점)</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">2-1. 토론기반 훈련 (현장)</div>상황관리, 상황판단회의 운영, 단계별 문제해결 (3개 지표 × 5점)</div>
+  <div class="domain-card"><div class="max">25점</div><div class="title">2-2. 실행기반 훈련 (현장)</div>대응기구 가동, 인명피해 최소화, 대응·수습, 동원자원, 협업활동 (5개 지표 × 5점)</div>
+  <div class="domain-card"><div class="max">15점</div><div class="title">2-3. 훈련참여 노력도 (현장)</div>지휘책임자 5점, 통제관 3점, 대국민 홍보 5점, 국민 참여 2점</div>
+  <div class="domain-card"><div class="max">20점</div><div class="title">3. 훈련 환류 (사후)</div>개선과제 도출 6점, 개선계획 수립 8점, 전년도 후속조치 이행률 6점</div>
+  <div class="domain-card"><div class="max">±</div><div class="title">가점·감점</div>가점: 유튜브 게시 +1 · PS-LTE +2 · 통합연계 +3 · 컨설팅 워크숍 +4<br>감점: 연계훈련 미실시/보여주기 보도/허위자료/안전사고/특별재난지역 미실시 각 -5, 유형 불일치/동일유형 반복 각 -3</div>
 </div>
+<h3>등급 채점 방식</h3>
+<p>각 지표는 <strong>매우우수 → 매우미흡 5등급</strong>으로 채점하며, 등급별 점수는 배점에 따라 다릅니다
+(5점 지표: 5/4/3/2/1 · 통제관 3점: 3/2/1/0.5/0 · 국민참여 2점: 2/1.5/1/0.5/0 · 개선과제 6점: 6/4/3/2/1 · 개선계획 8점: 8/6/4/2/1).</p>
 <h3>AI 평가 처리 로직</h3>
 <ol>
-  <li>담당자가 각 항목을 5점 척도로 자기 채점</li>
-  <li>훈련 내용 설명(선택)을 함께 Claude에 전달</li>
-  <li>Claude가 평가관 시각에서 조정점수 + 영역별 피드백 반환</li>
-  <li>자기점수 vs AI 조정점수 비교 막대그래프 표시</li>
-  <li>자기점수가 AI 조정점수보다 현저히 높은 영역 → "과대평가 경고" 표시</li>
+  <li>담당자가 20개 지표를 등급으로 자기 채점 + 가점·감점 체크</li>
+  <li>지표별 평가의견 메모(선택)를 함께 AI에 전달</li>
+  <li>AI가 2026 평가지표 기준 평가위원 시각에서 조정점수 + 영역별 피드백 반환</li>
+  <li>자기점수 vs AI 조정점수 비교 막대그래프 표시, 과대평가 영역 경고</li>
 </ol>
 
 <!-- S12 -->
