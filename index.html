@@ -282,6 +282,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 @media(max-width:767px){.ttx-grid{grid-template-columns:1fr;height:auto}}
 .ttx-met-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
 .ttx-met-title{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+/* 피해 추이 스파크라인 (소형 멀티플) */
+.ttx-trend{position:relative;margin-bottom:4px}
+.ttx-trend svg{display:block;width:100%;height:52px}
+.ttx-trend-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:9px;color:var(--muted);padding:0 2px}
+.ttx-trend-hd b{font-size:11px;font-weight:700}
+.ttx-trend-tip{position:fixed;display:none;background:var(--navy);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:500;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 /* 현황판 2열 그리드로 변경 */
 .ttx-met-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .ttx-met-card{background:var(--bg);border-radius:8px;padding:7px 5px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
@@ -624,6 +630,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <!-- 좌측: 현황판 + 상황일지 -->
     <div class="ttx-met-wrap" style="display:flex;flex-direction:column;gap:0">
       <div class="ttx-met-title">📊 현황판</div>
+      <div id="ttxTrendWrap" style="display:none">
+        <div class="ttx-met-sec">📈 피해 추이 (재난시간)</div>
+        <div class="ttx-trend" id="ttxTrendCas"></div>
+        <div class="ttx-trend" id="ttxTrendDis"></div>
+        <div id="ttxTrendTip" class="ttx-trend-tip"></div>
+      </div>
       <div id="ttxMetPanel"></div>
       <div style="margin-top:8px;border-top:1px solid #e0ddd5;padding-top:8px;flex:1;display:flex;flex-direction:column;min-height:0">
         <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px">📋 상황일지</div>
@@ -1711,6 +1723,7 @@ function ttxRestoreState() {
       } else if(ttxState.phase>=1){
         ttxRenderMeetingHeader();
         ttxRenderMetrics();
+        ttxRenderTrend();
         ttxRenderAgencies();
         updateNavStep(3);
         showTtxStep(2);
@@ -1830,10 +1843,17 @@ function ttxSimTick() {
   const supp = ttxSuppression();
   const cf = ttxCurveFactor(cfg, ttxState.simTick);
   const v = ttxState.variables;
-  const grow = (val, rate) => Math.max(0, Math.round(Math.max(val, 10) * rate * cf * (1 - supp)));
-  const dC = grow(v.casualties||0,             cfg.casualties);
-  const dD = grow(v.displaced||0,              cfg.displaced);
-  const dI = grow(v.infrastructure_damage||0,  cfg.infra);
+  // 소수 증가분은 누적했다가 정수가 되는 틱에 반영 (값이 작아도 피해가 진행되도록)
+  const frac = ttxState.growFrac = ttxState.growFrac || {};
+  const grow = (val, rate, key) => {
+    const acc = (frac[key]||0) + Math.max(0, Math.max(val, 10) * rate * cf * (1 - supp));
+    const whole = Math.floor(acc);
+    frac[key] = acc - whole;
+    return whole;
+  };
+  const dC = grow(v.casualties||0,             cfg.casualties, 'c');
+  const dD = grow(v.displaced||0,              cfg.displaced,  'd');
+  const dI = grow(v.infrastructure_damage||0,  cfg.infra,      'i');
   if (dC > 0) {
     v.casualties = (v.casualties||0) + dC;
     v.serious = (v.serious||0) + Math.ceil(dC*0.4);
@@ -1856,7 +1876,54 @@ function ttxSimTick() {
     suppression: +supp.toFixed(3),
   });
   ttxRenderMetrics();
+  ttxRenderTrend();
   ttxSaveState();
+}
+
+// ─── 피해 추이 스파크라인 (T3-1) ───────────────
+// 인명·이재민은 스케일이 달라 한 축에 겹치지 않고 소형 멀티플 2개로 그린다.
+// 세로 점선 = 기관 투입으로 억제율이 오른 시점.
+function ttxSparkline(elId, hist, key, color, label, unit) {
+  const el=document.getElementById(elId); if(!el) return;
+  const W=200, H=36, P=3;
+  const vals=hist.map(h=>h[key]||0);
+  const min=Math.min(...vals), max=Math.max(...vals);
+  const span=(max-min)||1;
+  const n=vals.length;
+  const x=i=>P+(n<2?0:(W-2*P)*i/(n-1));
+  const y=v=>H-P-(H-2*P)*((v-min)/span);
+  const pts=vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const marks=hist.map((h,i)=>i>0&&h.suppression>hist[i-1].suppression?i:-1).filter(i=>i>0);
+  el.innerHTML=`
+    <div class="ttx-trend-hd"><span><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${color};margin-right:4px"></span>${label}</span><b>${vals[n-1].toLocaleString()}${unit}</b></div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      ${marks.map(i=>`<line x1="${x(i).toFixed(1)}" y1="0" x2="${x(i).toFixed(1)}" y2="${H}" stroke="#dde0d8" stroke-width="1" stroke-dasharray="2,2"/>`).join('')}
+      <polyline points="${pts} ${x(n-1).toFixed(1)},${H-P} ${x(0).toFixed(1)},${H-P}" fill="${color}18" stroke="none"/>
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <circle cx="${x(n-1).toFixed(1)}" cy="${y(vals[n-1]).toFixed(1)}" r="3" fill="${color}" stroke="#fff" stroke-width="1.5"/>
+    </svg>`;
+  const svg=el.querySelector('svg'), tip=document.getElementById('ttxTrendTip');
+  if(svg&&tip){
+    svg.onmousemove=e=>{
+      const r=svg.getBoundingClientRect();
+      const i=Math.max(0,Math.min(n-1,Math.round((e.clientX-r.left)/r.width*(n-1))));
+      const h=hist[i];
+      tip.style.display='block';
+      tip.style.left=(e.clientX+10)+'px';
+      tip.style.top=(e.clientY-28)+'px';
+      tip.textContent=`재난 +${h.t*TTX_TICK_SIM_MIN}분 · ${label} ${(h[key]||0).toLocaleString()}${unit} · 억제율 ${Math.round((h.suppression||0)*100)}%`;
+    };
+    svg.onmouseleave=()=>{tip.style.display='none';};
+  }
+}
+
+function ttxRenderTrend() {
+  const wrap=document.getElementById('ttxTrendWrap'); if(!wrap) return;
+  const hist=ttxState.damageHistory||[];
+  if(!ttxState.scenario||!hist.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  ttxSparkline('ttxTrendCas',hist,'casualties','#a82020','인명피해','명');
+  ttxSparkline('ttxTrendDis',hist,'displaced','#0e8a76','이재민','명');
 }
 
 // ─── API Streaming ────────────────────────────
@@ -2067,6 +2134,7 @@ JSON으로만 응답 (마크다운 없이):
     ttxSaveState();
     ttxRenderMeetingHeader();
     ttxRenderMetrics();
+    ttxRenderTrend();
     ttxRenderAgencies();
     updateNavStep(3);
     showTtxStep(2);
@@ -2429,6 +2497,7 @@ round_event는 전개 아크·이력·현재 피해에서 자연스럽게 이어
     ttxState.currentOptions=parsed.options;
     ttxRenderOptions(parsed.options);
   }catch(err){
+    ab.textContent='🚨 돌발상황: '+(ttxState.currentRoundEvent||arc||'상황 정보 없음');
     document.getElementById('ttxOptsGrid').innerHTML=`<div style="color:var(--red);font-size:13px;padding:16px;grid-column:1/-1">⚠️ 선택지 생성 실패: ${err.message}<br><button class="btn-s" style="margin-top:8px;font-size:12px" onclick="ttxLoadOptions()">다시 시도</button></div>`;
   }
 }
@@ -2512,6 +2581,14 @@ ${ttxDecisionHistory()}
           ttxState.variables[k]=Math.max(0,(ttxState.variables[k]||0)+(parsed.variable_changes[k]||0));
       });
       ttxRenderMetrics();
+      // 의사결정 효과도 추이에 즉시 반영
+      (ttxState.damageHistory=ttxState.damageHistory||[]).push({
+        t:ttxState.simTick||0,
+        casualties:ttxState.variables.casualties, displaced:ttxState.variables.displaced,
+        infra:ttxState.variables.infrastructure_damage,
+        suppression:+ttxSuppression().toFixed(3),
+      });
+      ttxRenderTrend();
     }
 
     const score=Math.min(100,Math.max(0,parsed.score||50));
