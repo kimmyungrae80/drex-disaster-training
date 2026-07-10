@@ -19,18 +19,23 @@ const PRIMARY_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
 
 async function callGroq(apiKey, model, messages, maxTokens) {
+  // gpt-oss 계열은 추론(reasoning) 토큰이 max_tokens에서 차감되어
+  // 한도가 작으면 JSON이 잘린다 → 추론 최소화 + 한도 여유 확보
+  const isGptOss = model.includes('gpt-oss');
+  const payload = {
+    model,
+    max_tokens: isGptOss ? Math.max(maxTokens * 2, 3000) : maxTokens,
+    stream: true,
+    messages,
+  };
+  if (isGptOss) payload.reasoning_effort = 'low';
   return fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model,
-      max_tokens: maxTokens,
-      stream: true,
-      messages,
-    }),
+    body: JSON.stringify(payload),
   });
 }
 

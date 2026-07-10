@@ -1131,13 +1131,28 @@ function hideErr(id) {
 // ═══════════════════════════════════════════════
 // SUPABASE / SESSION
 // ═══════════════════════════════════════════════
-const SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
-// 주의: API 키는 환경변수에서 로드됨 (하드코딩 금지 - 보안위험)
-// Vercel 배포 시 환경변수로 설정되며, 로컬 개발 시 .env.local에서 로드
-const SUPABASE_KEY = typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY
-  ? process.env.SUPABASE_ANON_KEY
-  : null;
-const supabaseClient = SUPABASE_KEY ? (window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_KEY) || null) : null;
+// 주의: 키는 레포에 하드코딩하지 않는다. 부팅 시 /api/config에서
+// Vercel 환경변수(SUPABASE_URL, SUPABASE_ANON_KEY)를 받아 초기화.
+// (브라우저에는 process.env가 없으므로 서버 엔드포인트 경유가 필요)
+let SUPABASE_URL = "https://jouasqnsbxbikvjrrfnd.supabase.co";
+let SUPABASE_KEY = null;
+let supabaseClient = null;
+(async function initSupabase(){
+  try{
+    const r = await fetch('/api/config');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const c = await r.json();
+    if(c.supabaseUrl) SUPABASE_URL = c.supabaseUrl;
+    if(c.supabaseKey){
+      SUPABASE_KEY = c.supabaseKey;
+      supabaseClient = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_KEY) || null;
+    } else {
+      console.warn('SUPABASE_ANON_KEY 환경변수 미설정 — DB 기능 오프라인 모드');
+    }
+  }catch(e){
+    console.warn('Supabase 설정 로드 실패 — 오프라인 모드:', e.message);
+  }
+})();
 
 function genSessionId() { return "sess_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 function getSessionId() {
@@ -1146,6 +1161,7 @@ function getSessionId() {
   return sid;
 }
 async function sbPost(table, data) {
+  if (!SUPABASE_KEY) return; // 설정 미로드 시 오프라인 모드
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
       method:"POST",
@@ -2364,16 +2380,16 @@ JSON으로만 응답 (마크다운 없이):
     // ── Validator (T2-2): 로컬 규칙 검증, 위반 시 1회만 재생성 ──
     let issues=ttxValidateScenario(sc, mc, regionTags);
     let regenerated=false;
-    if(issues.length && sc){
+    if(issues.length){
       regenerated=true;
       const text2=await ttxStreamAPI(
         [{role:'user',content:prompt},
-         {role:'assistant',content:text},
-         {role:'user',content:`검증 실패 항목:\n- ${issues.join('\n- ')}\n\n위 항목을 모두 수정하여 동일한 JSON 형식으로만 다시 응답하세요.`}],
+         {role:'assistant',content:text||'(빈 응답)'},
+         {role:'user',content:`검증 실패 항목:\n- ${issues.join('\n- ')}\n\n위 항목을 모두 수정하여 완전한 JSON 형식으로만 다시 응답하세요.`}],
         null, 2200
       );
       const sc2=ttxParseJSON(text2);
-      if(sc2 && ttxValidateScenario(sc2, mc, regionTags).length < issues.length) sc=sc2;
+      if(sc2 && (!sc || ttxValidateScenario(sc2, mc, regionTags).length < issues.length)) sc=sc2;
     }
     if(!sc||!sc.situation_title) throw new Error('시나리오 파싱 실패. 다시 시도해주세요.');
     // 재실패 시 로컬 강제 보정: 수치는 MC 값이 정본
@@ -2795,9 +2811,13 @@ ${TTX_AGENCIES.map(a=>`${a.name}(${a.role})`).join(', ')}
 }`;
 
   try{
-    const text=await ttxStreamAPI([{role:'user',content:prompt}],null,1000);
-    let parsed=ttxParseJSON(text);
-    if(!parsed||!parsed.options||!parsed.options.length) throw new Error('선택지 파싱 실패');
+    let parsed=null;
+    for(let attempt=1;attempt<=2&&!parsed;attempt++){ // 파싱 실패 시 1회 자동 재시도
+      const text=await ttxStreamAPI([{role:'user',content:prompt}],null,1400);
+      parsed=ttxParseJSON(text);
+      if(parsed&&(!parsed.options||!parsed.options.length)) parsed=null;
+    }
+    if(!parsed) throw new Error('선택지 파싱 실패');
     parsed=ttxDeepSanitize(parsed);
     // 표시 순서 PRNG 셔플 후 재라벨링 (T2-3) — "C가 항상 안전" 메타게임 차단
     for(let i=parsed.options.length-1;i>0;i--){
@@ -2894,8 +2914,11 @@ ${ttxDecisionHistory()}
 }`;
 
   try{
-    const text=await ttxStreamAPI([{role:'user',content:prompt}],null,700);
-    let parsed=ttxParseJSON(text);
+    let parsed=null;
+    for(let attempt=1;attempt<=2&&!parsed;attempt++){ // 파싱 실패 시 1회 자동 재시도
+      const text=await ttxStreamAPI([{role:'user',content:prompt}],null,1000);
+      parsed=ttxParseJSON(text);
+    }
     if(!parsed) throw new Error('결과 파싱 실패');
     parsed=ttxDeepSanitize(parsed);
 
