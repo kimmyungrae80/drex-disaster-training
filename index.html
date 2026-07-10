@@ -745,6 +745,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 
+  <!-- 토론기반 훈련 평가점검표 (2026 평가지표 2-1) -->
+  <div class="card" id="ttxDiscussCard" style="display:none">
+    <div class="ct">📝 토론기반 훈련 적정성 평가 <span style="font-size:12px;color:var(--muted);font-weight:400">— 2026 안전한국훈련 평가지표 2-1 (15점)</span></div>
+    <div id="ttxDiscussBody"></div>
+  </div>
+
   <!-- RTO 시뮬레이션 -->
   <div class="rto-section">
     <div class="rto-h">⏱️ 복구목표시간(RTO) 시뮬레이션</div>
@@ -2147,6 +2153,123 @@ function ttxSparkline(elId, hist, key, color, label, unit) {
   }
 }
 
+// ─── 토론기반 훈련 평가점검표 (2026 평가지표 2-1) ──
+// TTX는 공식 지표의 '2-1 토론기반 훈련' 영역에 해당 → 훈련 데이터를 근거로
+// 공식 등급 기준에 따라 4개 척도(2-1-3은 초기/수습 분할)를 평가한다.
+const TTX_DISC_ITEMS=[
+  {id:'2-1-1', name:'재난 발생 상황관리의 적절성', scores:[5,4,3,2,1],
+   crit:'매우우수: 다양한 경로로 지체 없이 상황 인지, 매뉴얼 기준 보고·전파+초기대응 정보 포함, 체계적 기록 / 보통: 외부 통보 의존, 단순 사실 위주 전파, 다소 지체 / 매우미흡: 인지 실패·전파 미작동'},
+  {id:'2-1-2', name:'상황판단회의 운영의 적절성', scores:[5,4,3,2,1],
+   crit:'매우우수: 신속 소집+충실한 자료·심층 논의로 상황인식-문제규명-의사결정 전 과정 연계 / 보통: 형식적 결정은 있으나 취약계층 보호 등 중요 사항 누락, 보고 나열식 / 매우미흡: 중요 의사결정 수행 불가'},
+  {id:'2-1-3a', name:'단계별 문제해결 — 초기대응', scores:[3,2,1,0.5,0],
+   crit:'매우우수: 초기 문제점·재난 확대 가능성 예측, 해결방안 중심 토의, 협업 갈등·현장 지원 선제 발굴 / 보통: 문제 확인은 했으나 확대·복합상황 논의 부족, 보고 위주 / 매우미흡: 단순 보고에 그침'},
+  {id:'2-1-3b', name:'단계별 문제해결 — 비상대응·수습복구', scores:[2,1.5,1,0.5,0],
+   crit:'매우우수: 민원·자원·갈등·수습복구까지 식별하고 기관 간 협력·역할 조정 포함 구체적 해결방안 도출 / 보통: 기본 방향성만 논의, 실질 해결방안 미도출 / 매우미흡: 문제해결 토의 전무'},
+];
+
+function ttxDiscussEvidence(){
+  const d=ttxState.decisions||[];
+  const delays=ttxState.decisionDelays||[];
+  const supp=Math.round(ttxSuppression()*100);
+  const init=(ttxState.damageHistory&&ttxState.damageHistory[0])||{};
+  const v=ttxState.variables||{};
+  const keySet=new Set(KEY_AGENCIES[ttxState.disasterType]||KEY_AGENCIES['기타']);
+  const deployed=TTX_AGENCIES.filter(a=>['현장투입','완료'].includes(ttxState.agencyStatuses[a.id]));
+  const keyDeployed=deployed.filter(a=>keySet.has(a.id)).length;
+  const rounds=d.map((dc,i)=>{
+    const rp=dc.ruleParts||{};
+    return `라운드${dc.phase}: ${dc.option}안 「${dc.action||''}」 결정 소요 ${rp.delay!=null?rp.delay+'초':'-'} · 규칙점수(신속${rp.timeScore??'-'}/기관${rp.agencyScore??'-'}/위험${rp.unexpScore??'-'}/억제${rp.suppScore??'-'}) → ${(dc.outcome||'').slice(0,70)}`;
+  }).join('\n');
+  return `[훈련 개요] ${ttxState.orgName} · ${ttxState.disasterType} · ${ttxState.intensity} · ${ttxState.totalRounds}라운드(국면: 초기대응→확산·대응→수습·안정화) · 종합 ${ttxState.totalScore}점
+[의사결정 회의 기록]
+${rounds||'기록 없음'}
+[운영 지표] 평균 결정 소요 ${delays.length?Math.round(delays.reduce((a,b)=>a+b,0)/delays.length):0}초 · 돌발변수 ${ttxState.unexpectedEventsCount||0}회 · 조기 안정화 ${ttxState.stabilized?'달성':'미달성'} · 위기 라운드 ${ttxState.crisisInserted?'발생':'없음'}
+[기관 운용] 13개 기관 중 현장투입·완료 ${deployed.length}개 (핵심기관 ${keyDeployed}/${keySet.size}) · 최종 피해 억제율 ${supp}%
+[피해 추이] 인명 ${init.casualties??'-'}→${v.casualties??'-'}명 · 이재민 ${init.displaced??'-'}→${v.displaced??'-'}명`;
+}
+
+async function ttxDiscussionEval(){
+  const card=document.getElementById('ttxDiscussCard');
+  const body=document.getElementById('ttxDiscussBody');
+  if(!card||!body) return;
+  card.style.display='block';
+  body.innerHTML='<div class="ttx-spin-wrap"><div class="ttx-spin"></div><div class="ttx-spin-text">평가지표 2-1 기준으로 평가 중...</div></div>';
+
+  const prompt=`아래는 TTX(토론기반) 재난훈련 시뮬레이션의 실제 진행 기록입니다.
+2026 재난대응 안전한국훈련 평가지표 '2-1 토론기반 훈련의 적정성' 기준으로 4개 척도를 평가하세요.
+
+${ttxDiscussEvidence()}
+
+[평가 척도와 공식 등급 기준]
+${TTX_DISC_ITEMS.map(it=>`· ${it.id} ${it.name} (배점 ${it.scores[0]}점, 등급별 ${it.scores.join('/')}점)\n  ${it.crit}`).join('\n')}
+
+[평가 원칙]
+- 등급은 매우우수/우수/보통/미흡/매우미흡 중 하나
+- 시뮬레이션에서 관측 가능한 근거(결정 소요시간, 논의·조치 내용, 기관 운용, 피해 억제)로 판단
+- 시뮬레이션에서 관측 불가한 항목(문서·전파체계 등)은 감점 사유로 삼지 말고 의견에 '실훈련에서 확인 필요'로 명시
+- 평가의견은 구체적 판단 근거를 제시하고 '개선 여지가 있는' 등 객관적 용어 사용
+
+JSON으로만 응답:
+{
+  "items":[
+    {"id":"2-1-1","grade":"우수","opinion":"판단 근거 1~2문장"},
+    {"id":"2-1-2","grade":"보통","opinion":"판단 근거 1~2문장"},
+    {"id":"2-1-3a","grade":"우수","opinion":"판단 근거 1~2문장"},
+    {"id":"2-1-3b","grade":"보통","opinion":"판단 근거 1~2문장"}
+  ],
+  "summary":"토론기반 훈련 종합의견 2~3문장 (실훈련 대비 보완 필요사항 포함)"
+}`;
+
+  try{
+    let r=null;
+    for(let attempt=1;attempt<=2&&!r;attempt++){
+      const text=await ttxStreamAPI([{role:'user',content:prompt}],
+        '당신은 2026 재난대응 안전한국훈련 평가위원입니다. 공식 평가지표의 등급 기준에 따라 냉정하고 근거 있게 평가하세요.',1200);
+      r=ttxParseJSON(text);
+      if(r&&!Array.isArray(r.items)) r=null;
+    }
+    if(!r) throw new Error('평가 결과 파싱 실패');
+    r=ttxDeepSanitize(r);
+    ttxRenderDiscussEval(r);
+  }catch(err){
+    body.innerHTML=`<div style="color:var(--red);font-size:13px">⚠️ 평가 생성 실패: ${err.message} <button class="btn-s" style="font-size:12px;margin-left:8px" onclick="ttxDiscussionEval()">다시 시도</button></div>`;
+  }
+}
+
+function ttxRenderDiscussEval(r){
+  const body=document.getElementById('ttxDiscussBody');
+  let total=0;
+  const rows=TTX_DISC_ITEMS.map(it=>{
+    const res=(r.items||[]).find(x=>x.id===it.id)||{};
+    let gi=MX_GRADE_LABELS.indexOf(res.grade);
+    if(gi<0) gi=2; // 등급 불명 시 보통
+    const score=it.scores[gi];
+    total+=score;
+    const col=gi<=1?'var(--teal)':gi===2?'var(--amber)':'var(--red)';
+    return `<div style="padding:12px 0;border-bottom:1px dashed var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:7px">
+        <span style="font-size:13.5px;font-weight:700;color:var(--navy)">${it.id} ${it.name} <span style="font-weight:400;color:var(--muted)">(배점 ${it.scores[0]}점)</span></span>
+        <span style="font-size:14px;font-weight:700;color:${col}">${MX_GRADE_LABELS[gi]} · ${score}점</span>
+      </div>
+      <div style="display:flex;gap:4px;margin-bottom:7px;flex-wrap:wrap">
+        ${MX_GRADE_LABELS.map((g,i2)=>`<span style="font-size:10.5px;padding:3px 8px;border-radius:6px;border:1.5px solid ${i2===gi?col:'var(--border)'};background:${i2===gi?col:'#fff'};color:${i2===gi?'#fff':'var(--muted)'};font-weight:${i2===gi?'700':'400'}">${i2===gi?'☑':'☐'} ${g} ${it.scores[i2]}</span>`).join('')}
+      </div>
+      <div style="font-size:12.5px;color:var(--text);line-height:1.65;background:#f9f8f5;border-radius:7px;padding:9px 12px"><b>평가의견:</b> ${res.opinion||'-'}</div>
+    </div>`;
+  }).join('');
+  total=Math.round(total*10)/10;
+  const pct=Math.round(total/15*100);
+  const tcol=pct>=80?'var(--teal)':pct>=60?'var(--amber)':'var(--red)';
+  body.innerHTML=rows+`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 2px 4px;flex-wrap:wrap;gap:8px">
+      <span style="font-size:14px;font-weight:700;color:var(--navy)">2-1 토론기반 훈련 소계</span>
+      <span style="font-size:20px;font-weight:700;color:${tcol}">${total} / 15점</span>
+    </div>
+    ${r.summary?`<div style="font-size:13px;line-height:1.7;background:#f0faf8;border-left:4px solid var(--teal);border-radius:7px;padding:11px 14px;margin-top:8px"><b>종합의견:</b> ${r.summary}</div>`:''}
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">※ 시뮬레이션에서 관측 가능한 범위의 평가입니다. 문서·전파체계 등 서면 확인사항은 실훈련에서 별도 점검하세요.</div>`;
+  window._ttxDiscussEval={total, items:r.items, summary:r.summary}; // 보고서 연동용
+}
+
 // ─── 결과 시각화 (T3-2) ────────────────────────
 function ttxRenderViz(rtoMC) {
   const card=document.getElementById('ttxVizCard');
@@ -3077,6 +3200,7 @@ function ttxNextPhase() {
     ttxRenderResults();
     showTtxStep(3);
     ttxGenerateReport();
+    ttxDiscussionEval();
   }
 }
 
@@ -3884,6 +4008,7 @@ prompt 포함 정보:
   <li>종합점수 링(원형 그래프) + 등급 라벨</li>
   <li>최종 피해현황 4개 지표 (틱 진행 + 의사결정 누적 반영값)</li>
   <li><strong>훈련 분석 카드</strong> — 의사결정 타임라인(라운드·선택·규칙/AI 점수 분해), 규칙점수 4요소 평균 막대, RTO 몬테카를로 분포 히스토그램(P50/P95 마커)</li>
+  <li><strong>토론기반 훈련 평가점검표</strong> — TTX는 2026 평가지표의 '2-1 토론기반 훈련' 영역에 해당. 훈련 기록을 근거로 2-1-1 상황관리(5점)·2-1-2 상황판단회의(5점)·2-1-3 단계별 문제해결(초기 3점+수습 2점)을 공식 등급 기준으로 AI 평가 (15점 만점, 등급 체크·평가의견 포함, 인쇄 시 보고서에 포함)</li>
   <li>시나리오 재현 정보 (시드·불확실성 계수·돌발 횟수)</li>
 </ul>
 <h3>RTO 산출 (훈련 실적 연동)</h3>
