@@ -6,6 +6,34 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type, X-Session-ID',
 };
 
+// 한국어 강제 규칙 — 모든 호출에 서버측 주입 (llama 계열의 한자 혼입 방지)
+const KO_SYSTEM =
+  '당신은 대한민국 재난안전 훈련 전문가입니다. ' +
+  '모든 응답은 반드시 표준 한국어(한글)로만 작성하세요. ' +
+  '한자(漢字), 중국어 간체/번체, 일본어 문자는 절대 사용 금지입니다. ' +
+  '영어는 RTO, SOP 같은 표준 약어에만 허용됩니다. ' +
+  'JSON으로 응답할 때도 모든 문자열 값은 한글로만 작성하세요.';
+
+// 한국어 품질이 좋은 모델을 우선 사용하고, 미지원 계정이면 llama로 폴백
+const PRIMARY_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
+
+async function callGroq(apiKey, model, messages, maxTokens) {
+  return fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens,
+      stream: true,
+      messages,
+    }),
+  });
+}
+
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: CORS });
@@ -24,26 +52,17 @@ export default async function handler(req) {
     const sessionId = req.headers.get('X-Session-ID') || 'unknown';
     console.log(`[DREX] session=${sessionId}`);
 
-    // Anthropic 형식 → Groq(OpenAI) 형식 변환
+    // Anthropic 형식 → Groq(OpenAI) 형식 변환 + 한국어 규칙 서버측 주입
     const messages = [];
-    if (body.system) {
-      messages.push({ role: 'system', content: body.system });
-    }
+    messages.push({ role: 'system', content: body.system ? KO_SYSTEM + '\n\n' + body.system : KO_SYSTEM });
     messages.push(...(body.messages || []));
 
-    const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: body.max_tokens || 2000,
-        stream: true,
-        messages,
-      }),
-    });
+    const maxTokens = body.max_tokens || 2000;
+    let groqResp = await callGroq(apiKey, PRIMARY_MODEL, messages, maxTokens);
+    if (!groqResp.ok) {
+      console.log(`[DREX] primary model failed (${groqResp.status}) → fallback ${FALLBACK_MODEL}`);
+      groqResp = await callGroq(apiKey, FALLBACK_MODEL, messages, maxTokens);
+    }
 
     if (!groqResp.ok) {
       const errText = await groqResp.text();
