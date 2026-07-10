@@ -258,7 +258,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ck-row.checked .ck-lbl{color:#1a8c4a}
 .ck-sub{font-size:11px;color:var(--amber);font-weight:600;margin-top:3px;display:block}
 /* ── TAB NAVIGATION ── */
-.tab-nav{display:flex;gap:0;margin:-24px -16px 8px;background:var(--navy);padding:0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-nav{display:flex;gap:0;margin:-24px -16px 8px;background:var(--navy);padding:0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:60px;z-index:150;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .tab-nav::-webkit-scrollbar{display:none}
 .tab-btn{padding:16px 20px;background:transparent;border:none;border-bottom:3px solid transparent;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:.2s all;white-space:nowrap;flex-shrink:0}
 .tab-btn:hover{color:rgba(255,255,255,.8)}
@@ -789,6 +789,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
 <!-- MOCK EXAM PANEL -->
 <div id="mockExamPanel" style="display:none">
+
+<button onclick="switchOrgTab(1)" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;padding:8px 16px;background:#fff;border:1.5px solid var(--border);border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;transition:.15s all" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border)'">← TTX 시뮬레이터로 돌아가기</button>
 
 <div class="ptitle">
   <h2>🎯 모의평가 (평가관 기준 자가진단)</h2>
@@ -1545,6 +1547,7 @@ function switchOrgTab(tab) {
     if (sbar) sbar.style.display='none';
     mxBuildDomains();
   }
+  window.scrollTo(0,0); // 탭 전환 시 상단으로
 }
 
 // ─── Mock Exam v2 (모의평가 – 평가관 기준) ────────
