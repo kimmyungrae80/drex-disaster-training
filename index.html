@@ -262,12 +262,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .tab-btn{padding:16px 20px;background:transparent;border:none;border-bottom:3px solid transparent;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:.2s all;white-space:nowrap;flex-shrink:0}
 .tab-btn:hover{color:rgba(255,255,255,.8)}
 .tab-btn.active{color:#fff;border-bottom-color:var(--teal)}
-@media(max-width:640px){.tab-nav{margin:-20px -16px 6px;padding:0 16px}.tab-btn{padding:10px 14px;font-size:13px}}
+@media(max-width:640px){.tab-nav{margin:-20px -16px 6px;padding:0 12px}.tab-btn{padding:10px 10px;font-size:13px}}
 /* ── TTX SIMULATOR ── */
 .ttx-panel{display:none}
 .ttx-panel.active{display:block;animation:fadeUp .35s ease}
 .ttx-hd{background:var(--navy);color:#fff;border-radius:12px;padding:12px 18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.ttx-hd-title{font-size:15px;font-weight:700;flex:1;min-width:160px}
+.ttx-hd-title{font-size:17px;font-weight:700;flex:1;min-width:160px}
 .ttx-hd-title small{display:inline;font-size:10px;color:rgba(255,255,255,.5);margin-left:8px;font-weight:400}
 .ttx-hd-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .sev-badge{padding:5px 13px;border-radius:16px;font-size:12px;font-weight:700;flex-shrink:0}
@@ -275,25 +275,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sev-orange{background:#f97316;color:#fff}
 .sev-yellow{background:#eab308;color:#1a1a1a}
 .ttx-timer{font-size:22px;font-weight:700;color:#ef4444;font-family:monospace;flex-shrink:0;min-width:80px;text-align:right}
-.ttx-phase-badge{font-size:12px;font-weight:600;background:rgba(255,255,255,.15);padding:5px 13px;border-radius:16px;flex-shrink:0;color:#fff}
+.ttx-phase-badge{font-size:13.5px;font-weight:700;background:rgba(255,255,255,.18);padding:6px 15px;border-radius:16px;flex-shrink:0;color:#fff}
 /* ── TTX 한화면 레이아웃 ── */
-.ttx-grid{display:grid;grid-template-columns:200px 1fr 240px;gap:10px;height:calc(100vh - 160px);margin-bottom:0}
+.ttx-grid{display:grid;grid-template-columns:230px 1fr 285px;gap:12px;height:calc(100vh - 160px);margin-bottom:0}
 @media(min-width:768px) and (max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;height:auto}.ttx-met-wrap{grid-column:1;grid-row:2}.ttx-center-wrap{grid-column:1/-1;grid-row:1}.ttx-agencies-wrap{grid-column:2;grid-row:2}}
 @media(max-width:767px){.ttx-grid{grid-template-columns:1fr;height:auto}}
 .ttx-met-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
-.ttx-met-title{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+.ttx-met-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;text-align:center}
 /* 피해 추이 스파크라인 (소형 멀티플) */
 .ttx-trend{position:relative;margin-bottom:4px}
 .ttx-trend svg{display:block;width:100%;height:52px}
-.ttx-trend-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:9px;color:var(--muted);padding:0 2px}
-.ttx-trend-hd b{font-size:11px;font-weight:700}
+.ttx-trend-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;color:var(--muted);padding:0 2px}
+.ttx-trend-hd b{font-size:13.5px;font-weight:700;color:var(--navy)}
 .ttx-trend-tip{position:fixed;display:none;background:var(--navy);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:500;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 /* 지역 특성 태그 칩 */
 .tag-chip{font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:5px 12px;border-radius:14px;border:1.5px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:.15s all}
 .tag-chip:hover{border-color:var(--teal)}
 .tag-chip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
 /* 상황일지 필터 */
-.log-fbtn{font-family:'Noto Sans KR',sans-serif;font-size:8.5px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer}
+.log-fbtn{font-family:'Noto Sans KR',sans-serif;font-size:10.5px;padding:3px 9px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer}
 .log-fbtn.sel{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
 /* 결과 시각화 */
 .viz-sub{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px}
@@ -309,16 +309,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 @media(max-width:640px){#ttxVizGrid{grid-template-columns:1fr !important}}
 /* 현황판 2열 그리드로 변경 */
 .ttx-met-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.ttx-met-card{background:var(--bg);border-radius:8px;padding:7px 5px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
+.ttx-met-card{background:var(--bg);border-radius:8px;padding:9px 6px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
 .ttx-met-card:hover{border-color:var(--teal)}
-.ttx-met-label{font-size:9px;color:var(--muted);font-weight:500;margin-bottom:2px;line-height:1.2}
-.ttx-met-val{font-size:16px;font-weight:700;color:var(--navy);line-height:1}
-.ttx-met-unit{font-size:9px;color:var(--muted);margin-top:1px}
+.ttx-met-label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px;line-height:1.25}
+.ttx-met-val{font-size:19px;font-weight:700;color:var(--navy);line-height:1}
+.ttx-met-unit{font-size:10.5px;color:var(--muted);margin-top:2px}
 /* 현황판 섹션 제목 */
-.ttx-met-sec{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 3px;grid-column:1/-1;padding-left:2px}
+.ttx-met-sec{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.3px;margin:8px 0 4px;grid-column:1/-1;padding-left:2px;border-bottom:1px solid var(--border);padding-bottom:3px}
 .ttx-center-wrap{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
-.ttx-situation-box{background:#f5f3ee;border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.7;margin-bottom:8px;min-height:56px;white-space:pre-line;border-left:3px solid var(--teal)}
-.ttx-alert-banner{background:#ef4444;color:#fff;border-radius:7px;padding:8px 12px;margin-bottom:8px;font-size:13px;font-weight:600;display:none;animation:alertPop .4s ease}
+.ttx-situation-box{background:#f5f3ee;border-radius:8px;padding:13px 16px;font-size:15px;line-height:1.8;margin-bottom:10px;min-height:56px;white-space:pre-line;border-left:4px solid var(--teal)}
+.ttx-alert-banner{background:#ef4444;color:#fff;border-radius:8px;padding:11px 15px;margin-bottom:10px;font-size:15px;font-weight:700;line-height:1.6;display:none;animation:alertPop .4s ease;box-shadow:0 2px 10px rgba(239,68,68,.3)}
 .ttx-alert-banner.show{display:block}
 @keyframes alertPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .ttx-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
@@ -327,24 +327,26 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-opt:hover:not(:disabled){border-color:var(--teal);background:#f0faf8}
 .ttx-opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
 .ttx-opt:disabled{cursor:not-allowed;opacity:.75}
-.ttx-opt-lbl{font-weight:700;font-size:13px;margin-bottom:2px}
-.ttx-opt-txt{font-size:12px;line-height:1.45;margin-top:2px}
-.ttx-risk{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:6px}
+.ttx-opt-lbl{font-weight:700;font-size:15px;margin-bottom:3px}
+.ttx-opt-txt{font-size:13.5px;line-height:1.55;margin-top:3px}
+.ttx-risk{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:9px;display:inline-block;margin-top:7px}
 .risk-h{background:#ffe4e4;color:#ef4444}
 .risk-m{background:#fff4e4;color:#f97316}
 .risk-l{background:#e4f4e4;color:#16a34a}
 .ttx-opt.sel .ttx-risk{background:rgba(255,255,255,.2);color:#fff}
-.ttx-outcome{background:#0d1b2a;color:#b8d4e8;border-radius:10px;padding:16px;font-size:13px;line-height:1.8;white-space:pre-line;display:none;margin-top:10px}
+.ttx-opt-prob{font-size:11px;color:var(--amber);font-weight:600;margin-top:4px;display:block}
+.ttx-opt.sel .ttx-opt-prob{color:rgba(255,255,255,.85)}
+.ttx-outcome{background:#0d1b2a;color:#c9dcec;border-radius:10px;padding:18px 20px;font-size:14.5px;line-height:1.85;white-space:pre-line;display:none;margin-top:10px}
 .ttx-outcome.show{display:block}
 .ttx-agencies-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
-.ttx-ag-title{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+.ttx-ag-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;text-align:center}
 .ttx-ag-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
 @media(max-width:767px){.ttx-ag-grid{grid-template-columns:1fr 1fr}}
-.ttx-ag-card{border-radius:7px;padding:6px 2px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s all;background:#fafafa}
+.ttx-ag-card{border-radius:8px;padding:8px 3px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s all;background:#fafafa}
 .ttx-ag-card:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
-.ttx-ag-icon{font-size:14px;margin-bottom:1px}
-.ttx-ag-name{font-size:8px;color:var(--navy);font-weight:600;line-height:1.2;word-break:keep-all;margin-bottom:2px}
-.ttx-ag-st,.ttx-ag-status{font-size:7.5px;font-weight:700;padding:1px 4px;border-radius:5px;display:inline-block}
+.ttx-ag-icon{font-size:16px;margin-bottom:2px}
+.ttx-ag-name{font-size:10.5px;color:var(--navy);font-weight:700;line-height:1.25;word-break:keep-all;margin-bottom:3px}
+.ttx-ag-st,.ttx-ag-status{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block}
 .ags-standby{border-color:#e4e7ed}.ags-standby .ttx-ag-st,.ags-standby .ttx-ag-status{background:#e4e7ed;color:#555}
 .ags-dispatch{border-color:#93c5fd;background:#eff6ff}.ags-dispatch .ttx-ag-st,.ags-dispatch .ttx-ag-status{background:#dbeafe;color:#1d4ed8}
 .ags-field{border-color:#fdba74;background:#fff7ed}.ags-field .ttx-ag-st,.ags-field .ttx-ag-status{background:#fed7aa;color:#c2410c}
@@ -386,7 +388,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sop-act{width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border:1.5px solid #e0ddd5;border-radius:8px;background:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;transition:.15s all;display:flex;justify-content:space-between;align-items:center}
 .sop-act:hover{border-color:var(--teal);background:#f0faf8}
 .sop-act-eff{font-size:10px;color:var(--teal);font-weight:600;flex-shrink:0;margin-left:8px}
-.slog-item{padding:4px 6px;border-radius:4px;margin-bottom:3px;font-size:9px;line-height:1.6}
+.slog-item{padding:6px 9px;border-radius:5px;margin-bottom:4px;font-size:11.5px;line-height:1.65}
 </style>
 </head>
 <body>
@@ -669,7 +671,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       </div>
       <div id="ttxMetPanel"></div>
       <div style="margin-top:8px;border-top:1px solid #e0ddd5;padding-top:8px;flex:1;display:flex;flex-direction:column;min-height:0">
-        <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px">📋 상황일지</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:5px">📋 상황일지</div>
         <div id="ttxLogFilter" style="display:flex;gap:3px;margin-bottom:4px;flex-wrap:wrap">
           <button class="log-fbtn sel" data-cat="all" onclick="ttxFilterLog(this)">전체</button>
           <button class="log-fbtn" data-cat="decision" onclick="ttxFilterLog(this)">의사결정</button>
@@ -678,7 +680,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
           <button class="log-fbtn" data-cat="system" onclick="ttxFilterLog(this)">시스템</button>
         </div>
         <div id="ttxSituationLog" style="flex:1;overflow-y:auto;min-height:0"></div>
-        <button onclick="ttxDownloadLog()" style="margin-top:5px;width:100%;padding:4px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
+        <button onclick="ttxDownloadLog()" style="margin-top:5px;width:100%;padding:4px 0;border:1px solid #ddd;background:#fafafa;border-radius:5px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--navy)">📥 전체 일지 다운로드</button>
       </div>
     </div>
 
@@ -1146,6 +1148,23 @@ async function sbPost(table, data) {
       body:JSON.stringify(data),
     });
   } catch(e) { console.warn("sb save failed", e); }
+}
+
+// ═══════════════════════════════════════════════
+// TRAINING DATA (안전한국훈련 컨설팅보고서)
+// ═══════════════════════════════════════════════
+let trainingDataCache = null;
+async function loadTrainingData() {
+  if (trainingDataCache) return trainingDataCache;
+  try {
+    const res = await fetch('docs/training-data.json');
+    const data = await res.json();
+    trainingDataCache = data;
+    return data;
+  } catch (e) {
+    console.warn('Training data load failed:', e);
+    return { metadata: {}, statistics: {}, records: [] };
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -2171,6 +2190,14 @@ function ttxParseJSON(text) {
   }
 }
 
+// ─── 핵심 수치 강조 ────────────────────────────
+// 상황·결과 텍스트의 피해 수치를 굵은 적색으로 강조 (HTML 이스케이프 후 적용)
+function ttxEmphasize(text){
+  const esc=String(text??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc.replace(/(\d[\d,.]*\s*(?:여\s*)?(?:명|세대|가구|건|동|개소|단위|ha|톤|mm|℃|km))/g,
+    '<b style="color:var(--red)">$1</b>');
+}
+
 // ─── 한국어 새니타이저 ─────────────────────────
 // LLM이 한국어에 한자·가나를 섞는 경우 최후 방어선으로 제거
 const TTX_CJK_RE=/[一-鿿㐀-䶿豈-﫿぀-ヿㇰ-ㇿ]/;
@@ -2532,7 +2559,7 @@ function ttxRenderAgencies() {
     card.id = 'agCard_'+a.id;
     card.onclick = () => ttxShowSopPopup(a.id);
     card.innerHTML = `<div class="ttx-ag-name">${a.name}</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.55);margin:2px 0 4px;line-height:1.3">${a.role||''}</div>
+      <div style="font-size:9.5px;color:var(--muted);margin:2px 0 4px;line-height:1.3">${a.role||''}</div>
       <div class="ttx-ag-status">${st}</div>`;
     grid.appendChild(card);
   });
@@ -2725,9 +2752,9 @@ async function ttxLoadOptions() {
   const ub=document.getElementById('ttxUnexpectedBanner');
   if(ub) ub.style.display='none';
 
-  // Show situation — 직전 결정의 next_situation이 있으면 그것을 표시 (맥락 연결)
-  document.getElementById('ttxSituationText').textContent=
-    ttxState.lastNextSituation || sc.initial_report;
+  // Show situation — 직전 결정의 next_situation이 있으면 그것을 표시 (맥락 연결, 수치 강조)
+  document.getElementById('ttxSituationText').innerHTML=
+    ttxEmphasize(ttxState.lastNextSituation || sc.initial_report);
 
   // Alert banner — 라운드 돌발상황은 아래 API 응답(round_event)으로 채움
   const ab=document.getElementById('ttxAlertBanner');
@@ -2774,13 +2801,13 @@ ${TTX_AGENCIES.map(a=>`${a.name}(${a.role})`).join(', ')}
     }
     parsed.options.forEach((o,i)=>o.label=String.fromCharCode(65+i));
     ttxState.currentRoundEvent=parsed.round_event||arc;
-    ab.textContent='🚨 돌발상황: '+ttxState.currentRoundEvent;
+    ab.innerHTML='🚨 돌발상황: '+ttxEmphasize(ttxState.currentRoundEvent);
     if(parsed.round_event) ttxLogSituation('🟠','red',`라운드 ${ttxState.phase} 돌발상황 — ${parsed.round_event}`);
     ttxState.currentOptions=parsed.options;
     ttxState.optionsShownAt=ttxState.elapsedSeconds||0; // 신속성 채점 기준점
     ttxRenderOptions(parsed.options);
   }catch(err){
-    ab.textContent='🚨 돌발상황: '+(ttxState.currentRoundEvent||arc||'상황 정보 없음');
+    ab.innerHTML='🚨 돌발상황: '+ttxEmphasize(ttxState.currentRoundEvent||arc||'상황 정보 없음');
     document.getElementById('ttxOptsGrid').innerHTML=`<div style="color:var(--red);font-size:13px;padding:16px;grid-column:1/-1">⚠️ 선택지 생성 실패: ${err.message}<br><button class="btn-s" style="margin-top:8px;font-size:12px" onclick="ttxLoadOptions()">다시 시도</button></div>`;
   }
 }
@@ -2792,7 +2819,7 @@ function ttxRenderOptions(options) {
       <div class="ttx-opt-lbl">${o.label}안</div>
       <div class="ttx-opt-txt">${o.action}</div>
       <span class="ttx-risk ${riskCls[o.risk]||'risk-m'}">위험도: ${o.risk}</span>
-      ${o.unexpected_prob?`<span style="font-size:9px;color:rgba(255,255,255,.45);margin-top:3px;display:block">⚡ 돌발확률 ${o.unexpected_prob}%</span>`:''}
+      ${o.unexpected_prob?`<span class="ttx-opt-prob">⚡ 돌발확률 ${o.unexpected_prob}%</span>`:''}
     </button>`).join('');
 }
 
@@ -2892,8 +2919,8 @@ ${ttxDecisionHistory()}
     ttxState.lastNextSituation=parsed.next_situation||'';
     ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
 
-    ob.textContent=`[${label}안 선택 결과]\n${parsed.outcome}\n\n`+
-      `📊 라운드 점수: ${score}점 = 규칙 ${rule.total}점×60% + AI평가 ${llmScore}점×40% (누적 평균: ${ttxState.totalScore}점)\n`+
+    ob.innerHTML=`<b style="color:#7ec8e3">[${label}안 선택 결과]</b>\n${ttxEmphasize(parsed.outcome)}\n\n`+
+      `📊 <b style="color:#fff;font-size:16px">라운드 점수: ${score}점</b> = 규칙 ${rule.total}점×60% + AI평가 ${llmScore}점×40% (누적 평균: <b style="color:#7ec8e3">${ttxState.totalScore}점</b>)\n`+
       `   └ 신속성 ${rule.timeScore} · 기관투입 ${rule.agencyScore} · 위험관리 ${rule.unexpScore} · 피해억제 ${rule.suppScore}`;
 
     // 결과의 관련기관 출동 지령 (퍼지 매칭 — "소방서" 등 변형 표기도 인식)
