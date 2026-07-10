@@ -288,6 +288,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-trend-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:9px;color:var(--muted);padding:0 2px}
 .ttx-trend-hd b{font-size:11px;font-weight:700}
 .ttx-trend-tip{position:fixed;display:none;background:var(--navy);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:500;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* 지역 특성 태그 칩 */
+.tag-chip{font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:5px 12px;border-radius:14px;border:1.5px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:.15s all}
+.tag-chip:hover{border-color:var(--teal)}
+.tag-chip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
 /* 현황판 2열 그리드로 변경 */
 .ttx-met-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .ttx-met-card{background:var(--bg);border-radius:8px;padding:7px 5px;text-align:center;border:1.5px solid transparent;transition:.2s;cursor:pointer}
@@ -576,6 +580,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="fg">
       <label class="fl">지역 특성 <span style="color:var(--red)">*</span></label>
       <input type="text" class="fi" id="ttxRegion" placeholder="예: 해안 도심, 산간 농촌, 내륙 공업지대">
+      <div id="ttxRegionTags" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
+        <button type="button" class="tag-chip" data-v="인구밀집" onclick="this.classList.toggle('sel')">인구밀집</button>
+        <button type="button" class="tag-chip" data-v="하천·해안 인접" onclick="this.classList.toggle('sel')">하천·해안</button>
+        <button type="button" class="tag-chip" data-v="산간지형" onclick="this.classList.toggle('sel')">산간지형</button>
+        <button type="button" class="tag-chip" data-v="산업단지" onclick="this.classList.toggle('sel')">산업단지</button>
+        <button type="button" class="tag-chip" data-v="고령인구 다수" onclick="this.classList.toggle('sel')">고령화</button>
+        <button type="button" class="tag-chip" data-v="관광객 밀집" onclick="this.classList.toggle('sel')">관광지</button>
+        <button type="button" class="tag-chip" data-v="도서·접근취약" onclick="this.classList.toggle('sel')">도서지역</button>
+        <button type="button" class="tag-chip" data-v="지하공간 다수" onclick="this.classList.toggle('sel')">지하공간</button>
+      </div>
+      <div class="hint">해당하는 특성을 선택하면 시나리오 전개에 반영됩니다 (복수 선택 가능)</div>
     </div>
     <div class="fg">
       <label class="fl">훈련 강도 <span style="color:var(--red)">*</span></label>
@@ -1984,6 +1999,32 @@ function ttxParseJSON(text) {
   }
 }
 
+// ─── 시나리오 Validator (T2-2) ─────────────────
+// 로컬 규칙 검증 — 위반 시 1회만 재생성 요청 (C4: API 추가 호출 최소화)
+function ttxValidateScenario(sc, mc, regionTags) {
+  if(!sc) return ['JSON 파싱 실패'];
+  const issues=[];
+  ['situation_title','initial_report','time_pressure'].forEach(k=>{
+    if(!sc[k]) issues.push(`필수 필드 누락: ${k}`);
+  });
+  if(!sc.stage_arcs) issues.push('필수 필드 누락: stage_arcs');
+  else ['stage1','stage2','stage3'].forEach(k=>{
+    if(!sc.stage_arcs[k]) issues.push(`전개 아크 누락: ${k}`);
+  });
+  if(sc.situation_title && sc.situation_title.length>40) issues.push('situation_title 40자 초과');
+  const kv=sc.key_variables||{};
+  [['casualties','인명피해'],['displaced','이재민'],['infrastructure_damage','시설피해'],['resource_needed','필요자원']].forEach(([k,name])=>{
+    if(kv[k]!==mc[k]) issues.push(`key_variables.${k}(${name})가 MC 수치 ${mc[k]}와 불일치`);
+  });
+  if(regionTags&&regionTags.length){
+    const txt=[sc.initial_report,JSON.stringify(sc.stage_arcs||''),sc.situation_title].join(' ');
+    // 태그 핵심어(첫 2글자)라도 언급됐는지 확인
+    const hit=regionTags.some(t=>txt.includes(t)||txt.includes(t.slice(0,2)));
+    if(!hit) issues.push(`지역 특성 태그(${regionTags.join(', ')})가 시나리오에 반영되지 않음`);
+  }
+  return issues;
+}
+
 // ─── STEP 1: Scenario Generation ──────────────
 async function ttxGenerateScenario() {
   const orgName=document.getElementById('ttxOrgName').value.trim();
@@ -1991,6 +2032,7 @@ async function ttxGenerateScenario() {
   const disasterCustomInput=document.getElementById('ttxDisasterCustom');
   const disasterForPrompt=(disaster==='기타' && disasterCustomInput?.value.trim()) ? disasterCustomInput.value.trim() : disaster;
   const region=document.getElementById('ttxRegion').value.trim();
+  const regionTags=[...document.querySelectorAll('#ttxRegionTags .tag-chip.sel')].map(b=>b.dataset.v);
   const intensity=ttxState.intensity;
   const participants=parseInt(document.getElementById('ttxParticipants').value)||0;
 
@@ -2007,7 +2049,8 @@ async function ttxGenerateScenario() {
   updateNavStep(2);
 
   ttxState.orgName=orgName; ttxState.disasterType=disaster;
-  ttxState.region=region; ttxState.intensity=intensity; ttxState.participants=participants;
+  ttxState.region=region; ttxState.regionTags=regionTags;
+  ttxState.intensity=intensity; ttxState.participants=participants;
   ttxState.sessionId=null; ttxState.unexpectedEventsCount=0;
 
   const genBtn=document.getElementById('ttxGenBtn');
@@ -2044,7 +2087,8 @@ async function ttxGenerateScenario() {
 [훈련 조건]
 - 기관: ${orgName}
 - 재난: ${disasterForPrompt}
-- 지역: ${region}
+- 지역: ${region}${regionTags.length?`
+- 지역 특성 태그: ${regionTags.join(', ')} — 시나리오 전개와 돌발상황에 반드시 구체적으로 반영할 것`:''}
 - 강도: ${intensity}
 - 참여인원: ${participants}명
 
@@ -2091,8 +2135,26 @@ JSON으로만 응답 (마크다운 없이):
       2200,
       webSearchTool
     );
-    const sc=ttxParseJSON(text);
+    let sc=ttxParseJSON(text);
+    // ── Validator (T2-2): 로컬 규칙 검증, 위반 시 1회만 재생성 ──
+    let issues=ttxValidateScenario(sc, mc, regionTags);
+    let regenerated=false;
+    if(issues.length && sc){
+      regenerated=true;
+      const text2=await ttxStreamAPI(
+        [{role:'user',content:prompt},
+         {role:'assistant',content:text},
+         {role:'user',content:`검증 실패 항목:\n- ${issues.join('\n- ')}\n\n위 항목을 모두 수정하여 동일한 JSON 형식으로만 다시 응답하세요.`}],
+        null, 2200
+      );
+      const sc2=ttxParseJSON(text2);
+      if(sc2 && ttxValidateScenario(sc2, mc, regionTags).length < issues.length) sc=sc2;
+    }
     if(!sc||!sc.situation_title) throw new Error('시나리오 파싱 실패. 다시 시도해주세요.');
+    // 재실패 시 로컬 강제 보정: 수치는 MC 값이 정본
+    sc.key_variables={casualties:mc.casualties, displaced:mc.displaced,
+      infrastructure_damage:mc.infrastructure_damage, resource_needed:mc.resource_needed};
+    const finalIssues=ttxValidateScenario(sc, mc, regionTags);
 
     ttxState.scenario=sc;
     ttxState.realCaseRef=sc.real_case_reference||'';
@@ -2132,7 +2194,9 @@ JSON으로만 응답 (마크다운 없이):
         `<b>MC 시드:</b> ${mc.seed}<br>`+
         `<b>불확실성 계수:</b> [${mc.uncertaintyFactors.join(', ')}]<br>`+
         `<b>실제 사례 참조:</b> ${sc.real_case_reference||'없음'}<br>`+
-        `<b>초기 피해 (MC):</b> 인명 ${mc.casualties}명 · 이재민 ${mc.displaced}명 · 시설 ${mc.infrastructure_damage}건 · 자원 ${mc.resource_needed}단위`;
+        `<b>초기 피해 (MC):</b> 인명 ${mc.casualties}명 · 이재민 ${mc.displaced}명 · 시설 ${mc.infrastructure_damage}건 · 자원 ${mc.resource_needed}단위<br>`+
+        `<b>시나리오 검증:</b> ${finalIssues.length?'⚠️ 일부 미충족('+finalIssues.length+'건) — 수치는 MC 값으로 보정됨':(regenerated?'✅ 통과 (1회 재생성)':'✅ 통과')}`+
+        `<br><b>총 라운드:</b> ${ttxState.totalRounds} (${intensity})`;
       infoCard.style.display='block';
     }
 
@@ -2500,12 +2564,17 @@ ${ttxDecisionHistory()}
 ${ttxState.lastNextSituation?`\n[직전 결정 이후 상황]\n${ttxState.lastNextSituation}\n`:''}
 이번 라운드의 돌발상황 1개와 의사결정 선택지 3개를 JSON으로만 생성하세요 (unexpected_prob은 0~40 사이 정수).
 round_event는 전개 아크·이력·현재 피해에서 자연스럽게 이어지는 새 돌발상황 (1~2문장). 이전 라운드에서 이미 취한 조치를 반복하는 선택지는 금지. related_agencies는 다음 13개 중에서만: 소방본부, 경찰청, 군부대, 보건소/병원, 교육청, 환경부, 국토교통부, 행안부, 전기(한전), 통신(KT), 수도/가스, 자원봉사, 민간기업
+
+[선택지 설계 원칙 — 반드시 지킬 것]
+- 위험도(높음/중간/낮음) 조합은 매번 다르게. 셋 다 같은 위험도도, 높음 2개도 허용
+- 정답이 뻔하면 안 됨: 고위험 선택지는 성공 시 효과가 커야 하고, 저위험 선택지는 느리거나 소극적인 대가가 있어야 함
+- 각 선택지는 서로 다른 대응 철학(공격적 투입 / 단계적 확대 / 보수적 보존)을 대표할 것
 {
   "round_event": "이번 라운드 돌발상황 (1~2문장)",
   "options": [
-    {"label":"A","action":"대응 행동 (25자 이내)","risk":"높음","unexpected_prob":30,"unexpected_event":"부작용 1문장","related_agencies":["소방본부","경찰청"]},
-    {"label":"B","action":"대응 행동 (25자 이내)","risk":"중간","unexpected_prob":15,"unexpected_event":"부작용 1문장","related_agencies":["보건소/병원","행안부"]},
-    {"label":"C","action":"대응 행동 (25자 이내)","risk":"낮음","unexpected_prob":8,"unexpected_event":"부작용 1문장","related_agencies":["자원봉사","민간기업"]}
+    {"label":"A","action":"대응 행동 (25자 이내)","risk":"높음|중간|낮음 중 하나","unexpected_prob":30,"unexpected_event":"부작용 1문장","related_agencies":["소방본부","경찰청"]},
+    {"label":"B","action":"대응 행동 (25자 이내)","risk":"높음|중간|낮음 중 하나","unexpected_prob":15,"unexpected_event":"부작용 1문장","related_agencies":["보건소/병원","행안부"]},
+    {"label":"C","action":"대응 행동 (25자 이내)","risk":"높음|중간|낮음 중 하나","unexpected_prob":8,"unexpected_event":"부작용 1문장","related_agencies":["자원봉사","민간기업"]}
   ]
 }`;
 
@@ -2513,6 +2582,12 @@ round_event는 전개 아크·이력·현재 피해에서 자연스럽게 이어
     const text=await ttxStreamAPI([{role:'user',content:prompt}],null,1000);
     const parsed=ttxParseJSON(text);
     if(!parsed||!parsed.options||!parsed.options.length) throw new Error('선택지 파싱 실패');
+    // 표시 순서 PRNG 셔플 후 재라벨링 (T2-3) — "C가 항상 안전" 메타게임 차단
+    for(let i=parsed.options.length-1;i>0;i--){
+      const j=Math.floor(ttxRandom()*(i+1));
+      [parsed.options[i],parsed.options[j]]=[parsed.options[j],parsed.options[i]];
+    }
+    parsed.options.forEach((o,i)=>o.label=String.fromCharCode(65+i));
     ttxState.currentRoundEvent=parsed.round_event||arc;
     ab.textContent='🚨 돌발상황: '+ttxState.currentRoundEvent;
     if(parsed.round_event) ttxLogSituation('🟠','red',`라운드 ${ttxState.phase} 돌발상황 — ${parsed.round_event}`);
@@ -3054,6 +3129,7 @@ function ttxReset() {
   document.getElementById('ttxParticipants').value='';
   const seedEl=document.getElementById('ttxSeedInput');
   if(seedEl) seedEl.value='';
+  document.querySelectorAll('#ttxRegionTags .tag-chip').forEach(b=>b.classList.remove('sel'));
   document.querySelectorAll('#ttxIntensityGroup .rb').forEach(b=>b.classList.remove('sel'));
   document.getElementById('ttxErr1').classList.remove('show');
   document.getElementById('ttxRptBox').style.display='none';
