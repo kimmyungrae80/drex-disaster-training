@@ -337,6 +337,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-opt.sel .ttx-risk{background:rgba(255,255,255,.2);color:#fff}
 .ttx-opt-prob{font-size:11px;color:var(--amber);font-weight:600;margin-top:4px;display:block}
 .ttx-opt.sel .ttx-opt-prob{color:rgba(255,255,255,.85)}
+/* 상황부여 메시지 (T4-2) */
+.ttx-msg{border:2px solid #93c5fd;background:#eff6ff;border-radius:9px;padding:10px 13px;margin-bottom:7px;animation:alertPop .35s ease}
+.ttx-msg.done{border-color:var(--border);background:#f9f8f5;opacity:.85}
+.ttx-msg.missed{border-color:#fca5a5;background:#fff5f5}
+.ttx-msg-from{font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:3px}
+.ttx-msg-body{font-size:13.5px;line-height:1.6;margin-bottom:8px}
+.ttx-msg-acts{display:flex;gap:6px;flex-wrap:wrap}
+.ttx-msg-act{flex:1;min-width:140px;padding:8px 11px;border:1.5px solid var(--border);background:#fff;border-radius:7px;font-family:'Noto Sans KR',sans-serif;font-size:12.5px;cursor:pointer;text-align:left;line-height:1.4;transition:.15s all}
+.ttx-msg-act:hover{border-color:var(--teal);background:#f0faf8}
+.ttx-msg-result{font-size:12px;font-weight:600}
 .ttx-outcome{background:#0d1b2a;color:#c9dcec;border-radius:10px;padding:18px 20px;font-size:14.5px;line-height:1.85;white-space:pre-line;display:none;margin-top:10px}
 .ttx-outcome.show{display:block}
 .ttx-agencies-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
@@ -612,6 +622,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div class="hint">해당하는 특성을 선택하면 시나리오 전개에 반영됩니다 (복수 선택 가능)</div>
     </div>
     <div class="fg">
+      <label class="fl">훈련 방식 <span style="color:var(--red)">*</span></label>
+      <div class="rg" id="ttxModeGroup">
+        <button class="rb sel" data-v="full" onclick="ttxSelectMode(this)">통합훈련 모드 (권장)<br><small style="font-weight:400;font-size:11px">상황 메시지 처리 + 핵심 의사결정 · 40~60분</small></button>
+        <button class="rb" data-v="quick" onclick="ttxSelectMode(this)">신속 모드<br><small style="font-weight:400;font-size:11px">핵심 의사결정만 · 15~25분</small></button>
+      </div>
+      <div class="hint">통합훈련 모드는 실제 통합시나리오처럼 라운드마다 상황부여 메시지(강도별 2~4건)를 처리합니다</div>
+    </div>
+    <div class="fg">
       <label class="fl">훈련 강도 <span style="color:var(--red)">*</span></label>
       <div class="rg" id="ttxIntensityGroup">
         <button class="rb" data-v="초급" onclick="ttxSelectIntensity(this)">초급<br><small style="font-weight:400;font-size:11px">기본 대응 절차</small></button>
@@ -664,6 +682,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <!-- 좌측: 현황판 + 상황일지 -->
     <div class="ttx-met-wrap" style="display:flex;flex-direction:column;gap:0">
       <div class="ttx-met-title">📊 현황판</div>
+      <div id="ttxEnvTrack" style="display:none;background:#0d1b2a;border-radius:9px;padding:9px 11px;margin-bottom:8px">
+        <div style="font-size:10.5px;font-weight:700;color:#7ec8e3;margin-bottom:5px" id="ttxEnvStage">🌐 환경 전개</div>
+        <div style="font-size:11.5px;line-height:1.7;color:#c9dcec" id="ttxEnvBody"></div>
+      </div>
       <div id="ttxTrendWrap" style="display:none">
         <div class="ttx-met-sec">📈 피해 추이 (재난시간)</div>
         <div class="ttx-trend" id="ttxTrendCas"></div>
@@ -690,6 +712,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
       <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
       <div class="ttx-alert-banner" id="ttxAlertBanner">🚨 돌발상황 발생!</div>
+      <div id="ttxMsgWrap" style="display:none;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">📨 상황부여 메시지 <span id="ttxMsgCount" style="color:var(--muted);font-weight:400"></span></span>
+          <span style="font-size:11px;color:var(--muted)">도착한 메시지에 조치를 결정하세요 — 방치 시 미조치 처리</span>
+        </div>
+        <div id="ttxMsgList"></div>
+      </div>
       <div id="ttxUnexpectedBanner" style="display:none;background:#7c1010;color:#fff;border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;font-weight:600;animation:alertPop .4s ease">⚡ 돌발변수 발생!</div>
       <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px" id="ttxOptTitle">의사결정 선택지</div>
       <div class="ttx-opts" id="ttxOptsGrid">
@@ -776,6 +805,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
       <button class="btn-a" onclick="ttxGenerateReport()" id="ttxRptBtn">🤖 AI 보고서 생성</button>
       <button class="btn-s" onclick="ttxPrintReport()">🖨️ 보고서 출력</button>
+      <button class="btn-s" onclick="ttxDownloadMasterDoc()">📄 통합시나리오 총괄표 다운로드</button>
       <button class="btn-s" onclick="ttxReset()">🔄 새 훈련 시작</button>
     </div>
   </div>
@@ -1506,6 +1536,7 @@ let ttxState = {
   scenario:null,
   phase:1,
   totalRounds:3,
+  trainingMode:'full',
   stabilized:false,
   crisisInserted:false,
   currentRoundEvent:'',
@@ -1908,6 +1939,12 @@ function ttxSelectIntensity(btn) {
   ttxState.intensity=btn.dataset.v;
 }
 
+function ttxSelectMode(btn) {
+  document.querySelectorAll('#ttxModeGroup .rb').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  ttxState.trainingMode=btn.dataset.v;
+}
+
 // ─── Persist ──────────────────────────────────
 function ttxSaveState() {
   const s={...ttxState,timerInterval:null,rngState:ttxRngState,tickRngState:ttxTickRngState};
@@ -1933,6 +1970,7 @@ function ttxRestoreState() {
         ttxRenderMeetingHeader();
         ttxRenderMetrics();
         ttxRenderTrend();
+        ttxRenderEnvTrack();
         ttxRenderAgencies();
         updateNavStep(3);
         showTtxStep(2);
@@ -2184,6 +2222,7 @@ function ttxDiscussEvidence(){
 [의사결정 회의 기록]
 ${rounds||'기록 없음'}
 [운영 지표] 평균 결정 소요 ${delays.length?Math.round(delays.reduce((a,b)=>a+b,0)/delays.length):0}초 · 돌발변수 ${ttxState.unexpectedEventsCount||0}회 · 조기 안정화 ${ttxState.stabilized?'달성':'미달성'} · 위기 라운드 ${ttxState.crisisInserted?'발생':'없음'}
+[상황 메시지 처리] ${(function(){const ms=d.map(dc=>dc.ruleParts&&dc.ruleParts.msgScore).filter(v=>v!=null);return ms.length?`라운드별 평균 ${Math.round(ms.reduce((a,b)=>a+b,0)/ms.length)}점 (${ms.join(', ')})`:'신속 모드 — 메시지 없음';})()}
 [기관 운용] 13개 기관 중 현장투입·완료 ${deployed.length}개 (핵심기관 ${keyDeployed}/${keySet.size}) · 최종 피해 억제율 ${supp}%
 [피해 추이] 인명 ${init.casualties??'-'}→${v.casualties??'-'}명 · 이재민 ${init.displaced??'-'}→${v.displaced??'-'}명`;
 }
@@ -2292,8 +2331,10 @@ function ttxRenderViz(rtoMC) {
     +(ttxState.crisisInserted?'<div class="viz-tl-item"><div class="viz-tl-dot" style="background:var(--red)"></div><div>🚨 피해 폭주 — 위기 라운드 삽입됨</div></div>':'');
 
   // ② 규칙점수 4요소 평균 막대
-  const parts=[['신속성','timeScore'],['기관투입','agencyScore'],['위험관리','unexpScore'],['피해억제','suppScore']];
   const withRule=ds.filter(d=>d.ruleParts);
+  const hasMsg=withRule.some(d=>d.ruleParts.msgScore!=null);
+  const parts=[['신속성','timeScore'],['기관투입','agencyScore'],['위험관리','unexpScore'],['피해억제','suppScore']];
+  if(hasMsg) parts.push(['메시지','msgScore']);
   document.getElementById('ttxVizRule').innerHTML=withRule.length?parts.map(([lbl,k])=>{
     const avg=Math.round(withRule.reduce((s,d)=>s+(d.ruleParts[k]||0),0)/withRule.length);
     return `<div class="viz-row"><div class="viz-row-lbl">${lbl}</div>
@@ -2321,6 +2362,100 @@ function ttxRenderViz(rtoMC) {
   } else el.innerHTML='';
 }
 
+// ─── 상황부여 메시지 시스템 (T4-2, 통합훈련 모드) ──
+const TTX_MSG_COUNT={초급:2,중급:3,고급:4};
+const TTX_MSG_REVEAL_SEC=25;  // 도착 간격(실시간 초)
+const TTX_MSG_TIMELY_SEC=90;  // 적시 처리 기준(초)
+
+function ttxInitRoundMsgs(msgs){
+  ttxState.roundMsgs=(msgs||[]).map(m=>({
+    from:m.from||'재난상황실', msg:m.msg||'',
+    actions:(m.actions||[]).slice(0,2),
+    shownAt:null, handledAt:null, choiceIdx:null, score:null, missed:false,
+  }));
+  const wrap=document.getElementById('ttxMsgWrap');
+  if(wrap) wrap.style.display=(ttxState.trainingMode==='full'&&ttxState.roundMsgs.length)?'block':'none';
+  ttxRenderMsgs();
+}
+
+function ttxRevealMsgs(){
+  if(ttxState.trainingMode!=='full'||!ttxState.roundMsgs) return;
+  const base=ttxState.optionsShownAt||0;
+  let changed=false;
+  ttxState.roundMsgs.forEach((m,i)=>{
+    if(m.shownAt===null && (ttxState.elapsedSeconds-base)>=i*TTX_MSG_REVEAL_SEC+5){
+      m.shownAt=ttxState.elapsedSeconds; changed=true;
+      ttxLogSituation('📨','red',`상황 메시지 도착 — [${m.from}] ${m.msg.slice(0,60)}`,'event');
+    }
+  });
+  if(changed) ttxRenderMsgs();
+}
+
+function ttxRenderMsgs(){
+  const list=document.getElementById('ttxMsgList');
+  const cnt=document.getElementById('ttxMsgCount');
+  if(!list) return;
+  const msgs=ttxState.roundMsgs||[];
+  const shown=msgs.filter(m=>m.shownAt!==null);
+  if(cnt) cnt.textContent=`(도착 ${shown.length}/${msgs.length} · 처리 ${msgs.filter(m=>m.handledAt!==null).length})`;
+  list.innerHTML=shown.map((m,mi0)=>{
+    const mi=msgs.indexOf(m);
+    if(m.missed) return `<div class="ttx-msg missed">
+      <div class="ttx-msg-from">📨 ${m.from}</div>
+      <div class="ttx-msg-body">${ttxEmphasize(m.msg)}</div>
+      <div class="ttx-msg-result" style="color:var(--red)">✗ 미조치 (0점)</div></div>`;
+    if(m.handledAt!==null){
+      const act=m.actions[m.choiceIdx]||{};
+      const col=m.score>=80?'var(--teal)':m.score>=55?'var(--amber)':'var(--red)';
+      return `<div class="ttx-msg done">
+        <div class="ttx-msg-from">📨 ${m.from}</div>
+        <div class="ttx-msg-body" style="margin-bottom:4px">${ttxEmphasize(m.msg)}</div>
+        <div class="ttx-msg-result" style="color:${col}">☑ ${act.label||''} — ${act.quality==='적정'?'적정 조치':'차선 조치'} · ${m.score}점</div></div>`;
+    }
+    return `<div class="ttx-msg">
+      <div class="ttx-msg-from">📨 ${m.from} <span style="color:var(--red);font-weight:400">· 조치 대기</span></div>
+      <div class="ttx-msg-body">${ttxEmphasize(m.msg)}</div>
+      <div class="ttx-msg-acts">${m.actions.map((a,ai)=>
+        `<button class="ttx-msg-act" onclick="ttxHandleMsg(${mi},${ai})">${a.label}${a.agencies&&a.agencies.length?`<span style="display:block;font-size:10.5px;color:var(--muted);margin-top:2px">→ ${a.agencies.join(', ')}</span>`:''}</button>`).join('')}
+      </div></div>`;
+  }).join('');
+}
+
+function ttxHandleMsg(mi, ai){
+  const m=(ttxState.roundMsgs||[])[mi];
+  if(!m||m.handledAt!==null||m.missed) return;
+  const act=m.actions[ai]||{};
+  m.handledAt=ttxState.elapsedSeconds; m.choiceIdx=ai;
+  const elapsed=m.handledAt-(m.shownAt||m.handledAt);
+  const qualityScore=act.quality==='적정'?100:60;
+  const timelyScore=elapsed<=TTX_MSG_TIMELY_SEC?100:40;
+  m.score=Math.round(qualityScore*0.7+timelyScore*0.3);
+  (act.agencies||[]).forEach(nm=>{
+    const ag=ttxMatchAgency(nm);
+    if(ag&&(ttxState.agencyStatuses[ag.id]||'대기중')==='대기중') ttxDispatchAgency(ag,'메시지 조치');
+  });
+  ttxLogSituation('📮','blue',`메시지 조치 — [${m.from}] ${act.label||''} (${m.score}점)`,'decision');
+  ttxRenderMsgs(); ttxSaveState();
+}
+
+// 라운드 종료 시 미처리 확정 (미도착 포함 전부 미조치)
+function ttxFinalizeRoundMsgs(){
+  (ttxState.roundMsgs||[]).forEach(m=>{
+    if(m.handledAt===null&&!m.missed){
+      m.missed=true; m.score=0;
+      if(m.shownAt===null) m.shownAt=ttxState.elapsedSeconds;
+      ttxLogSituation('📪','red',`메시지 미조치 — [${m.from}] ${m.msg.slice(0,50)}`,'event');
+    }
+  });
+  ttxRenderMsgs();
+}
+
+function ttxRoundMsgScore(){
+  const msgs=ttxState.roundMsgs||[];
+  if(!msgs.length) return null;
+  return Math.round(msgs.reduce((a,m)=>a+(m.score||0),0)/msgs.length);
+}
+
 // ─── 규칙 기반 채점 (T1-3) ─────────────────────
 // LLM 임의 점수의 편차를 보정: 라운드 점수 = 규칙 60% + LLM 40%.
 // 동일한 플레이는 항상 동일한 규칙점수 → 훈련 회차 간 비교 가능.
@@ -2336,8 +2471,30 @@ function ttxRuleScore(option, unexpectedFired) {
   const unexpScore = unexpectedFired ? 55 : 100;
   // ④ 피해 억제 — 현재 억제율 (0.6 이상이면 만점)
   const suppScore = Math.round(Math.min(1, ttxSuppression()/0.6)*100);
-  const total = Math.round(timeScore*0.30 + agencyScore*0.30 + unexpScore*0.15 + suppScore*0.25);
-  return {total, timeScore, agencyScore, unexpScore, suppScore, delay};
+  // ⑤ 메시지 처리 (통합훈련 모드) — 품질·적시성 (미조치 0점 포함 평균)
+  const msgScore = ttxRoundMsgScore();
+  let total;
+  if(msgScore!==null){
+    total = Math.round(timeScore*0.20 + agencyScore*0.25 + unexpScore*0.15 + suppScore*0.20 + msgScore*0.20);
+  }else{
+    total = Math.round(timeScore*0.30 + agencyScore*0.30 + unexpScore*0.15 + suppScore*0.25);
+  }
+  return {total, timeScore, agencyScore, unexpScore, suppScore, msgScore, delay};
+}
+
+// ─── 환경 전개 트랙 (T4-3) ─────────────────────
+const TTX_TRAFFIC_ICON={'원활':'🟢','혼잡':'🟡','마비':'🔴'};
+function ttxRenderEnvTrack(){
+  const wrap=document.getElementById('ttxEnvTrack');
+  if(!wrap) return;
+  const et=ttxState.scenario&&ttxState.scenario.env_track;
+  if(!Array.isArray(et)||!et.length){wrap.style.display='none';return;}
+  const stage=ttxStageOfRound(ttxState.phase);
+  const e=et[Math.min(stage,et.length)-1]||{};
+  wrap.style.display='block';
+  document.getElementById('ttxEnvStage').textContent=`🌐 환경 전개 — ${TTX_STAGE_NAMES[stage-1]} 국면`;
+  document.getElementById('ttxEnvBody').innerHTML=
+    `☔ ${e.weather||'-'}<br>⚠️ ${e.hazard||'-'}<br>🚗 교통 ${TTX_TRAFFIC_ICON[e.traffic]||''} ${e.traffic||'-'}${e.note?`<br><span style="opacity:.7">※ ${e.note}</span>`:''}`;
 }
 
 function ttxRenderTrend() {
@@ -2438,6 +2595,16 @@ function ttxValidateScenario(sc, mc, regionTags) {
     const hit=regionTags.some(t=>txt.includes(t)||txt.includes(t.slice(0,2)));
     if(!hit) issues.push(`지역 특성 태그(${regionTags.join(', ')})가 시나리오에 반영되지 않음`);
   }
+  // 통합시나리오 골격 (T4-1)
+  if(!Array.isArray(sc.env_track)||sc.env_track.length<3) issues.push('env_track 3개 국면 누락');
+  else sc.env_track.forEach((e,i)=>{
+    if(!e||!e.weather||!e.hazard||!e.traffic) issues.push(`env_track stage${i+1} 필드 누락 (weather/hazard/traffic)`);
+  });
+  if(!sc.stage_issue_titles) issues.push('stage_issue_titles 누락');
+  else ['stage1','stage2','stage3'].forEach(k=>{
+    const arr=sc.stage_issue_titles[k];
+    if(!Array.isArray(arr)||arr.length<2) issues.push(`${k} 쟁점 제목 2개 이상 필요`);
+  });
   // 한자·중국어·일본어 문자 검출 → 재생성 사유
   if(ttxHasCJK(JSON.stringify(sc)))
     issues.push('한자·중국어·일본어 문자가 포함됨 — 모든 문자열을 표준 한국어(한글)로만 다시 작성할 것');
@@ -2542,6 +2709,16 @@ JSON으로만 응답 (마크다운 없이):
     "stage2": "확산·대응 국면 전개 개요 — 피해 확산과 자원 한계 (1~2문장)",
     "stage3": "수습·안정화 국면 전개 개요 — 복구 전환과 잔존 위험 (1~2문장)"
   },
+  "env_track": [
+    {"stage":1,"weather":"기상 상태 (수치 포함, 예: 시간당 20~40㎜ 누적 120㎜)","hazard":"재난유형에 맞는 위험지표 (예: 하천수위 경계 5.1m / 여진 규모 / 확진 추이)","traffic":"원활|혼잡|마비 중 하나","note":"특이사항 1문장"},
+    {"stage":2,"weather":"...","hazard":"...","traffic":"...","note":"..."},
+    {"stage":3,"weather":"...","hazard":"...","traffic":"...","note":"..."}
+  ],
+  "stage_issue_titles": {
+    "stage1": ["초기대응 국면 상황판단회의 쟁점 제목 2~4개 (예: 저지대 취약계층 대피 지연)"],
+    "stage2": ["확산·대응 국면 쟁점 제목 2~4개"],
+    "stage3": ["수습·안정화 국면 쟁점 제목 2~4개"]
+  },
   "real_case_reference": "참조한 국내 실제 사례 (사건명, 연도, 교훈 1~2문장. 확실하지 않으면 '유사사례 참조 없음')",
   "uncertainty_factors": [${mc.uncertaintyFactors.join(', ')}],
   "monte_carlo_seed": ${mc.seed}
@@ -2551,7 +2728,7 @@ JSON으로만 응답 (마크다운 없이):
     const text=await ttxStreamAPI(
       [{role:'user',content:prompt}],
       null,
-      2200
+      2800
     );
     let sc=ttxParseJSON(text);
     // ── Validator (T2-2): 로컬 규칙 검증, 위반 시 1회만 재생성 ──
@@ -2563,7 +2740,7 @@ JSON으로만 응답 (마크다운 없이):
         [{role:'user',content:prompt},
          {role:'assistant',content:text||'(빈 응답)'},
          {role:'user',content:`검증 실패 항목:\n- ${issues.join('\n- ')}\n\n위 항목을 모두 수정하여 완전한 JSON 형식으로만 다시 응답하세요.`}],
-        null, 2200
+        null, 2800
       );
       const sc2=ttxParseJSON(text2);
       if(sc2 && (!sc || ttxValidateScenario(sc2, mc, regionTags).length < issues.length)) sc=sc2;
@@ -2600,6 +2777,10 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.lastNextSituation='';
     ttxState.simTick=0;
     ttxState.dispatchInfo={};
+    ttxState.roundMsgs=[];
+    ttxState.msgHistory={};
+    ttxState.stageSnapshots={};
+    ttxState._lastEnvStage=0;
     ttxState.damageHistory=[{
       t:0,
       casualties:ttxState.variables.casualties, displaced:ttxState.variables.displaced,
@@ -2822,6 +3003,7 @@ function ttxStartTimer() {
     const el=document.getElementById('ttxTimerDisplay');
     if(el) el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
     if(ttxState.elapsedSeconds % TTX_TICK_REAL_SEC === 0) ttxSimTick();
+    ttxRevealMsgs();
   },1000);
 }
 
@@ -2959,10 +3141,38 @@ async function ttxLoadOptions() {
   ab.textContent='🚨 상황 전개 분석 중...';
   ab.classList.add('show');
   document.getElementById('ttxPhaseBadge').textContent=ttxBadgeText();
+  // 환경 전개 갱신 + 국면 전환 시 일지 기록
+  const prevStage=ttxState._lastEnvStage||0;
+  if(stage!==prevStage){
+    if(prevStage>0){
+      (ttxState.stageSnapshots=ttxState.stageSnapshots||{})[prevStage]={
+        casualties:ttxState.variables.casualties, displaced:ttxState.variables.displaced,
+        infra:ttxState.variables.infrastructure_damage, t:ttxState.simTick||0,
+      };
+    }
+    ttxState._lastEnvStage=stage;
+    const e=(ttxState.scenario.env_track||[])[stage-1];
+    if(e&&prevStage>0) ttxLogSituation('🌐','red',`${TTX_STAGE_NAMES[stage-1]} 국면 진입 — ${e.weather||''} / ${e.hazard||''} / 교통 ${e.traffic||''}`,'system');
+  }
+  ttxRenderEnvTrack();
 
+  const isFull=ttxState.trainingMode==='full';
+  const msgCount=TTX_MSG_COUNT[ttxState.intensity]||3;
+  const issueTitles=(sc.stage_issue_titles&&sc.stage_issue_titles['stage'+stage])||[];
+  const msgSchema=isFull?`
+이번 라운드의 상황부여 메시지 ${msgCount}건도 생성하세요. 각 메시지는 위 쟁점에서 파생된 구체적 상황(수치 포함)이고,
+조치 2안 중 하나는 quality "적정"(역할에 맞는 기관·정석 대응), 하나는 "차선"(가능하지만 느리거나 불완전). 순서는 섞을 것.
+"messages":[
+  {"from":"발신처 (예: 119상황실, 읍면동, 언론사, 주민)","msg":"상황 메시지 1~2문장 (수치 포함)",
+   "actions":[
+     {"label":"조치 내용 (20자 이내)","quality":"적정","agencies":["소방본부"]},
+     {"label":"조치 내용 (20자 이내)","quality":"차선","agencies":["행안부"]}
+   ]}
+],`:'';
   const prompt=`재난 상황: ${sc.situation_title}
 현재 국면: ${TTX_STAGE_NAMES[stage-1]} (라운드 ${ttxState.phase}/${ttxState.totalRounds})
-이 국면의 전개 아크: ${arc}
+이 국면의 전개 아크: ${arc}${isFull&&issueTitles.length?`
+이 국면의 주요 쟁점(총괄표): ${issueTitles.join(' / ')}`:''}
 기관: ${ttxState.orgName}, 재난: ${ttxState.disasterType}
 현재 피해: 인명 ${ttxState.variables.casualties}명, 이재민 ${ttxState.variables.displaced}명, 시설 ${ttxState.variables.infrastructure_damage}건
 ${isCrisisRound?'⚠️ 이번은 피해 폭주로 강제 삽입된 위기 라운드 — 최악 상황을 전제로 한 돌발상황과 선택지를 생성할 것\n':''}
@@ -2979,7 +3189,7 @@ ${TTX_AGENCIES.map(a=>`${a.name}(${a.role})`).join(', ')}
 - 정답이 뻔하면 안 됨: 고위험 선택지는 성공 시 효과가 커야 하고, 저위험 선택지는 느리거나 소극적인 대가가 있어야 함
 - 각 선택지는 서로 다른 대응 철학(공격적 투입 / 단계적 확대 / 보수적 보존)을 대표할 것
 {
-  "round_event": "이번 라운드 돌발상황 (1~2문장)",
+  "round_event": "이번 라운드 돌발상황 (1~2문장)",${msgSchema}
   "options": [
     {"label":"A","action":"대응 행동 (25자 이내)","risk":"높음|중간|낮음 중 하나","unexpected_prob":30,"unexpected_event":"부작용 1문장","related_agencies":["소방본부","경찰청"]},
     {"label":"B","action":"대응 행동 (25자 이내)","risk":"높음|중간|낮음 중 하나","unexpected_prob":15,"unexpected_event":"부작용 1문장","related_agencies":["보건소/병원","행안부"]},
@@ -2990,12 +3200,14 @@ ${TTX_AGENCIES.map(a=>`${a.name}(${a.role})`).join(', ')}
   try{
     let parsed=null;
     for(let attempt=1;attempt<=2&&!parsed;attempt++){ // 파싱 실패 시 1회 자동 재시도
-      const text=await ttxStreamAPI([{role:'user',content:prompt}],null,1400);
+      const text=await ttxStreamAPI([{role:'user',content:prompt}],null,isFull?2200:1400);
       parsed=ttxParseJSON(text);
       if(parsed&&(!parsed.options||!parsed.options.length)) parsed=null;
+      if(parsed&&isFull&&(!Array.isArray(parsed.messages)||!parsed.messages.length)) parsed=null; // 메시지 누락도 재시도
     }
     if(!parsed) throw new Error('선택지 파싱 실패');
     parsed=ttxDeepSanitize(parsed);
+    ttxInitRoundMsgs(isFull?parsed.messages:[]);
     // 표시 순서 PRNG 셔플 후 재라벨링 (T2-3) — "C가 항상 안전" 메타게임 차단
     for(let i=parsed.options.length-1;i>0;i--){
       const j=Math.floor(ttxRandom()*(i+1));
@@ -3035,6 +3247,9 @@ async function ttxSelectOption(label) {
 
   const option=ttxState.currentOptions?.find(o=>o.label===label);
   if(!option) return;
+  // 핵심 결정 후에는 새 메시지 도착 중단 (미도착분 즉시 공개 — 놓친 것 확인 가능)
+  (ttxState.roundMsgs||[]).forEach(m=>{ if(m.shownAt===null) m.shownAt=ttxState.elapsedSeconds; });
+  ttxRenderMsgs();
 
   ttxLogSituation('🔵', 'blue', `라운드 ${ttxState.phase} 의사결정 — ${label}안 선택: ${option?.action||''}`);
 
@@ -3119,14 +3334,14 @@ ${ttxDecisionHistory()}
     const rule=ttxRuleScore(option, unexpectedFired);
     const llmScore=Math.min(100,Math.max(0,parsed.score||50));
     const score=Math.round(rule.total*0.6 + llmScore*0.4);
-    ttxState.decisions.push({phase:ttxState.phase,option:label,action:option.action,outcome:parsed.outcome,score,llmScore,ruleScore:rule.total,ruleParts:rule});
+    ttxState.decisions.push({phase:ttxState.phase,option:label,action:option.action,outcome:parsed.outcome,event:ttxState.currentRoundEvent||'',score,llmScore,ruleScore:rule.total,ruleParts:rule});
     (ttxState.decisionDelays=ttxState.decisionDelays||[]).push(rule.delay);
     ttxState.lastNextSituation=parsed.next_situation||'';
     ttxState.totalScore=Math.round(ttxState.decisions.reduce((s,d)=>s+d.score,0)/ttxState.decisions.length);
 
     ob.innerHTML=`<b style="color:#7ec8e3">[${label}안 선택 결과]</b>\n${ttxEmphasize(parsed.outcome)}\n\n`+
       `📊 <b style="color:#fff;font-size:16px">라운드 점수: ${score}점</b> = 규칙 ${rule.total}점×60% + AI평가 ${llmScore}점×40% (누적 평균: <b style="color:#7ec8e3">${ttxState.totalScore}점</b>)\n`+
-      `   └ 신속성 ${rule.timeScore} · 기관투입 ${rule.agencyScore} · 위험관리 ${rule.unexpScore} · 피해억제 ${rule.suppScore}`;
+      `   └ 신속성 ${rule.timeScore} · 기관투입 ${rule.agencyScore} · 위험관리 ${rule.unexpScore} · 피해억제 ${rule.suppScore}${rule.msgScore!==null&&rule.msgScore!==undefined?` · 메시지 ${rule.msgScore}`:''}`;
 
     // 결과의 관련기관 출동 지령 (퍼지 매칭 — "소방서" 등 변형 표기도 인식)
     if (parsed.related_agencies && Array.isArray(parsed.related_agencies)) {
@@ -3188,6 +3403,27 @@ function ttxEvaluateProgression() {
 }
 
 function ttxNextPhase() {
+  const pending=(ttxState.roundMsgs||[]).filter(m=>m.handledAt===null&&!m.missed).length;
+  if(pending>0 && !confirm(`아직 조치하지 않은 상황 메시지가 ${pending}건 있습니다.\n지금 진행하면 미조치(0점) 처리됩니다. 계속할까요?`)) return;
+  ttxFinalizeRoundMsgs();
+  // 메시지 점수 확정 (결정 이후 처리분 포함) → 라운드 점수 재산정
+  const lastD=ttxState.decisions[ttxState.decisions.length-1];
+  if(lastD&&lastD.ruleParts&&(ttxState.roundMsgs||[]).length){
+    const ms=ttxRoundMsgScore();
+    if(ms!==null){
+      const rp=lastD.ruleParts; rp.msgScore=ms;
+      lastD.ruleScore=Math.round(rp.timeScore*0.20+rp.agencyScore*0.25+rp.unexpScore*0.15+rp.suppScore*0.20+ms*0.20);
+      lastD.score=Math.round(lastD.ruleScore*0.6+(lastD.llmScore||50)*0.4);
+      ttxState.totalScore=Math.round(ttxState.decisions.reduce((a,dd)=>a+dd.score,0)/ttxState.decisions.length);
+      ttxSaveState();
+    }
+  }
+  // 라운드별 메시지 이력 보존 (총괄표 문서용)
+  if((ttxState.roundMsgs||[]).length){
+    ttxState.msgHistory=ttxState.msgHistory||{};
+    if(!ttxState.msgHistory[ttxState.phase])
+      ttxState.msgHistory[ttxState.phase]=JSON.parse(JSON.stringify(ttxState.roundMsgs));
+  }
   if(ttxState.phase<ttxState.totalRounds){
     ttxState.phase++;
     document.getElementById('ttxNextWrap').style.display='none';
@@ -3530,7 +3766,7 @@ function ttxReset() {
     decisions:[],totalScore:0,sessionId:null,
     monteCarloSeed:null,uncertaintyFactors:[],realCaseRef:'',
     unexpectedEventsCount:0,lastNextSituation:'',
-    simTick:0,damageHistory:[],dispatchInfo:{},
+    simTick:0,damageHistory:[],dispatchInfo:{},roundMsgs:[],trainingMode:ttxState.trainingMode||'full',
   };
   localStorage.removeItem('drex_ttx');
   document.getElementById('ttxOrgName').value='';
@@ -3540,6 +3776,8 @@ function ttxReset() {
   const seedEl=document.getElementById('ttxSeedInput');
   if(seedEl) seedEl.value='';
   document.querySelectorAll('#ttxRegionTags .tag-chip').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('#ttxModeGroup .rb').forEach(b=>b.classList.toggle('sel',b.dataset.v==='full'));
+  ttxState.trainingMode='full';
   document.querySelectorAll('#ttxIntensityGroup .rb').forEach(b=>b.classList.remove('sel'));
   document.getElementById('ttxErr1').classList.remove('show');
   document.getElementById('ttxRptBox').style.display='none';
@@ -3552,6 +3790,90 @@ function ttxReset() {
 // ═══════════════════════════════════════════════
 // MANUAL DOWNLOAD
 // ═══════════════════════════════════════════════
+// ─── 통합시나리오 총괄표 문서 생성 (T4-4) ──────
+// 훈련 기록을 실무 통합시나리오 양식 구조로 문서화 — 로컬 생성, API 호출 없음
+function ttxDownloadMasterDoc(){
+  const sc=ttxState.scenario||{};
+  const v=ttxState.variables||{};
+  const et=sc.env_track||[];
+  const snaps=ttxState.stageSnapshots||{};
+  const init=(ttxState.damageHistory&&ttxState.damageHistory[0])||{};
+  const dmg=st=>{
+    const sn=st===3?{casualties:v.casualties,displaced:v.displaced,infra:v.infrastructure_damage}:(snaps[st]||null);
+    return sn?`인명 ${sn.casualties??'-'}명 · 이재민 ${sn.displaced??'-'}명 · 시설 ${sn.infra??'-'}건`:'(국면 미도달)';
+  };
+  const issues=st=>((sc.stage_issue_titles||{})['stage'+st]||[]).map(t=>`· ${t}`).join('<br>')||'-';
+  const stageRow=(label,fn)=>`<tr><th style="width:110px">${label}</th>${[1,2,3].map(st=>`<td>${fn(st)}</td>`).join('')}</tr>`;
+  const de=ttxState.decisions||[];
+  const decRows=de.map(d=>{
+    const msgs=(ttxState.msgHistory||{})[d.phase]||[];
+    const msgHtml=msgs.length?`<div style="margin-top:5px;font-size:11.5px;color:#555">${msgs.map(m=>{
+      const act=m.actions&&m.actions[m.choiceIdx];
+      return `📨 [${m.from}] ${m.msg}<br>&nbsp;&nbsp;→ ${m.missed?'<b style="color:#a82020">미조치</b>':`${act?act.label:''} (${m.score}점)`}`;
+    }).join('<br>')}</div>`:'';
+    return `<tr><td style="text-align:center;font-weight:700">${d.phase}</td>
+      <td>${TTX_STAGE_NAMES[ttxStageOfRound(d.phase)-1]||''}</td>
+      <td>${d.event||''}</td>
+      <td><b>[${d.option}안]</b> ${d.action||''}<br><span style="font-size:11.5px;color:#555">${(d.outcome||'')}</span>${msgHtml}</td>
+      <td style="text-align:center;font-weight:700">${d.score}점</td></tr>`;
+  }).join('');
+  const agRows=TTX_AGENCIES.map(a=>`<tr><td>${a.name}</td><td>${a.role}</td><td style="text-align:center">${ttxState.agencyStatuses[a.id]||'대기중'}</td></tr>`).join('');
+  const de21=window._ttxDiscussEval;
+  const discHtml=de21?`
+  <h2>Ⅴ. 토론기반 훈련 적정성 평가 (2026 평가지표 2-1)</h2>
+  <table><tr><th>척도</th><th>등급·점수</th><th>평가의견</th></tr>
+  ${TTX_DISC_ITEMS.map(it=>{const r=(de21.items||[]).find(x=>x.id===it.id)||{};let gi=MX_GRADE_LABELS.indexOf(r.grade);if(gi<0)gi=2;
+    return `<tr><td>${it.id} ${it.name}</td><td style="text-align:center">${MX_GRADE_LABELS[gi]} · ${it.scores[gi]}점</td><td>${r.opinion||'-'}</td></tr>`;}).join('')}
+  <tr><td colspan="2" style="font-weight:700">소계</td><td style="font-weight:700">${de21.total} / 15점</td></tr></table>
+  ${de21.summary?`<p><b>종합의견:</b> ${de21.summary}</p>`:''}`:'';
+
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<title>${ttxState.orgName} 재난대응 훈련 통합시나리오 총괄표</title>
+<style>
+ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:13px;color:#222;line-height:1.7;max-width:960px;margin:0 auto;padding:36px 28px}
+ h1{font-size:21px;color:#12213a;border-bottom:3px solid #0e8a76;padding-bottom:10px}
+ h2{font-size:15px;color:#12213a;margin:26px 0 10px;border-left:4px solid #0e8a76;padding-left:9px}
+ table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12.5px}
+ th{background:#12213a;color:#fff;padding:7px 9px;text-align:left;font-weight:600}
+ td{padding:6px 9px;border:1px solid #ddd;vertical-align:top}
+ .meta{background:#f5f3ee;border-radius:8px;padding:12px 16px;font-size:12.5px}
+ @media print{body{padding:0}}
+</style></head><body>
+<h1>재난대응 안전한국훈련 통합시나리오 총괄표 <span style="font-size:12px;color:#888;font-weight:400">(DREX 훈련 기록 기반 자동 생성)</span></h1>
+<div class="meta">
+ <b>훈련기관:</b> ${ttxState.orgName} &nbsp;·&nbsp; <b>재난유형:</b> ${ttxState.disasterType} &nbsp;·&nbsp; <b>강도:</b> ${ttxState.intensity} (${ttxState.totalRounds}라운드, ${ttxState.trainingMode==='full'?'통합훈련':'신속'} 모드)<br>
+ <b>지역:</b> ${ttxState.region||'-'}${(ttxState.regionTags||[]).length?` (${ttxState.regionTags.join(', ')})`:''} &nbsp;·&nbsp; <b>MC 시드:</b> ${ttxState.monteCarloSeed??'-'} &nbsp;·&nbsp; <b>종합점수:</b> ${ttxState.totalScore}점<br>
+ <b>상황 설정:</b> ${sc.initial_report||'-'}
+</div>
+<h2>Ⅰ. 통합훈련 시나리오 총괄</h2>
+<table>
+ <tr><th style="width:110px">구분</th><th>초기대응</th><th>확산·대응</th><th>수습·안정화</th></tr>
+ ${stageRow('전개 개요',st=>((sc.stage_arcs||{})['stage'+st])||'-')}
+ ${stageRow('기상',st=>(et[st-1]||{}).weather||'-')}
+ ${stageRow('위험지표',st=>(et[st-1]||{}).hazard||'-')}
+ ${stageRow('교통',st=>(et[st-1]||{}).traffic||'-')}
+ ${stageRow('피해 누적',st=>dmg(st))}
+ ${stageRow('주요쟁점',st=>issues(st))}
+</table>
+<p style="font-size:11.5px;color:#777">※ 초기 피해(MC 샘플링): 인명 ${init.casualties??'-'}명 · 이재민 ${init.displaced??'-'}명 · 시설 ${init.infra??'-'}건</p>
+<h2>Ⅱ. 상황판단회의 기록 (라운드별)</h2>
+<table><tr><th style="width:36px">R</th><th style="width:80px">국면</th><th style="width:24%">돌발상황</th><th>의사결정·메시지 조치</th><th style="width:52px">점수</th></tr>${decRows||'<tr><td colspan=5>-</td></tr>'}</table>
+<h2>Ⅲ. 협업기관 운용 결과</h2>
+<table><tr><th>기관</th><th>역할</th><th style="width:80px">최종 상태</th></tr>${agRows}</table>
+<h2>Ⅳ. 피해 및 복구 지표</h2>
+<div class="meta">최종 피해: 인명 ${v.casualties??0}명 · 이재민 ${v.displaced??0}명 · 시설 ${v.infrastructure_damage??0}건 · 투입자원 ${v.resource_needed??0}단위<br>
+돌발변수 ${ttxState.unexpectedEventsCount||0}회 · 조기 안정화 ${ttxState.stabilized?'달성':'미달성'} · 위기 라운드 ${ttxState.crisisInserted?'발생':'없음'}</div>
+${discHtml}
+<p style="margin-top:28px;font-size:11px;color:#999;border-top:1px solid #ddd;padding-top:10px">본 문서는 DREX 훈련 기록으로 자동 생성된 초안입니다. 실제 훈련 계획 수립 시 기관 여건에 맞게 보완하세요. · 생성 ${new Date().toLocaleString('ko-KR')}</p>
+</body></html>`;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`통합시나리오총괄표_${ttxState.orgName||'DREX'}_${new Date().toISOString().slice(0,10)}.html`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('📄 총괄표 다운로드 완료');
+}
+
 function drexDownloadManual() {
   const html = `<!DOCTYPE html>
 <html lang="ko">
@@ -3850,6 +4172,17 @@ prompt 포함 정보:
   <li><strong>위기 라운드</strong> — 인명피해가 초기 대비 3배를 넘으면 최악 시나리오 라운드가 강제 추가</li>
 </ul>
 <p>대응을 잘하면 훈련이 짧고 좋게 끝나고, 못하면 길고 험하게 끝납니다 — 의사결정과 기관 운용이 전개를 실제로 바꿉니다.</p>
+<h3>훈련 방식 — 통합훈련 모드 / 신속 모드</h3>
+<table>
+  <tr><th>구분</th><th>통합훈련 모드 (기본)</th><th>신속 모드</th></tr>
+  <tr><td>라운드 구성</td><td>상황부여 메시지 2~4건(강도별) + 핵심 의사결정 1회</td><td>핵심 의사결정 1회</td></tr>
+  <tr><td>소요 시간</td><td>40~60분 (실제 토론훈련 규모)</td><td>15~25분 (개인 학습용)</td></tr>
+  <tr><td>용도</td><td>단체 상황판단회의 훈련, 평가 대비</td><td>절차 숙달, 반복 학습</td></tr>
+</table>
+<p>통합훈련 모드에서는 실제 통합시나리오처럼 <strong>상황부여 메시지</strong>(발신처·내용·조치 2안)가
+라운드 시작 후 25초 간격으로 도착합니다. 각 메시지에 조치를 결정하면 관련 기관이 자동 출동하며,
+품질(적정/차선) 70% + 적시성(90초 내) 30%로 채점됩니다. <strong>방치한 메시지는 라운드 종료 시 미조치(0점)</strong> 처리되고,
+메시지 실적은 규칙점수의 20%를 차지합니다. 국면별 기상·위험지표·교통 상태는 좌측 <strong>환경 전개</strong> 카드에 표시됩니다.</p>
 <h3>3패널 레이아웃</h3>
 <table>
   <tr><th>패널</th><th>너비</th><th>내용</th></tr>
@@ -4008,6 +4341,7 @@ prompt 포함 정보:
   <li>종합점수 링(원형 그래프) + 등급 라벨</li>
   <li>최종 피해현황 4개 지표 (틱 진행 + 의사결정 누적 반영값)</li>
   <li><strong>훈련 분석 카드</strong> — 의사결정 타임라인(라운드·선택·규칙/AI 점수 분해), 규칙점수 4요소 평균 막대, RTO 몬테카를로 분포 히스토그램(P50/P95 마커)</li>
+  <li><strong>통합시나리오 총괄표 다운로드</strong> — 훈련 기록(환경 전개·피해 누적·회의 기록·메시지 조치·기관 운용·평가점검표)을 실무 통합시나리오 양식 구조의 문서로 자동 생성. 차년도 훈련 계획 초안으로 활용 가능</li>
   <li><strong>토론기반 훈련 평가점검표</strong> — TTX는 2026 평가지표의 '2-1 토론기반 훈련' 영역에 해당. 훈련 기록을 근거로 2-1-1 상황관리(5점)·2-1-2 상황판단회의(5점)·2-1-3 단계별 문제해결(초기 3점+수습 2점)을 공식 등급 기준으로 AI 평가 (15점 만점, 등급 체크·평가의견 포함, 인쇄 시 보고서에 포함)</li>
   <li>시나리오 재현 정보 (시드·불확실성 계수·돌발 횟수)</li>
 </ul>
@@ -4113,7 +4447,8 @@ AHP복합계수 = 2.0 − AHP합산 (의사결정 38%·협업 24%·자원 19%·S
 <ol>
   <li><strong>기관명·재난유형·지역 특성</strong>을 입력합니다. 지역 특성은 구체적일수록 시나리오가 현실적입니다 (예: "낙동강 인접 저지대 주거밀집 지역").</li>
   <li><strong>지역 특성 태그</strong>를 해당하는 만큼 클릭합니다. 선택한 태그는 돌발상황에 반드시 반영됩니다.</li>
-  <li><strong>훈련 강도</strong>를 선택합니다 — 강도는 피해 규모뿐 아니라 의사결정 라운드 수(초급 3 / 중급 4~5 / 고급 6)를 결정합니다.</li>
+  <li><strong>훈련 방식</strong>을 선택합니다 — 단체 훈련·평가 대비는 <b>통합훈련 모드</b>(메시지 처리 포함, 40~60분), 개인 반복 학습은 신속 모드(15~25분).</li>
+  <li><strong>훈련 강도</strong>를 선택합니다 — 강도는 피해 규모, 라운드 수(초급 3 / 중급 4~5 / 고급 6), 라운드당 메시지 수(2~4건)를 결정합니다.</li>
   <li><strong>시뮬레이션 시드</strong>는 평소엔 비워둡니다. 교육 전/후 비교평가를 하려면 같은 숫자를 입력해 동일 조건을 재현하세요. (시드는 결과 화면의 "시나리오 재현 정보"에서 확인 가능)</li>
   <li>[시나리오 생성]을 누르면 몬테카를로 샘플링 → AI 생성 → Validator 검증을 거쳐 훈련이 시작됩니다.</li>
 </ol>
@@ -4126,6 +4461,7 @@ AHP복합계수 = 2.0 − AHP합산 (의사결정 38%·협업 24%·자원 19%·S
 </div>
 <ol>
   <li><strong>돌발상황 배너</strong>(🚨)와 상황 브리핑을 읽습니다. 2라운드부터는 직전 결정의 여파가 이어집니다.</li>
+  <li>(통합훈련 모드) <strong>상황부여 메시지</strong>(📨)가 순차 도착합니다 — 내용을 읽고 조치 2안 중 선택하세요. 90초 안에 처리하면 적시성 만점, 방치하면 라운드 종료 시 미조치 0점입니다.</li>
   <li><strong>우측 기관 카드</strong>를 클릭해 관련 기관의 SOP 조치를 실시합니다 — 의사결정 전에 기관을 먼저 움직이면 규칙점수 "기관투입" 항목에서 유리합니다.</li>
   <li><strong>A/B/C 선택지</strong>를 검토하고 결정합니다. 위험도 조합은 매번 다르며 표시 순서도 섞이므로 내용을 읽고 판단해야 합니다. 60초 안에 결정하면 신속성 만점, 3분을 넘기면 감점됩니다.</li>
   <li>결과와 점수 분해(규칙/AI, 4요소)를 확인하고 [다음 라운드 진입]을 누릅니다.</li>
