@@ -355,6 +355,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ag-notify-item{background:var(--navy);color:#fff;border-left:5px solid var(--amber);border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.6;box-shadow:0 4px 18px rgba(0,0,0,.35);animation:alertPop .3s ease;cursor:pointer}
 .ag-notify-item b{color:#ffd479}
 .ag-log-mine{background:#fff8e6;border-left:3px solid var(--amber);font-weight:600}
+/* 상황도 (T6) */
+.sitmap-compact svg{max-height:185px}
+#ttxSitMapWrap.collapsed #ttxSitMapBody{display:none}
+#sitMapModal .ag-confirm-box svg{max-height:76vh}
 .ttx-outcome{background:#0d1b2a;color:#c9dcec;border-radius:10px;padding:18px 20px;font-size:14.5px;line-height:1.85;white-space:pre-line;display:none;margin-top:10px}
 .ttx-outcome.show{display:block}
 .ttx-agencies-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
@@ -745,6 +749,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
     <!-- 중앙: 상황 + 의사결정 -->
     <div class="ttx-center-wrap">
+      <div id="ttxSitMapWrap" style="display:none;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">🗺️ 훈련구역 상황도</span>
+          <span style="display:flex;gap:8px">
+            <button class="log-fbtn" onclick="ttxOpenSitMapModal()">🔍 확대</button>
+            <button class="log-fbtn" id="ttxSitMapToggle" onclick="ttxToggleSitMap()">접기 ▲</button>
+          </span>
+        </div>
+        <div id="ttxSitMapBody" class="sitmap-compact" style="cursor:zoom-in" onclick="ttxOpenSitMapModal()"></div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:3px">⚠️ 위험구역(국면·피해 연동 확산) · 🚒 투입 기관 · 클릭하면 확대</div>
+      </div>
       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
       <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
       <div class="ttx-alert-banner" id="ttxAlertBanner">🚨 돌발상황 발생!</div>
@@ -989,7 +1004,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div id="agSituation" class="ttx-situation-box" style="margin-bottom:8px">상황 수신 대기 중입니다. 통제관이 훈련을 시작하면 표시됩니다.</div>
     <div class="ttx-alert-banner" id="agAlert" style="margin-bottom:8px"></div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px" id="agMetrics"></div>
-    <div id="agEnv" style="display:none;background:#0d1b2a;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.7;color:#c9dcec"></div>
+    <div id="agEnv" style="display:none;background:#0d1b2a;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.7;color:#c9dcec;margin-bottom:8px"></div>
+    <div id="agSitMap" style="display:none;cursor:zoom-in" onclick="agOpenSitMapModal()"></div>
+    <div id="agSitMapHint" style="display:none;font-size:10.5px;color:var(--muted);margin-top:3px">🗺️ 훈련구역 상황도 — 청록 테두리가 우리 기관 위치 · 클릭하면 확대</div>
   </div>
 
   <div class="card" style="margin-bottom:12px">
@@ -1024,6 +1041,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
 <!-- 담당자 알림 팝업 (내 기관 관련 상황) -->
 <div id="agNotify" class="ag-notify"></div>
+
+<!-- 상황도 확대 모달 -->
+<div id="sitMapModal" class="ag-confirm-overlay" onclick="if(event.target===this)ttxCloseSitMapModal()">
+  <div class="ag-confirm-box" style="max-width:1100px;padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-size:15px;font-weight:700;color:var(--navy)">🗺️ 훈련구역 상황도</span>
+      <button class="btn-s" onclick="ttxCloseSitMapModal()">✕ 닫기</button>
+    </div>
+    <div id="sitMapModalBody"></div>
+  </div>
+</div>
 
 <!-- 담당자 조치 확인 팝업 -->
 <div id="agConfirmOverlay" class="ag-confirm-overlay">
@@ -1380,6 +1408,8 @@ function liveBuildSnapshot(){
     },
     agencyStatuses:{...ttxState.agencyStatuses},
     recentLog:(ttxState.logBuffer||[]).slice(-20),
+    sitmap:(ttxState.scenario&&ttxState.scenario.sitmap)||null,
+    initCasualties:((ttxState.damageHistory||[])[0]||{}).casualties||0,
     updated:Date.now(),
   };
 }
@@ -1542,6 +1572,17 @@ function liveRenderAgencyView(sn){
     if(logs.length) window._agSeenLogT=Math.max(window._agSeenLogT, ...logs.map(l=>l.t));
   }
 
+  // 상황도 동기화 (내 기관 마커 강조)
+  if(sn.sitmap){
+    window._agSitData={sitmap:sn.sitmap, stage:ttxStageNameToIdx(sn.stageName),
+      initCasualties:sn.initCasualties||0, casualties:(sn.variables||{}).casualties||0,
+      agencyStatuses:sn.agencyStatuses||{}, myAgencyId:liveAgencyId};
+    const svg=ttxSitMapSVG(window._agSitData);
+    const el=document.getElementById('agSitMap');
+    if(el&&svg){el.style.display='block';el.innerHTML=svg;
+      document.getElementById('agSitMapHint').style.display='block';}
+  }
+
   const st=(sn.agencyStatuses||{})[liveAgencyId]||'대기중';
   const stEl=document.getElementById('agMyStatus');
   stEl.textContent=st;
@@ -1601,6 +1642,13 @@ function liveRecordNote(){
   const t=(inp.value||'').trim();
   if(!t){showToast('조치 내용을 입력하세요');return;}
   agConfirm(`조치록 기록: <b>${t}</b>`, ()=>{ liveRecord('note', t); inp.value=''; });
+}
+
+function ttxStageNameToIdx(name){ const i=TTX_STAGE_NAMES.indexOf(name); return i>=0?i+1:1; }
+function agOpenSitMapModal(){
+  if(!window._agSitData) return;
+  document.getElementById('sitMapModalBody').innerHTML=ttxSitMapSVG(window._agSitData);
+  document.getElementById('sitMapModal').classList.add('open');
 }
 
 // 내 기관 관련 알림 팝업 (8초 후 자동 닫힘, 클릭 시 닫힘)
@@ -2377,6 +2425,7 @@ function ttxRestoreState() {
         ttxRenderMetrics();
         ttxRenderTrend();
         ttxRenderEnvTrack();
+        ttxRenderSitMap();
         ttxRenderAgencies();
         updateNavStep(3);
         showTtxStep(2);
@@ -2557,6 +2606,7 @@ function ttxSimTick() {
   });
   ttxRenderMetrics();
   ttxRenderTrend();
+  ttxRenderSitMap();
   ttxSaveState();
 }
 
@@ -2888,6 +2938,116 @@ function ttxRuleScore(option, unexpectedFired) {
   return {total, timeScore, agencyScore, unexpScore, suppScore, msgScore, delay};
 }
 
+// ─── 훈련구역 상황도 (T6) — SVG 도식 지도 ──────
+// 실무 통합시나리오의 훈련구역 개요도 방식. 국면·피해에 따라 위험구역이 확산되고
+// 투입 기관 마커가 표시되는 살아있는 상황판(COP).
+const TTX_MAP_ICONS={school:'🏫',hospital:'🏥',plant:'🏭',shelter:'⛺',office:'🏛️',bridge:'🌉',market:'🏪'};
+function ttxEsc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// data: {sitmap, stage, initCasualties, casualties, agencyStatuses, myAgencyId}
+function ttxSitMapSVG(data){
+  const sm=data.sitmap;
+  if(!sm||!Array.isArray(sm.features)||!sm.features.length) return '';
+  const cx=v=>Math.max(0,Math.min(1000,+v||0));
+  const cy=v=>Math.max(0,Math.min(600,+v||0));
+  const feats=sm.features;
+  const origin=feats.find(f=>f.kind==='origin');
+  const ox=origin?cx(origin.at?.[0]):500, oy=origin?cy(origin.at?.[1]):300;
+  // 위험구역 반경: 국면(확산기 최대) × 피해 배율
+  const ratio=data.initCasualties>0?Math.min(2,(data.casualties||0)/data.initCasualties):1;
+  const stage=data.stage||1;
+  const r=Math.round(70*(stage===1?1:stage===2?1.7:1.35)*(0.7+0.3*ratio));
+  const hazColor=stage===3?'#c47d1a':'#a82020';
+
+  let g='';
+  // 배경 격자
+  g+='<rect width="1000" height="600" fill="#f2f0e8"/>';
+  for(let i=100;i<1000;i+=100) g+=`<line x1="${i}" y1="0" x2="${i}" y2="600" stroke="#e3e0d5" stroke-width="1"/>`;
+  for(let i=100;i<600;i+=100) g+=`<line x1="0" y1="${i}" x2="1000" y2="${i}" stroke="#e3e0d5" stroke-width="1"/>`;
+  // 지형·구역 (아래층)
+  feats.forEach(f=>{
+    if(f.kind==='river'&&f.from&&f.to){
+      g+=`<line x1="${cx(f.from[0])}" y1="${cy(f.from[1])}" x2="${cx(f.to[0])}" y2="${cy(f.to[1])}" stroke="#a8cbe8" stroke-width="34" stroke-linecap="round" opacity=".85"/>`;
+      g+=`<text x="${(cx(f.from[0])+cx(f.to[0]))/2+22}" y="${(cy(f.from[1])+cy(f.to[1]))/2}" font-size="15" fill="#3b78a8" font-weight="700">${ttxEsc(f.label||'')}</text>`;
+    }else if(f.kind==='road'&&f.from&&f.to){
+      g+=`<line x1="${cx(f.from[0])}" y1="${cy(f.from[1])}" x2="${cx(f.to[0])}" y2="${cy(f.to[1])}" stroke="#c9c0ae" stroke-width="14" stroke-linecap="round"/>`;
+      g+=`<line x1="${cx(f.from[0])}" y1="${cy(f.from[1])}" x2="${cx(f.to[0])}" y2="${cy(f.to[1])}" stroke="#fff" stroke-width="2" stroke-dasharray="14,10"/>`;
+      g+=`<text x="${(cx(f.from[0])+cx(f.to[0]))/2}" y="${(cy(f.from[1])+cy(f.to[1]))/2-12}" font-size="13" fill="#8a8172">${ttxEsc(f.label||'')}</text>`;
+    }else if(f.kind==='area'&&f.at){
+      const w=Math.min(400,+f.w||180), h=Math.min(300,+f.h||120);
+      g+=`<rect x="${cx(f.at[0])-w/2}" y="${cy(f.at[1])-h/2}" width="${w}" height="${h}" rx="10" fill="#ddd5c3" opacity=".75" stroke="#c4bba6"/>`;
+      g+=`<text x="${cx(f.at[0])}" y="${cy(f.at[1])}" font-size="13.5" fill="#6b6250" text-anchor="middle" font-weight="600">${ttxEsc(f.label||'')}</text>`;
+    }
+  });
+  // 위험구역 (2겹 원 + 점선 테두리)
+  g+=`<circle cx="${ox}" cy="${oy}" r="${r*1.55}" fill="${hazColor}" opacity=".10"/>`;
+  g+=`<circle cx="${ox}" cy="${oy}" r="${r}" fill="${hazColor}" opacity=".22" stroke="${hazColor}" stroke-width="2.5" stroke-dasharray="8,6"/>`;
+  g+=`<text x="${ox}" y="${oy-r-10}" font-size="14" fill="${hazColor}" text-anchor="middle" font-weight="700">${ttxEsc(origin?.label||'위험구역')}${stage===3?' (수습 중)':''}</text>`;
+  g+=`<text x="${ox}" y="${oy+5}" font-size="20" text-anchor="middle">⚠️</text>`;
+  // 시설 (위층)
+  feats.forEach(f=>{
+    if(f.kind==='facility'&&f.at){
+      const x=cx(f.at[0]), y=cy(f.at[1]);
+      g+=`<circle cx="${x}" cy="${y}" r="17" fill="#fff" stroke="#c4bba6"/>`;
+      g+=`<text x="${x}" y="${y+6}" font-size="17" text-anchor="middle">${TTX_MAP_ICONS[f.icon]||'📍'}</text>`;
+      g+=`<text x="${x}" y="${y+33}" font-size="12" fill="#544d3e" text-anchor="middle" font-weight="600">${ttxEsc(f.label||'')}</text>`;
+    }
+  });
+  // 투입 기관 마커 — 위험구역 주변에 결정적 각도로 배치
+  const st=data.agencyStatuses||{};
+  TTX_AGENCIES.forEach((a,i)=>{
+    const status=st[a.id];
+    if(status!=='현장투입'&&status!=='완료'&&status!=='출동중') return;
+    const ang=(i/TTX_AGENCIES.length)*Math.PI*2-Math.PI/2;
+    const dist=r+34+(i%2)*20;
+    const x=Math.max(24,Math.min(976,ox+dist*Math.cos(ang)));
+    const y=Math.max(24,Math.min(576,oy+dist*Math.sin(ang)));
+    const isMine=data.myAgencyId===a.id;
+    const en=status==='출동중';
+    g+=`<g opacity="${en?'.55':'1'}">`;
+    if(isMine) g+=`<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="var(--teal)" stroke-width="3"/>`;
+    g+=`<circle cx="${x}" cy="${y}" r="14" fill="${en?'#eff6ff':'#fff7ed'}" stroke="${en?'#93c5fd':'#fdba74'}" stroke-width="2"${en?' stroke-dasharray="4,3"':''}/>`;
+    g+=`<text x="${x}" y="${y+5}" font-size="13" text-anchor="middle">${TTX_AG_ICONS[a.id]||'📌'}</text>`;
+    g+=`</g>`;
+  });
+  return `<svg viewBox="0 0 1000 600" style="width:100%;display:block;border-radius:8px" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+}
+
+function ttxSitMapData(){ // 통제관 측 데이터
+  return {
+    sitmap:ttxState.scenario&&ttxState.scenario.sitmap,
+    stage:ttxStageOfRound(ttxState.phase),
+    initCasualties:((ttxState.damageHistory||[])[0]||{}).casualties||0,
+    casualties:ttxState.variables.casualties||0,
+    agencyStatuses:ttxState.agencyStatuses,
+  };
+}
+
+function ttxRenderSitMap(){
+  const wrap=document.getElementById('ttxSitMapWrap');
+  const body=document.getElementById('ttxSitMapBody');
+  if(!wrap||!body) return;
+  const svg=ttxSitMapSVG(ttxSitMapData());
+  if(!svg){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  if(!wrap.classList.contains('collapsed')) body.innerHTML=svg;
+  // 확대 모달이 열려 있으면 함께 갱신
+  const modal=document.getElementById('sitMapModalBody');
+  if(modal&&document.getElementById('sitMapModal').classList.contains('open')) modal.innerHTML=svg;
+}
+
+function ttxToggleSitMap(){
+  const wrap=document.getElementById('ttxSitMapWrap');
+  wrap.classList.toggle('collapsed');
+  document.getElementById('ttxSitMapToggle').textContent=wrap.classList.contains('collapsed')?'펼치기 ▼':'접기 ▲';
+  if(!wrap.classList.contains('collapsed')) ttxRenderSitMap();
+}
+function ttxOpenSitMapModal(){
+  document.getElementById('sitMapModalBody').innerHTML=ttxSitMapSVG(ttxSitMapData());
+  document.getElementById('sitMapModal').classList.add('open');
+}
+function ttxCloseSitMapModal(){ document.getElementById('sitMapModal').classList.remove('open'); }
+
 // ─── 환경 전개 트랙 (T4-3) ─────────────────────
 const TTX_TRAFFIC_ICON={'원활':'🟢','혼잡':'🟡','마비':'🔴'};
 function ttxRenderEnvTrack(){
@@ -3006,6 +3166,10 @@ function ttxValidateScenario(sc, mc, regionTags) {
   else sc.env_track.forEach((e,i)=>{
     if(!e||!e.weather||!e.hazard||!e.traffic) issues.push(`env_track stage${i+1} 필드 누락 (weather/hazard/traffic)`);
   });
+  if(!sc.sitmap||!Array.isArray(sc.sitmap.features)||sc.sitmap.features.length<4)
+    issues.push('sitmap.features 4개 이상 필요 (origin 포함)');
+  else if(!sc.sitmap.features.some(f=>f.kind==='origin'))
+    issues.push('sitmap에 origin(재난 발생 지점) 누락');
   if(!sc.stage_issue_titles) issues.push('stage_issue_titles 누락');
   else ['stage1','stage2','stage3'].forEach(k=>{
     const arr=sc.stage_issue_titles[k];
@@ -3076,6 +3240,7 @@ async function ttxGenerateScenario() {
 
 알고 있는 국내 ${disasterForPrompt} 실제 사례를 참조하여, 아래 조건으로 현실적인 TTX 시나리오를 생성하세요.
 모든 문자열은 표준 한국어(한글)로만 작성하고 한자·중국어·일본어 문자는 절대 사용하지 마세요.
+sitmap은 훈련구역 도식 상황도입니다: 좌표는 가로 0~1000, 세로 0~600. 지역 특성을 반영해 요소 6~10개를 배치하고 origin(재난 발생 지점)은 반드시 1개 포함하세요.
 
 [훈련 조건]
 - 기관: ${orgName}
@@ -3125,6 +3290,15 @@ JSON으로만 응답 (마크다운 없이):
     "stage2": ["확산·대응 국면 쟁점 제목 2~4개"],
     "stage3": ["수습·안정화 국면 쟁점 제목 2~4개"]
   },
+  "sitmap": {
+    "features": [
+      {"kind":"river","from":[500,0],"to":[520,600],"label":"하천명 (재난에 맞게 하천/해안선 등, 해당 없으면 생략)"},
+      {"kind":"road","from":[0,300],"to":[1000,300],"label":"주요 도로명"},
+      {"kind":"area","at":[700,350],"w":220,"h":140,"label":"구역명 (저지대 주거지/상가/농경지/산업단지 등)"},
+      {"kind":"facility","at":[250,150],"icon":"school","label":"시설명 (icon: school|hospital|plant|shelter|office|bridge|market)"},
+      {"kind":"origin","at":[520,320],"label":"재난 발생 지점"}
+    ]
+  },
   "real_case_reference": "참조한 국내 실제 사례 (사건명, 연도, 교훈 1~2문장. 확실하지 않으면 '유사사례 참조 없음')",
   "uncertainty_factors": [${mc.uncertaintyFactors.join(', ')}],
   "monte_carlo_seed": ${mc.seed}
@@ -3134,7 +3308,7 @@ JSON으로만 응답 (마크다운 없이):
     const text=await ttxStreamAPI(
       [{role:'user',content:prompt}],
       null,
-      2800
+      3200
     );
     let sc=ttxParseJSON(text);
     // ── Validator (T2-2): 로컬 규칙 검증, 위반 시 1회만 재생성 ──
@@ -3146,7 +3320,7 @@ JSON으로만 응답 (마크다운 없이):
         [{role:'user',content:prompt},
          {role:'assistant',content:text||'(빈 응답)'},
          {role:'user',content:`검증 실패 항목:\n- ${issues.join('\n- ')}\n\n위 항목을 모두 수정하여 완전한 JSON 형식으로만 다시 응답하세요.`}],
-        null, 2800
+        null, 3200
       );
       const sc2=ttxParseJSON(text2);
       if(sc2 && (!sc || ttxValidateScenario(sc2, mc, regionTags).length < issues.length)) sc=sc2;
@@ -3227,6 +3401,7 @@ JSON으로만 응답 (마크다운 없이):
 
     ttxSaveState();
     liveCreateSession(); // 라이브 세션 개설 (Supabase 온라인 시)
+    ttxRenderSitMap();
     ttxRenderMeetingHeader();
     ttxRenderMetrics();
     ttxRenderTrend();
@@ -3572,6 +3747,7 @@ async function ttxLoadOptions() {
     if(e&&prevStage>0) ttxLogSituation('🌐','red',`${TTX_STAGE_NAMES[stage-1]} 국면 진입 — ${e.weather||''} / ${e.hazard||''} / 교통 ${e.traffic||''}`,'system');
   }
   ttxRenderEnvTrack();
+  ttxRenderSitMap();
 
   const isFull=ttxState.trainingMode==='full';
   const msgCount=TTX_MSG_COUNT[ttxState.intensity]||3;
@@ -4267,6 +4443,7 @@ function ttxDownloadMasterDoc(){
  <b>지역:</b> ${ttxState.region||'-'}${(ttxState.regionTags||[]).length?` (${ttxState.regionTags.join(', ')})`:''} &nbsp;·&nbsp; <b>MC 시드:</b> ${ttxState.monteCarloSeed??'-'} &nbsp;·&nbsp; <b>종합점수:</b> ${ttxState.totalScore}점<br>
  <b>상황 설정:</b> ${sc.initial_report||'-'}
 </div>
+${(sc.sitmap&&sc.sitmap.features)?`<h2>Ⅰ-0. 훈련구역 상황도 (훈련 종료 시점)</h2><div style="border:1px solid #ddd;border-radius:8px;overflow:hidden">${ttxSitMapSVG(ttxSitMapData())}</div>`:''}
 <h2>Ⅰ. 통합훈련 시나리오 총괄</h2>
 <table>
  <tr><th style="width:110px">구분</th><th>초기대응</th><th>확산·대응</th><th>수습·안정화</th></tr>
@@ -4889,6 +5066,7 @@ AHP복합계수 = 2.0 − AHP합산 (의사결정 38%·협업 24%·자원 19%·S
 <ol>
   <li><strong>돌발상황 배너</strong>(🚨)와 상황 브리핑을 읽습니다. 2라운드부터는 직전 결정의 여파가 이어집니다.</li>
   <li>(통합훈련 모드) <strong>상황부여 메시지</strong>(📨)가 순차 도착합니다 — 내용을 읽고 조치 2안 중 선택하세요. 90초 안에 처리하면 적시성 만점, 방치하면 라운드 종료 시 미조치 0점입니다.</li>
+  <li>중앙 상단 <strong>훈련구역 상황도</strong>(🗺️)에서 위험구역 확산과 기관 투입 위치를 확인하세요 — 클릭하면 확대되어 빔프로젝터 공유용으로 쓸 수 있습니다.</li>
   <li><strong>우측 기관 카드</strong>를 클릭해 관련 기관의 SOP 조치를 실시합니다 — 의사결정 전에 기관을 먼저 움직이면 규칙점수 "기관투입" 항목에서 유리합니다.</li>
   <li><strong>A/B/C 선택지</strong>를 검토하고 결정합니다. 위험도 조합은 매번 다르며 표시 순서도 섞이므로 내용을 읽고 판단해야 합니다. 60초 안에 결정하면 신속성 만점, 3분을 넘기면 감점됩니다.</li>
   <li>결과와 점수 분해(규칙/AI, 4요소)를 확인하고 [다음 라운드 진입]을 누릅니다.</li>
