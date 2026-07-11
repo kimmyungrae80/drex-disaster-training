@@ -347,6 +347,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ttx-msg-act{flex:1;min-width:140px;padding:8px 11px;border:1.5px solid var(--border);background:#fff;border-radius:7px;font-family:'Noto Sans KR',sans-serif;font-size:12.5px;cursor:pointer;text-align:left;line-height:1.4;transition:.15s all}
 .ttx-msg-act:hover{border-color:var(--teal);background:#f0faf8}
 .ttx-msg-result{font-size:12px;font-weight:600}
+/* 담당자 확인 팝업 / 알림 (T5) */
+.ag-confirm-overlay{display:none;position:fixed;inset:0;background:rgba(13,27,42,.55);z-index:600;align-items:center;justify-content:center;padding:20px}
+.ag-confirm-overlay.open{display:flex}
+.ag-confirm-box{background:#fff;border-radius:14px;padding:22px 24px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.35);animation:alertPop .25s ease}
+.ag-notify{position:fixed;top:74px;right:16px;z-index:590;display:flex;flex-direction:column;gap:8px;max-width:360px}
+.ag-notify-item{background:var(--navy);color:#fff;border-left:5px solid var(--amber);border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.6;box-shadow:0 4px 18px rgba(0,0,0,.35);animation:alertPop .3s ease;cursor:pointer}
+.ag-notify-item b{color:#ffd479}
+.ag-log-mine{background:#fff8e6;border-left:3px solid var(--amber);font-weight:600}
 .ttx-outcome{background:#0d1b2a;color:#c9dcec;border-radius:10px;padding:18px 20px;font-size:14.5px;line-height:1.85;white-space:pre-line;display:none;margin-top:10px}
 .ttx-outcome.show{display:block}
 .ttx-agencies-wrap{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 14px rgba(0,0,0,.07);overflow-y:auto;display:flex;flex-direction:column}
@@ -1003,9 +1011,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct">📋 훈련 상황일지 <span style="font-size:11px;color:var(--muted);font-weight:400">— 통제관 화면과 실시간 공유 · 우리 기관 관련 항목은 강조·알림</span></div>
+    <div id="agSharedLog" style="font-size:12px;line-height:1.7;max-height:260px;overflow-y:auto">공유 대기 중...</div>
+  </div>
+
   <div class="card">
-    <div class="ct">📋 내 조치 이력</div>
+    <div class="ct">📝 내 조치 이력</div>
     <div id="agActionLog" style="font-size:12.5px;line-height:1.8;color:var(--text)">아직 기록이 없습니다.</div>
+  </div>
+</div>
+
+<!-- 담당자 알림 팝업 (내 기관 관련 상황) -->
+<div id="agNotify" class="ag-notify"></div>
+
+<!-- 담당자 조치 확인 팝업 -->
+<div id="agConfirmOverlay" class="ag-confirm-overlay">
+  <div class="ag-confirm-box">
+    <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px">📤 조치 전송 확인</div>
+    <div id="agConfirmBody" style="font-size:13.5px;line-height:1.7;background:#f5f3ee;border-radius:8px;padding:12px 14px;margin-bottom:14px"></div>
+    <div style="font-size:11.5px;color:var(--muted);margin-bottom:14px">전송하면 통제관 화면과 훈련 기록(총괄표)에 즉시 반영되며 취소할 수 없습니다.</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-s" onclick="agConfirmClose()">취소</button>
+      <button class="btn-p" id="agConfirmOk" style="padding:10px 22px">전송 →</button>
+    </div>
   </div>
 </div>
 
@@ -1350,6 +1379,7 @@ function liveBuildSnapshot(){
       resource_needed:ttxState.variables.resource_needed||0,
     },
     agencyStatuses:{...ttxState.agencyStatuses},
+    recentLog:(ttxState.logBuffer||[]).slice(-20),
     updated:Date.now(),
   };
 }
@@ -1442,6 +1472,8 @@ function liveEnterAgencyMode(){
   document.getElementById('loginOverlay').classList.add('hidden');
   document.querySelector('.main').style.display='block';
   document.getElementById('orgTabNav').style.display='none';
+  const sbar=document.querySelector('.hd .sbar'); if(sbar) sbar.style.display='none';
+  const fab=document.getElementById('chatFab'); if(fab) fab.style.display='none';
   ['ttxMainPanel','mockExamPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   const panel=document.getElementById('agencyPanel');
   panel.style.display='block';
@@ -1487,6 +1519,29 @@ function liveRenderAgencyView(sn){
     e.style.display='block';
     e.innerHTML=`☔ ${sn.env.weather||'-'} &nbsp;·&nbsp; ⚠️ ${sn.env.hazard||'-'} &nbsp;·&nbsp; 🚗 ${sn.env.traffic||'-'}`;
   }
+  // 공유 상황일지 렌더 + 내 기관 관련 신규 항목 알림
+  const myName=(TTX_AGENCIES.find(a=>a.id===liveAgencyId)||{}).name||'';
+  const logs=sn.recentLog||[];
+  const logEl=document.getElementById('agSharedLog');
+  if(logEl&&logs.length){
+    logEl.innerHTML=logs.slice().reverse().map(l=>{
+      const mine=myName&&l.text.includes(myName);
+      const ts=new Date(l.t).toLocaleTimeString('ko-KR',{hour12:false});
+      return `<div class="slog-item${mine?' ag-log-mine':''}" style="background:${mine?'':'#f9f8f5'}"><span style="font-family:monospace;opacity:.6">[${ts}]</span> ${l.icon||''} ${l.text}</div>`;
+    }).join('');
+  }
+  if(window._agSeenLogT===undefined){
+    // 첫 동기화: 과거 일지는 알림 없이 기준선만 설정
+    window._agSeenLogT=logs.length?Math.max(...logs.map(l=>l.t)):0;
+  }else{
+    logs.forEach(l=>{
+      if(l.t>window._agSeenLogT && myName && l.text.includes(myName) && !l.text.startsWith('[LIVE]')){
+        agNotify(l.text);
+      }
+    });
+    if(logs.length) window._agSeenLogT=Math.max(window._agSeenLogT, ...logs.map(l=>l.t));
+  }
+
   const st=(sn.agencyStatuses||{})[liveAgencyId]||'대기중';
   const stEl=document.getElementById('agMyStatus');
   stEl.textContent=st;
@@ -1519,13 +1574,46 @@ async function liveRecord(type, text, status){
     showToast('✅ 조치가 통제관 화면에 전송되었습니다');
   }catch(e){ showToast('⚠️ 전송 실패: '+(e.message||e)); }
 }
-function liveSetStatus(st){ liveRecord('status', null, st); const el=document.getElementById('agMyStatus'); if(el)el.textContent=st; }
-function liveRecordSop(text){ liveRecord('sop', text); }
+// 조치 전송 확인 팝업 (실수 방지 — 훈련 기록은 취소 불가)
+let _agConfirmCb=null;
+function agConfirm(html, onOk){
+  document.getElementById('agConfirmBody').innerHTML=html;
+  _agConfirmCb=onOk;
+  document.getElementById('agConfirmOverlay').classList.add('open');
+}
+function agConfirmClose(){ document.getElementById('agConfirmOverlay').classList.remove('open'); _agConfirmCb=null; }
+document.addEventListener('DOMContentLoaded',()=>{
+  const ok=document.getElementById('agConfirmOk');
+  if(ok) ok.onclick=()=>{ const cb=_agConfirmCb; agConfirmClose(); if(cb)cb(); };
+});
+
+function liveSetStatus(st){
+  agConfirm(`상태 변경: <b>${st}</b>`, ()=>{
+    liveRecord('status', null, st);
+    const el=document.getElementById('agMyStatus'); if(el)el.textContent=st;
+  });
+}
+function liveRecordSop(text){
+  agConfirm(`SOP 조치 실행: <b>${text}</b>`, ()=>liveRecord('sop', text));
+}
 function liveRecordNote(){
   const inp=document.getElementById('agNoteInput');
   const t=(inp.value||'').trim();
   if(!t){showToast('조치 내용을 입력하세요');return;}
-  liveRecord('note', t); inp.value='';
+  agConfirm(`조치록 기록: <b>${t}</b>`, ()=>{ liveRecord('note', t); inp.value=''; });
+}
+
+// 내 기관 관련 알림 팝업 (8초 후 자동 닫힘, 클릭 시 닫힘)
+function agNotify(text){
+  const wrap=document.getElementById('agNotify');
+  if(!wrap) return;
+  const el=document.createElement('div');
+  el.className='ag-notify-item';
+  el.innerHTML='📢 <b>우리 기관 관련 상황</b><br>'+text;
+  el.onclick=()=>el.remove();
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(), 8000);
+  while(wrap.children.length>3) wrap.firstChild.remove();
 }
 
 async function submitLogin() {
@@ -3096,6 +3184,7 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.simTick=0;
     ttxState.dispatchInfo={};
     ttxState.roundMsgs=[];
+    ttxState.logBuffer=[];
     ttxState.msgHistory={};
     ttxState.stageSnapshots={};
     ttxState._lastEnvStage=0;
@@ -3338,6 +3427,14 @@ function ttxGetTimestamp() {
 }
 
 function ttxLogSituation(icon, color, text, cat) {
+  // 라이브 공유용 구조화 버퍼 (최근 200건)
+  try{
+    (ttxState.logBuffer=ttxState.logBuffer||[]).push({
+      t:Date.now(), icon, text:String(text),
+      cat:cat||(color==='blue'?'decision':color==='green'?'agency':color==='red'?'event':'system'),
+    });
+    if(ttxState.logBuffer.length>200) ttxState.logBuffer.splice(0,ttxState.logBuffer.length-200);
+  }catch(e){}
   const log = document.getElementById('ttxSituationLog');
   if (!log) return;
   const item = document.createElement('div');
