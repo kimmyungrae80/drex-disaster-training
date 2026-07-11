@@ -757,8 +757,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
             <button class="log-fbtn" id="ttxSitMapToggle" onclick="ttxToggleSitMap()">접기 ▲</button>
           </span>
         </div>
-        <div id="ttxSitMapBody" class="sitmap-compact" style="cursor:zoom-in" onclick="ttxOpenSitMapModal()"></div>
-        <div style="font-size:10.5px;color:var(--muted);margin-top:3px">⚠️ 위험구역(국면·피해 연동 확산) · 🚒 투입 기관 · 클릭하면 확대</div>
+        <div id="ttxSitMapBody" class="sitmap-compact"></div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:3px">⚠️ 위험구역(국면·피해 연동 확산) · 🚒 투입 기관 · [🔍 확대]로 크게 보기</div>
       </div>
       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
       <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
@@ -1005,8 +1005,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-alert-banner" id="agAlert" style="margin-bottom:8px"></div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px" id="agMetrics"></div>
     <div id="agEnv" style="display:none;background:#0d1b2a;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.7;color:#c9dcec;margin-bottom:8px"></div>
-    <div id="agSitMap" style="display:none;cursor:zoom-in" onclick="agOpenSitMapModal()"></div>
-    <div id="agSitMapHint" style="display:none;font-size:10.5px;color:var(--muted);margin-top:3px">🗺️ 훈련구역 상황도 — 청록 테두리가 우리 기관 위치 · 클릭하면 확대</div>
+    <div id="agSitMap" style="display:none"></div>
+    <div id="agSitMapHint" style="display:none;font-size:10.5px;color:var(--muted);margin-top:3px">🗺️ 훈련구역 상황도 — 청록 테두리가 우리 기관 · <button class="log-fbtn" onclick="agOpenSitMapModal()">🔍 확대</button></div>
   </div>
 
   <div class="card" style="margin-bottom:12px">
@@ -1309,6 +1309,7 @@ let supabaseClient = null;
     if(!r.ok) throw new Error('HTTP '+r.status);
     const c = await r.json();
     if(c.supabaseUrl) SUPABASE_URL = c.supabaseUrl;
+    if(c.kakaoJsKey) window._kakaoKey = c.kakaoJsKey;
     if(c.supabaseKey){
       SUPABASE_KEY = c.supabaseKey;
       supabaseClient = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_KEY) || null;
@@ -1409,6 +1410,7 @@ function liveBuildSnapshot(){
     agencyStatuses:{...ttxState.agencyStatuses},
     recentLog:(ttxState.logBuffer||[]).slice(-20),
     sitmap:(ttxState.scenario&&ttxState.scenario.sitmap)||null,
+    mapCenter:ttxState.mapCenter||null,
     initCasualties:((ttxState.damageHistory||[])[0]||{}).casualties||0,
     updated:Date.now(),
   };
@@ -1572,15 +1574,20 @@ function liveRenderAgencyView(sn){
     if(logs.length) window._agSeenLogT=Math.max(window._agSeenLogT, ...logs.map(l=>l.t));
   }
 
-  // 상황도 동기화 (내 기관 마커 강조)
-  if(sn.sitmap){
+  // 상황도 동기화 (내 기관 마커 강조, 실지도 우선)
+  if(sn.sitmap||sn.mapCenter){
     window._agSitData={sitmap:sn.sitmap, stage:ttxStageNameToIdx(sn.stageName),
       initCasualties:sn.initCasualties||0, casualties:(sn.variables||{}).casualties||0,
-      agencyStatuses:sn.agencyStatuses||{}, myAgencyId:liveAgencyId};
-    const svg=ttxSitMapSVG(window._agSitData);
+      agencyStatuses:sn.agencyStatuses||{}, myAgencyId:liveAgencyId, mapCenter:sn.mapCenter||null};
     const el=document.getElementById('agSitMap');
-    if(el&&svg){el.style.display='block';el.innerHTML=svg;
-      document.getElementById('agSitMapHint').style.display='block';}
+    if(el){
+      el.style.display='block';
+      document.getElementById('agSitMapHint').style.display='block';
+      loadKakaoSdk().then(ok=>{
+        if(ok&&sn.mapCenter){ ttxRealMapRender('agSitMap', window._agSitData, sn.mapCenter, 230); }
+        else{ const svg=ttxSitMapSVG(window._agSitData); if(svg) el.innerHTML=svg; else el.style.display='none'; }
+      });
+    }
   }
 
   const st=(sn.agencyStatuses||{})[liveAgencyId]||'대기중';
@@ -1646,9 +1653,7 @@ function liveRecordNote(){
 
 function ttxStageNameToIdx(name){ const i=TTX_STAGE_NAMES.indexOf(name); return i>=0?i+1:1; }
 function agOpenSitMapModal(){
-  if(!window._agSitData) return;
-  document.getElementById('sitMapModalBody').innerHTML=ttxSitMapSVG(window._agSitData);
-  document.getElementById('sitMapModal').classList.add('open');
+  if(window._agSitData) ttxOpenSitMapModal(window._agSitData);
 }
 
 // 내 기관 관련 알림 팝업 (8초 후 자동 닫힘, 클릭 시 닫힘)
@@ -3013,6 +3018,95 @@ function ttxSitMapSVG(data){
   return `<svg viewBox="0 0 1000 600" style="width:100%;display:block;border-radius:8px" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
 }
 
+// ─── 실지도 (카카오맵) — 키가 있으면 실지도, 없으면 SVG 도식 폴백 ──
+let kakaoReady=false;
+function loadKakaoSdk(){
+  if(kakaoReady) return Promise.resolve(true);
+  if(!window._kakaoKey) return Promise.resolve(false);
+  if(!window._kakaoLoading){
+    window._kakaoLoading=new Promise(res=>{
+      const sc=document.createElement('script');
+      sc.src='https://dapi.kakao.com/v2/maps/sdk.js?appkey='+window._kakaoKey+'&libraries=services&autoload=false';
+      sc.onload=()=>window.kakao.maps.load(()=>{kakaoReady=true;res(true);});
+      sc.onerror=()=>{console.warn('카카오맵 SDK 로드 실패 — 도식 폴백');res(false);};
+      document.head.appendChild(sc);
+    });
+  }
+  return window._kakaoLoading;
+}
+
+// 훈련 지역 지오코딩 (기관명 키워드 검색 — 통제관 1회)
+function ttxGeocodeCenter(){
+  return new Promise(resolve=>{
+    if(ttxState.mapCenter){resolve(ttxState.mapCenter);return;}
+    if(!kakaoReady||!window.kakao?.maps?.services){resolve(null);return;}
+    try{
+      const ps=new kakao.maps.services.Places();
+      ps.keywordSearch(ttxState.orgName||'대한민국', (data,status)=>{
+        if(status===kakao.maps.services.Status.OK&&data[0]){
+          ttxState.mapCenter={lat:+data[0].y,lng:+data[0].x};
+          ttxSaveState();
+          resolve(ttxState.mapCenter);
+        }else resolve(null);
+      });
+    }catch(e){resolve(null);}
+  });
+}
+
+// 지도 인스턴스 + 오버레이 관리
+const _rmaps={}; // containerId → {map, circles:[], overlays:[], center}
+function ttxRealMapRender(containerId, data, center, height){
+  const el=document.getElementById(containerId);
+  if(!el||!center) return false;
+  let m=_rmaps[containerId];
+  if(!m||!el.querySelector('div')){ // 최초 or DOM 교체됨
+    el.innerHTML=''; el.style.height=(height||185)+'px'; el.style.borderRadius='8px'; el.style.overflow='hidden';
+    const map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(center.lat,center.lng),level:6});
+    m=_rmaps[containerId]={map,circles:[],overlays:[]};
+  }
+  const map=m.map;
+  // 기존 오버레이 제거
+  m.circles.forEach(c=>c.setMap(null)); m.overlays.forEach(o=>o.setMap(null));
+  m.circles=[]; m.overlays=[];
+  const stage=data.stage||1;
+  const ratio=data.initCasualties>0?Math.min(2,(data.casualties||0)/data.initCasualties):1;
+  const rM=Math.round(700*(stage===1?1:stage===2?1.7:1.35)*(0.7+0.3*ratio)); // 미터
+  const hazColor=stage===3?'#c47d1a':'#e03131';
+  const pos=new kakao.maps.LatLng(center.lat,center.lng);
+  [[rM*1.55,.08],[rM,.2]].forEach(([r,op])=>{
+    const c=new kakao.maps.Circle({center:pos,radius:r,strokeWeight:2,strokeColor:hazColor,
+      strokeStyle:'shortdash',strokeOpacity:.8,fillColor:hazColor,fillOpacity:op});
+    c.setMap(map); m.circles.push(c);
+  });
+  // 발생 지점 라벨
+  const origin=(data.sitmap&&data.sitmap.features||[]).find(f=>f.kind==='origin');
+  const mkOv=(lat,lng,html,z)=>{
+    const o=new kakao.maps.CustomOverlay({position:new kakao.maps.LatLng(lat,lng),content:html,yAnchor:.5,zIndex:z||3});
+    o.setMap(map); m.overlays.push(o);
+  };
+  mkOv(center.lat,center.lng,
+    `<div style="background:${hazColor};color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.3)">⚠️ ${ttxEsc(origin?.label||'재난 발생')}${stage===3?' (수습 중)':''}</div>`,5);
+  // 투입 기관 마커 — 위험구역 주변 결정적 배치
+  const st=data.agencyStatuses||{};
+  const dLat=mm=>mm/111320, dLng=(mm,lat)=>mm/(111320*Math.cos(lat*Math.PI/180));
+  TTX_AGENCIES.forEach((a,i)=>{
+    const status=st[a.id];
+    if(status!=='현장투입'&&status!=='완료'&&status!=='출동중') return;
+    const ang=(i/TTX_AGENCIES.length)*Math.PI*2-Math.PI/2;
+    const dist=rM+250+(i%2)*180;
+    const lat=center.lat+dLat(dist*Math.sin(ang)*-1);
+    const lng=center.lng+dLng(dist*Math.cos(ang),center.lat);
+    const en=status==='출동중';
+    const mine=data.myAgencyId===a.id;
+    mkOv(lat,lng,
+      `<div style="display:flex;flex-direction:column;align-items:center;opacity:${en?'.6':'1'}">
+        <div style="width:30px;height:30px;border-radius:50%;background:${en?'#eff6ff':'#fff7ed'};border:2px ${en?'dashed #93c5fd':'solid #fdba74'};${mine?'box-shadow:0 0 0 3px #0e8a76;':''}display:flex;align-items:center;justify-content:center;font-size:15px">${TTX_AG_ICONS[a.id]||'📌'}</div>
+        <div style="font-size:10px;font-weight:700;color:#333;background:rgba(255,255,255,.9);padding:0 4px;border-radius:4px;margin-top:1px">${a.name}</div>
+      </div>`);
+  });
+  return true;
+}
+
 function ttxSitMapData(){ // 통제관 측 데이터
   return {
     sitmap:ttxState.scenario&&ttxState.scenario.sitmap,
@@ -3020,6 +3114,7 @@ function ttxSitMapData(){ // 통제관 측 데이터
     initCasualties:((ttxState.damageHistory||[])[0]||{}).casualties||0,
     casualties:ttxState.variables.casualties||0,
     agencyStatuses:ttxState.agencyStatuses,
+    mapCenter:ttxState.mapCenter||null,
   };
 }
 
@@ -3027,13 +3122,23 @@ function ttxRenderSitMap(){
   const wrap=document.getElementById('ttxSitMapWrap');
   const body=document.getElementById('ttxSitMapBody');
   if(!wrap||!body) return;
-  const svg=ttxSitMapSVG(ttxSitMapData());
-  if(!svg){wrap.style.display='none';return;}
+  const data=ttxSitMapData();
+  if(!data.sitmap&&!ttxState.scenario){wrap.style.display='none';return;}
   wrap.style.display='block';
-  if(!wrap.classList.contains('collapsed')) body.innerHTML=svg;
-  // 확대 모달이 열려 있으면 함께 갱신
-  const modal=document.getElementById('sitMapModalBody');
-  if(modal&&document.getElementById('sitMapModal').classList.contains('open')) modal.innerHTML=svg;
+  if(wrap.classList.contains('collapsed')) return;
+  loadKakaoSdk().then(ok=>{
+    if(ok){
+      ttxGeocodeCenter().then(center=>{
+        if(center&&ttxRealMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
+        delete _rmaps['ttxSitMapBody'];
+        const svg=ttxSitMapSVG(ttxSitMapData());
+        if(svg) body.innerHTML=svg; else wrap.style.display='none';
+      });
+    }else{
+      const svg=ttxSitMapSVG(data);
+      if(svg) body.innerHTML=svg; else wrap.style.display='none';
+    }
+  });
 }
 
 function ttxToggleSitMap(){
@@ -3042,9 +3147,19 @@ function ttxToggleSitMap(){
   document.getElementById('ttxSitMapToggle').textContent=wrap.classList.contains('collapsed')?'펼치기 ▼':'접기 ▲';
   if(!wrap.classList.contains('collapsed')) ttxRenderSitMap();
 }
-function ttxOpenSitMapModal(){
-  document.getElementById('sitMapModalBody').innerHTML=ttxSitMapSVG(ttxSitMapData());
-  document.getElementById('sitMapModal').classList.add('open');
+function ttxOpenSitMapModal(data){
+  data=data||ttxSitMapData();
+  const modal=document.getElementById('sitMapModal');
+  const body=document.getElementById('sitMapModalBody');
+  modal.classList.add('open');
+  loadKakaoSdk().then(ok=>{
+    if(ok&&data.mapCenter){
+      body.innerHTML=''; delete _rmaps['sitMapModalBody'];
+      setTimeout(()=>ttxRealMapRender('sitMapModalBody', data, data.mapCenter, Math.round(window.innerHeight*0.68)),60);
+    }else{
+      body.innerHTML=ttxSitMapSVG(data)||'<div style="padding:30px;color:var(--muted)">상황도 데이터가 없습니다.</div>';
+    }
+  });
 }
 function ttxCloseSitMapModal(){ document.getElementById('sitMapModal').classList.remove('open'); }
 
@@ -3359,6 +3474,7 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.dispatchInfo={};
     ttxState.roundMsgs=[];
     ttxState.logBuffer=[];
+    ttxState.mapCenter=null;
     ttxState.msgHistory={};
     ttxState.stageSnapshots={};
     ttxState._lastEnvStage=0;
