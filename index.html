@@ -446,8 +446,35 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <input type="tel" class="fi" id="lmOrgPhone" placeholder="010-0000-0000">
     </div>
     <div class="lm-divider"></div>
-    <button class="btn-p" style="width:100%;justify-content:center;font-size:16px;padding:15px" onclick="submitLogin()">시작하기 →</button>
-    <div class="lm-note">입력 정보는 플랫폼 운영 목적으로만 사용됩니다.<br><strong>Powered by Mr.Kim PhD</strong></div>
+    <button class="btn-p" style="width:100%;justify-content:center;font-size:16px;padding:15px" onclick="submitLogin()">통제관(관리자)으로 시작 →</button>
+    <div class="lm-divider"></div>
+    <div style="text-align:center;margin:2px 0 10px;font-size:13px;font-weight:700;color:var(--navy)">🏢 협업기관 담당자로 참여</div>
+    <div class="lm-err" id="lmJoinErr"></div>
+    <div class="lm-row">
+      <div class="fg">
+        <label class="fl">세션 코드</label>
+        <input type="text" class="fi" id="lmJoinCode" placeholder="예: 372845" maxlength="6" inputmode="numeric">
+      </div>
+      <div class="fg">
+        <label class="fl">소속 기관</label>
+        <select class="fi" id="lmJoinAgency">
+          <option value="">— 선택 —</option>
+          <option value="fire">소방본부</option><option value="police">경찰청</option>
+          <option value="army">군부대</option><option value="health">보건소/병원</option>
+          <option value="edu">교육청</option><option value="env">환경부</option>
+          <option value="mlit">국토교통부</option><option value="mois">행안부</option>
+          <option value="kepco">전기(한전)</option><option value="kt">통신(KT)</option>
+          <option value="gas">수도/가스</option><option value="vol">자원봉사</option>
+          <option value="corp">민간기업</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">담당자 이름</label>
+      <input type="text" class="fi" id="lmJoinName" placeholder="홍길동">
+    </div>
+    <button class="btn-s" style="width:100%;justify-content:center;font-size:14px;padding:12px" onclick="liveJoin()">훈련 참여 →</button>
+    <div class="lm-note">세션 코드는 통제관 화면 상단에 표시됩니다.<br>입력 정보는 플랫폼 운영 목적으로만 사용됩니다. <strong>Powered by Mr.Kim PhD</strong></div>
   </div>
 </div>
 
@@ -673,6 +700,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-hd-right">
       <span class="sev-badge sev-red" id="ttxSevBadge">🔴 위급</span>
       <span class="ttx-phase-badge" id="ttxPhaseBadge">초기대응 · 라운드 1</span>
+      <span class="ttx-phase-badge" id="ttxLiveCodeBadge" style="display:none;background:var(--teal)"></span>
       <span class="ttx-timer" id="ttxTimerDisplay">00:00:00</span>
     </div>
   </div>
@@ -937,6 +965,49 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 </div>
 
 </div><!-- /mockExamPanel -->
+
+<!-- ═══ 협업기관 담당자 패널 (T5 라이브 훈련) ═══ -->
+<div id="agencyPanel" style="display:none;max-width:860px;margin:0 auto">
+  <div class="ttx-hd" style="margin-bottom:12px">
+    <div class="ttx-hd-title" id="agHdTitle">기관 담당자 훈련</div>
+    <div class="ttx-hd-right">
+      <span class="ttx-phase-badge" id="agHdRound">대기 중</span>
+      <span class="ttx-phase-badge" style="background:var(--teal)" id="agHdCode"></span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct">📡 실시간 훈련 상황 <span id="agSyncDot" style="font-size:11px;color:var(--muted);font-weight:400">동기화 중...</span></div>
+    <div id="agSituation" class="ttx-situation-box" style="margin-bottom:8px">상황 수신 대기 중입니다. 통제관이 훈련을 시작하면 표시됩니다.</div>
+    <div class="ttx-alert-banner" id="agAlert" style="margin-bottom:8px"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px" id="agMetrics"></div>
+    <div id="agEnv" style="display:none;background:#0d1b2a;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.7;color:#c9dcec"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct">🚒 <span id="agMyName">내 기관</span> 조치
+      <span style="margin-left:auto;font-size:13px">현재 상태: <b id="agMyStatus" style="color:var(--amber)">대기중</b></span>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">상태 변경</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn-s" onclick="liveSetStatus('출동중')">🚨 출동중</button>
+      <button class="btn-s" onclick="liveSetStatus('현장투입')">🏃 현장투입</button>
+      <button class="btn-s" onclick="liveSetStatus('완료')">✅ 임무 완료</button>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">SOP 조치 실행 (현장조치 행동매뉴얼)</div>
+    <div id="agSopList" style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">자유 조치 기록 (조치록)</div>
+    <div style="display:flex;gap:6px">
+      <input type="text" class="fi" id="agNoteInput" placeholder="예: 배수펌프 3대 ○○리 저지대 투입 완료" style="flex:1" onkeydown="if(event.key==='Enter')liveRecordNote()">
+      <button class="btn-p" style="padding:10px 18px" onclick="liveRecordNote()">기록</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📋 내 조치 이력</div>
+    <div id="agActionLog" style="font-size:12.5px;line-height:1.8;color:var(--text)">아직 기록이 없습니다.</div>
+  </div>
+</div>
 
 </div><!-- /main -->
 
@@ -1229,6 +1300,234 @@ async function loadTrainingData() {
 // ═══════════════════════════════════════════════
 // LOGIN MODAL
 // ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// 다중 사용자 라이브 훈련 (T5 Phase 1)
+// 통제관 브라우저 = 시뮬레이션 정본. 스냅샷을 Supabase에 push(5초, dirty 시),
+// 기관 담당자는 스냅샷을 폴링해 같은 상황판을 보며 자기 조치를 기록한다.
+// ═══════════════════════════════════════════════
+const LIVE_POLL_MS = 5000;
+let liveRole=null;            // 'admin' | 'agency'
+let liveCode=null, liveAgencyId=null, liveActorName='';
+let liveLastActionId=0, liveDirty=false, liveTimer=null;
+
+function liveMarkDirty(){ liveDirty=true; }
+
+// ── 통제관: 세션 생성 ──
+async function liveCreateSession(){
+  if(!supabaseClient) return; // 오프라인 — 단독 훈련
+  try{
+    const code=String(Math.floor(100000+Math.random()*900000));
+    const {error}=await supabaseClient.from('ttx_live_sessions').insert({
+      code, org:ttxState.orgName, disaster:ttxState.disasterType,
+      status:'running', snapshot:liveBuildSnapshot(),
+    });
+    if(error) throw error;
+    liveRole='admin'; liveCode=code; liveLastActionId=0;
+    ttxState.liveAgencies={}; ttxState.liveActionLog=[];
+    const badge=document.getElementById('ttxLiveCodeBadge');
+    if(badge){badge.style.display='';badge.textContent='세션 코드 '+code;}
+    ttxLogSituation('📡','green',`라이브 세션 개설 — 참여 코드 ${code} (기관 담당자 접속 가능)`,'system');
+    if(liveTimer) clearInterval(liveTimer);
+    liveTimer=setInterval(liveAdminTick, LIVE_POLL_MS);
+  }catch(e){ console.warn('라이브 세션 생성 실패(오프라인 모드로 진행):', e.message||e); }
+}
+
+function liveBuildSnapshot(){
+  const sc=ttxState.scenario||{};
+  const stage=ttxStageOfRound(ttxState.phase);
+  return {
+    title:sc.situation_title||'', 
+    situation:ttxState.lastNextSituation||sc.initial_report||'',
+    round_event:ttxState.currentRoundEvent||'',
+    phase:ttxState.phase, totalRounds:ttxState.totalRounds,
+    stageName:TTX_STAGE_NAMES[stage-1]||'',
+    disaster:ttxState.disasterType,
+    env:(sc.env_track||[])[stage-1]||null,
+    variables:{
+      casualties:ttxState.variables.casualties||0,
+      displaced:ttxState.variables.displaced||0,
+      infrastructure_damage:ttxState.variables.infrastructure_damage||0,
+      resource_needed:ttxState.variables.resource_needed||0,
+    },
+    agencyStatuses:{...ttxState.agencyStatuses},
+    updated:Date.now(),
+  };
+}
+
+async function liveAdminTick(){
+  if(liveRole!=='admin'||!supabaseClient||!liveCode) return;
+  try{
+    if(liveDirty){
+      liveDirty=false;
+      await supabaseClient.from('ttx_live_sessions')
+        .update({snapshot:liveBuildSnapshot(), updated_at:new Date().toISOString()})
+        .eq('code',liveCode);
+    }
+    // 기관 조치 수신
+    const {data}=await supabaseClient.from('ttx_agency_actions')
+      .select('*').eq('session_code',liveCode).gt('id',liveLastActionId).order('id');
+    (data||[]).forEach(liveApplyAction);
+  }catch(e){ console.warn('live sync:', e.message||e); }
+}
+
+function liveApplyAction(row){
+  liveLastActionId=Math.max(liveLastActionId,row.id);
+  const ag=TTX_AGENCIES.find(a=>a.id===row.agency_id);
+  if(!ag) return;
+  ttxState.liveAgencies=ttxState.liveAgencies||{};
+  ttxState.liveActionLog=ttxState.liveActionLog||[];
+  const icon=TTX_AG_ICONS[ag.id]||'📌';
+  if(row.action_type==='join'){
+    ttxState.liveAgencies[ag.id]=row.actor_name||'담당자';
+    ttxLogSituation('🤝','green',`${ag.name} 담당자 참여 (${row.actor_name||''}) — 이 기관은 담당자가 직접 조치합니다`,'system');
+    const card=document.getElementById('agCard_'+ag.id);
+    if(card&&!card.querySelector('.live-badge')){
+      const b=document.createElement('span'); b.className='auto-done-badge live-badge';
+      b.style.background='var(--teal)'; b.textContent='LIVE'; card.appendChild(b);
+    }
+  }else if(row.action_type==='status'){
+    ttxSetAgencyStatus(ag.id,row.status||'출동중');
+    ttxLogSituation(icon,'green',`[LIVE] ${ag.name} 상태 변경 → ${row.status}`,'agency');
+  }else if(row.action_type==='sop'){
+    // SOP 효과 적용 + 현장투입
+    const sop=TTX_SOP[ag.id]||{};
+    const all=[...(sop.common||[]),...(sop[ttxState.disasterType]||[])];
+    const act=all.find(x=>x.a===row.action_text);
+    if(act&&act.e){
+      Object.keys(act.e).forEach(k=>{
+        if(ttxState.variables[k]!==undefined)
+          ttxState.variables[k]=Math.max(0,(ttxState.variables[k]||0)+(act.e[k]||0));
+      });
+      ttxRenderMetrics();
+    }
+    if((ttxState.agencyStatuses[ag.id]||'대기중')==='대기중'||ttxState.agencyStatuses[ag.id]==='출동중')
+      ttxSetAgencyStatus(ag.id,'현장투입');
+    ttxLogSituation(icon,'green',`[LIVE] ${ag.name} — ${row.action_text} 실시 (${row.actor_name||''})`,'agency');
+  }else if(row.action_type==='note'){
+    ttxLogSituation(icon,'green',`[LIVE] ${ag.name} 조치록 — ${row.action_text}`,'agency');
+  }
+  ttxState.liveActionLog.push({agency:ag.name, actor:row.actor_name||'', type:row.action_type,
+    text:row.action_text||row.status||'', time:row.created_at});
+  ttxSaveState();
+}
+
+// ── 기관 담당자: 참여 ──
+async function liveJoin(){
+  const err=document.getElementById('lmJoinErr');
+  if(err) err.style.display='none';
+  const code=(document.getElementById('lmJoinCode').value||'').trim();
+  const agId=document.getElementById('lmJoinAgency').value;
+  const name=(document.getElementById('lmJoinName').value||'').trim();
+  const fail=m=>{if(err){err.textContent=m;err.style.display='block';}};
+  if(!code||!agId||!name) return fail('세션 코드·기관·이름을 모두 입력해 주세요.');
+  if(!supabaseClient) return fail('서버 연결이 필요합니다. 잠시 후 다시 시도해 주세요.');
+  try{
+    const {data,error}=await supabaseClient.from('ttx_live_sessions')
+      .select('code,status').eq('code',code).maybeSingle();
+    if(error) throw error;
+    if(!data) return fail('세션 코드를 찾을 수 없습니다. 통제관 화면의 코드를 확인하세요.');
+    if(data.status==='ended') return fail('이미 종료된 훈련입니다.');
+    liveRole='agency'; liveCode=code; liveAgencyId=agId; liveActorName=name;
+    sessionStorage.setItem('drex_live',JSON.stringify({code,agId,name}));
+    await supabaseClient.from('ttx_agency_actions').insert({
+      session_code:code, agency_id:agId,
+      agency_name:(TTX_AGENCIES.find(a=>a.id===agId)||{}).name||agId,
+      actor_name:name, action_type:'join', action_text:'훈련 참여',
+    });
+    liveEnterAgencyMode();
+  }catch(e){ fail('참여 실패: '+(e.message||e)); }
+}
+
+function liveEnterAgencyMode(){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.querySelector('.main').style.display='block';
+  document.getElementById('orgTabNav').style.display='none';
+  ['ttxMainPanel','mockExamPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const panel=document.getElementById('agencyPanel');
+  panel.style.display='block';
+  const ag=TTX_AGENCIES.find(a=>a.id===liveAgencyId)||{};
+  document.getElementById('agHdTitle').textContent=`${TTX_AG_ICONS[liveAgencyId]||''} ${ag.name||''} 담당자 훈련 — ${liveActorName}`;
+  document.getElementById('agHdCode').textContent='세션 '+liveCode;
+  document.getElementById('agMyName').textContent=ag.name||'내 기관';
+  if(liveTimer) clearInterval(liveTimer);
+  liveTimer=setInterval(liveAgencyTick, LIVE_POLL_MS);
+  liveAgencyTick();
+}
+
+let _agLastUpdated=0, _agDisaster='';
+async function liveAgencyTick(){
+  if(liveRole!=='agency'||!supabaseClient) return;
+  try{
+    const {data}=await supabaseClient.from('ttx_live_sessions')
+      .select('snapshot,status').eq('code',liveCode).maybeSingle();
+    if(!data) return;
+    const dot=document.getElementById('agSyncDot');
+    if(dot) dot.textContent=data.status==='ended'?'훈련 종료됨':'● 실시간 동기화 중';
+    const sn=data.snapshot||{};
+    if(sn.updated&&sn.updated===_agLastUpdated) return; // 변화 없음
+    _agLastUpdated=sn.updated||Date.now();
+    liveRenderAgencyView(sn);
+  }catch(e){ console.warn('agency sync:', e.message||e); }
+}
+
+function liveRenderAgencyView(sn){
+  document.getElementById('agHdRound').textContent=
+    sn.phase?`${sn.stageName||''} · 라운드 ${sn.phase}/${sn.totalRounds||'?'}`:'대기 중';
+  if(sn.situation) document.getElementById('agSituation').innerHTML=
+    `<b>${sn.title||''}</b>\n${ttxEmphasize(sn.situation)}`;
+  const al=document.getElementById('agAlert');
+  if(sn.round_event){al.innerHTML='🚨 돌발상황: '+ttxEmphasize(sn.round_event);al.classList.add('show');}
+  const v=sn.variables||{};
+  document.getElementById('agMetrics').innerHTML=[
+    ['인명피해',v.casualties,'명'],['이재민',v.displaced,'명'],
+    ['시설피해',v.infrastructure_damage,'건'],['투입자원',v.resource_needed,'단위'],
+  ].map(([l,val,u])=>`<div class="ttx-met-card"><div class="ttx-met-label">${l}</div><div class="ttx-met-val">${(val||0).toLocaleString()}</div><div class="ttx-met-unit">${u}</div></div>`).join('');
+  if(sn.env){
+    const e=document.getElementById('agEnv');
+    e.style.display='block';
+    e.innerHTML=`☔ ${sn.env.weather||'-'} &nbsp;·&nbsp; ⚠️ ${sn.env.hazard||'-'} &nbsp;·&nbsp; 🚗 ${sn.env.traffic||'-'}`;
+  }
+  const st=(sn.agencyStatuses||{})[liveAgencyId]||'대기중';
+  const stEl=document.getElementById('agMyStatus');
+  stEl.textContent=st;
+  stEl.style.color=st==='대기중'?'var(--muted)':st==='출동중'?'#1d4ed8':st==='현장투입'?'#c2410c':'var(--teal)';
+  // SOP 목록 (재난유형 확정 시 1회 구성)
+  if(sn.disaster&&sn.disaster!==_agDisaster){
+    _agDisaster=sn.disaster;
+    const sop=TTX_SOP[liveAgencyId]||{};
+    const all=[...(sop.common||[]),...(sop[sn.disaster]||[])];
+    document.getElementById('agSopList').innerHTML=all.map(a=>
+      `<button class="ttx-msg-act" onclick="liveRecordSop('${a.a.replace(/'/g,"\\'")}')">▶ ${a.a}${a.e&&Object.keys(a.e).length?`<span style="font-size:10.5px;color:var(--teal);margin-left:6px">${Object.entries(a.e).map(([k,vv])=>({casualties:'인명',displaced:'이재민',infrastructure_damage:'시설',resource_needed:'자원'}[k]||k)+(vv>0?'+':'')+vv).join(' ')}</span>`:''}</button>`).join('');
+  }
+}
+
+async function liveRecord(type, text, status){
+  if(!supabaseClient||liveRole!=='agency') return;
+  try{
+    await supabaseClient.from('ttx_agency_actions').insert({
+      session_code:liveCode, agency_id:liveAgencyId,
+      agency_name:(TTX_AGENCIES.find(a=>a.id===liveAgencyId)||{}).name,
+      actor_name:liveActorName, action_type:type, action_text:text||null, status:status||null,
+    });
+    const log=document.getElementById('agActionLog');
+    if(log){
+      if(log.textContent.includes('아직 기록이 없습니다')) log.innerHTML='';
+      const ts=new Date().toLocaleTimeString('ko-KR',{hour12:false});
+      log.insertAdjacentHTML('afterbegin',
+        `<div style="padding:5px 0;border-bottom:1px dashed var(--border)"><span style="font-family:monospace;color:var(--muted)">[${ts}]</span> ${type==='status'?'상태 → <b>'+status+'</b>':type==='sop'?'SOP: '+text:'조치록: '+text}</div>`);
+    }
+    showToast('✅ 조치가 통제관 화면에 전송되었습니다');
+  }catch(e){ showToast('⚠️ 전송 실패: '+(e.message||e)); }
+}
+function liveSetStatus(st){ liveRecord('status', null, st); const el=document.getElementById('agMyStatus'); if(el)el.textContent=st; }
+function liveRecordSop(text){ liveRecord('sop', text); }
+function liveRecordNote(){
+  const inp=document.getElementById('agNoteInput');
+  const t=(inp.value||'').trim();
+  if(!t){showToast('조치 내용을 입력하세요');return;}
+  liveRecord('note', t); inp.value='';
+}
+
 async function submitLogin() {
   const errEl = document.getElementById("lmErr");
   errEl.style.display = "none";
@@ -1249,6 +1548,19 @@ async function submitLogin() {
 }
 
 function initLogin() {
+  // 기관 담당자 세션 복원
+  const live = sessionStorage.getItem("drex_live");
+  if (live) {
+    try{
+      const l=JSON.parse(live);
+      liveRole='agency'; liveCode=l.code; liveAgencyId=l.agId; liveActorName=l.name;
+      // Supabase 초기화(비동기) 후 진입
+      const wait=setInterval(()=>{ if(supabaseClient){clearInterval(wait);liveEnterAgencyMode();} },400);
+      setTimeout(()=>clearInterval(wait),8000);
+      document.getElementById("loginOverlay").classList.add("hidden");
+      return;
+    }catch(e){}
+  }
   const visitor = sessionStorage.getItem("drex_visitor");
   if (visitor) {
     document.getElementById("loginOverlay").classList.add("hidden");
@@ -1503,6 +1815,11 @@ function ttxSetAgencyStatus(agId, status) {
 // 출동중 상태로 시작 → TTX_DISPATCH_TICKS 틱 후 ttxSimTick이 현장투입으로 승격.
 // 즉시 전원 투입되던 기존 방식과 달리 억제율이 점진 상승 = 신속 지령의 가치가 생김.
 function ttxDispatchAgency(ag, tag, act) {
+  // 라이브 참여 기관은 담당자가 직접 조치 — 지령만 기록
+  if(ttxState.liveAgencies && ttxState.liveAgencies[ag.id]){
+    ttxLogSituation('📟','red',`${ag.name} 지령 (${tag}) — 담당자(${ttxState.liveAgencies[ag.id]}) 조치 필요${act?`: ${act.a}`:''}`,'agency');
+    return;
+  }
   ttxSetAgencyStatus(ag.id,'출동중');
   ttxState.dispatchInfo=ttxState.dispatchInfo||{};
   ttxState.dispatchInfo[ag.id]={tick:ttxState.simTick||0, action:act?act.a:null, effects:act?act.e:null};
@@ -1949,6 +2266,7 @@ function ttxSelectMode(btn) {
 function ttxSaveState() {
   const s={...ttxState,timerInterval:null,rngState:ttxRngState,tickRngState:ttxTickRngState};
   try{localStorage.setItem('drex_ttx',JSON.stringify(s));}catch(e){}
+  liveMarkDirty(); // 라이브 세션 스냅샷 갱신 예약
 }
 
 function ttxRestoreState() {
@@ -2819,6 +3137,7 @@ JSON으로만 응답 (마크다운 없이):
     if(session?.id) ttxState.sessionId=session.id;
 
     ttxSaveState();
+    liveCreateSession(); // 라이브 세션 개설 (Supabase 온라인 시)
     ttxRenderMeetingHeader();
     ttxRenderMetrics();
     ttxRenderTrend();
@@ -2949,6 +3268,7 @@ function ttxAutoExecuteNonKey() {
   const disaster = ttxState.disasterType || '';
   TTX_AGENCIES.forEach(a => {
     if (keySet.has(a.id)) return;
+    if (ttxState.liveAgencies && ttxState.liveAgencies[a.id]) return; // 라이브 참여 기관은 담당자 몫
     if ((ttxState.agencyStatuses[a.id]||'대기중') !== '대기중') return;
     const sopData = TTX_SOP[a.id] || {};
     // 재난 특화 SOP 우선, 없으면 공통 SOP 중 PRNG 선택 (기존: 항상 공통 1번 고정)
@@ -3433,6 +3753,11 @@ function ttxNextPhase() {
     ttxLoadOptions();
   }else{
     ttxStopTimer();
+    if(liveRole==='admin'&&supabaseClient&&liveCode){
+      supabaseClient.from('ttx_live_sessions')
+        .update({status:'ended',snapshot:liveBuildSnapshot(),updated_at:new Date().toISOString()})
+        .eq('code',liveCode).then(()=>{});
+    }
     ttxRenderResults();
     showTtxStep(3);
     ttxGenerateReport();
@@ -3860,6 +4185,11 @@ function ttxDownloadMasterDoc(){
 <table><tr><th style="width:36px">R</th><th style="width:80px">국면</th><th style="width:24%">돌발상황</th><th>의사결정·메시지 조치</th><th style="width:52px">점수</th></tr>${decRows||'<tr><td colspan=5>-</td></tr>'}</table>
 <h2>Ⅲ. 협업기관 운용 결과</h2>
 <table><tr><th>기관</th><th>역할</th><th style="width:80px">최종 상태</th></tr>${agRows}</table>
+${(ttxState.liveActionLog&&ttxState.liveActionLog.length)?`
+<h2>Ⅲ-1. 협업기관 담당자 조치 기록 (라이브 훈련)</h2>
+<table><tr><th style="width:110px">기관</th><th style="width:80px">담당자</th><th style="width:64px">유형</th><th>조치 내용</th><th style="width:150px">시각</th></tr>
+${ttxState.liveActionLog.filter(x=>x.type!=='join').map(x=>`<tr><td>${x.agency}</td><td>${x.actor}</td><td>${({sop:'SOP',note:'조치록',status:'상태'})[x.type]||x.type}</td><td>${x.text}</td><td>${x.time?new Date(x.time).toLocaleTimeString('ko-KR',{hour12:false}):'-'}</td></tr>`).join('')}
+</table>`:''}
 <h2>Ⅳ. 피해 및 복구 지표</h2>
 <div class="meta">최종 피해: 인명 ${v.casualties??0}명 · 이재민 ${v.displaced??0}명 · 시설 ${v.infrastructure_damage??0}건 · 투입자원 ${v.resource_needed??0}단위<br>
 돌발변수 ${ttxState.unexpectedEventsCount||0}회 · 조기 안정화 ${ttxState.stabilized?'달성':'미달성'} · 위기 라운드 ${ttxState.crisisInserted?'발생':'없음'}</div>
