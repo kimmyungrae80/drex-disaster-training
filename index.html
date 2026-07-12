@@ -1603,6 +1603,7 @@ function liveRenderAgencyView(sn){
       document.getElementById('agSitMapHint').style.display='block';
       loadKakaoSdk().then(ok=>{
         if(ok&&sn.mapCenter){ ttxRealMapRender('agSitMap', window._agSitData, sn.mapCenter, 230); }
+        else if(navigator.onLine&&sn.mapCenter){ ttxOsmMapRender('agSitMap', window._agSitData, sn.mapCenter, 230); }
         else{ const svg=ttxSitMapSVG(window._agSitData); if(svg) el.innerHTML=svg; else el.style.display='none'; }
       });
     }
@@ -3134,6 +3135,103 @@ function ttxGeocodeCenter(){
   });
 }
 
+// ─── OSM 타일 지도 (키 불필요 폴백) ────────────
+// 카카오 키가 없거나 SDK 로드 실패 시: OpenStreetMap 공개 타일을 직접 조립하고
+// 그 위에 SVG 오버레이(위험구역·기관 마커)를 그린다. 외부 라이브러리 없음.
+const _osmZoom={}; // containerId → zoom
+function _lngToX(lng,z){ return (lng+180)/360*Math.pow(2,z); }
+function _latToY(lat,z){ const r=lat*Math.PI/180; return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z); }
+function _mPerPx(lat,z){ return 40075016.686*Math.cos(lat*Math.PI/180)/(Math.pow(2,z)*256); }
+
+// OSM Nominatim 지오코딩 (무료, 키 불필요) — 훈련당 1회
+async function ttxGeocodeOsm(){
+  if(ttxState.mapCenter) return ttxState.mapCenter;
+  try{
+    const q=encodeURIComponent(ttxState.orgName||'');
+    if(!q) return null;
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&countrycodes=kr`,
+      {headers:{'Accept':'application/json'}});
+    if(!r.ok) return null;
+    const d=await r.json();
+    if(d&&d[0]){
+      ttxState.mapCenter={lat:+d[0].lat,lng:+d[0].lon};
+      ttxSaveState();
+      return ttxState.mapCenter;
+    }
+  }catch(e){ console.warn('OSM 지오코딩 실패:', e.message||e); }
+  return null;
+}
+
+function ttxOsmMapRender(containerId, data, center, height){
+  const el=document.getElementById(containerId);
+  if(!el||!center) return false;
+  const W=el.clientWidth||600, H=height||185;
+  const stage=data.stage||1;
+  const ratio=data.initCasualties>0?Math.min(2,(data.casualties||0)/data.initCasualties):1;
+  const rM=Math.round(700*(stage===1?1:stage===2?1.7:1.35)*(0.7+0.3*ratio));
+  // 줌: 위험구역 지름×3.2가 세로에 들어가게 (12~16 클램프)
+  let z=_osmZoom[containerId];
+  if(!z){
+    const need=rM*3.2/H;
+    z=Math.round(Math.log2(40075016.686*Math.cos(center.lat*Math.PI/180)/(256*need)));
+    z=Math.max(12,Math.min(16,z));
+    _osmZoom[containerId]=z;
+  }
+  const cx=_lngToX(center.lng,z)*256, cy=_latToY(center.lat,z)*256;
+  const x0=cx-W/2, y0=cy-H/2;
+  const t0x=Math.floor(x0/256), t0y=Math.floor(y0/256);
+  const t1x=Math.floor((x0+W)/256), t1y=Math.floor((y0+H)/256);
+  let tiles='';
+  for(let tx=t0x;tx<=t1x;tx++)for(let ty=t0y;ty<=t1y;ty++){
+    tiles+=`<img src="https://tile.openstreetmap.org/${z}/${tx}/${ty}.png" alt=""
+      style="position:absolute;left:${tx*256-x0}px;top:${ty*256-y0}px;width:256px;height:256px" loading="lazy">`;
+  }
+  // 오버레이 (픽셀 좌표)
+  const px=(lat,lng)=>[_lngToX(lng,z)*256-x0, _latToY(lat,z)*256-y0];
+  const mpp=_mPerPx(center.lat,z);
+  const [ox,oy]=px(center.lat,center.lng);
+  const rPx=rM/mpp;
+  const hazColor=stage===3?'#c47d1a':'#e03131';
+  const origin=(data.sitmap&&data.sitmap.features||[]).find(f=>f.kind==='origin');
+  let ov=`<circle cx="${ox}" cy="${oy}" r="${(rPx*1.55).toFixed(1)}" fill="${hazColor}" opacity=".08"/>
+    <circle cx="${ox}" cy="${oy}" r="${rPx.toFixed(1)}" fill="${hazColor}" opacity=".18" stroke="${hazColor}" stroke-width="2.5" stroke-dasharray="8,6"/>`;
+  let html='';
+  const st=data.agencyStatuses||{};
+  const dM=(mm,ang)=>[ox+mm*Math.cos(ang)/mpp, oy+mm*Math.sin(ang)/mpp];
+  TTX_AGENCIES.forEach((a,i)=>{
+    const status=st[a.id];
+    if(status!=='현장투입'&&status!=='완료'&&status!=='출동중') return;
+    const ang=(i/TTX_AGENCIES.length)*Math.PI*2-Math.PI/2;
+    const [mx,my]=dM(rM+250+(i%2)*180,ang);
+    const en=status==='출동중', mine=data.myAgencyId===a.id;
+    html+=`<div style="position:absolute;left:${(mx-15).toFixed(0)}px;top:${(my-15).toFixed(0)}px;display:flex;flex-direction:column;align-items:center;opacity:${en?'.6':'1'};z-index:4">
+      <div style="width:30px;height:30px;border-radius:50%;background:${en?'#eff6ff':'#fff7ed'};border:2px ${en?'dashed #93c5fd':'solid #fdba74'};${mine?'box-shadow:0 0 0 3px #0e8a76;':''}display:flex;align-items:center;justify-content:center;font-size:15px">${TTX_AG_ICONS[a.id]||'📌'}</div>
+      <div style="font-size:10px;font-weight:700;color:#333;background:rgba(255,255,255,.9);padding:0 4px;border-radius:4px;margin-top:1px;white-space:nowrap">${a.name}</div>
+    </div>`;
+  });
+  el.innerHTML=`<div style="position:relative;width:100%;height:${H}px;overflow:hidden;border-radius:8px;background:#dce8dc">
+    ${tiles}
+    <svg style="position:absolute;inset:0;z-index:3;pointer-events:none" width="${W}" height="${H}">${ov}</svg>
+    <div style="position:absolute;left:50%;top:${(oy-rPx-22).toFixed(0)}px;transform:translateX(-50%);z-index:5;background:${hazColor};color:#fff;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:9px;white-space:nowrap">⚠️ ${ttxEsc(origin?.label||'재난 발생')}${stage===3?' (수습 중)':''}</div>
+    ${html}
+    <div style="position:absolute;right:6px;top:6px;z-index:6;display:flex;flex-direction:column;gap:4px">
+      <button onclick="ttxOsmZoom('${containerId}',1)" style="width:26px;height:26px;border:1px solid #bbb;background:#fff;border-radius:6px;cursor:pointer;font-weight:700">+</button>
+      <button onclick="ttxOsmZoom('${containerId}',-1)" style="width:26px;height:26px;border:1px solid #bbb;background:#fff;border-radius:6px;cursor:pointer;font-weight:700">−</button>
+    </div>
+    <div style="position:absolute;right:4px;bottom:2px;z-index:6;font-size:9px;color:#555;background:rgba(255,255,255,.7);padding:0 4px;border-radius:3px">© OpenStreetMap</div>
+  </div>`;
+  el.dataset.osm='1';
+  el._osmArgs={data,center,height:H};
+  return true;
+}
+function ttxOsmZoom(containerId,delta){
+  const el=document.getElementById(containerId);
+  if(!el||!el._osmArgs) return;
+  _osmZoom[containerId]=Math.max(11,Math.min(17,(_osmZoom[containerId]||14)+delta));
+  const a=el._osmArgs;
+  ttxOsmMapRender(containerId,a.data,a.center,a.height);
+}
+
 // 지도 인스턴스 + 오버레이 관리
 const _rmaps={}; // containerId → {map, circles:[], overlays:[], center}
 function ttxRealMapRender(containerId, data, center, height){
@@ -3207,18 +3305,19 @@ function ttxRenderSitMap(){
   if(!data.sitmap&&!ttxState.scenario){wrap.style.display='none';return;}
   wrap.style.display='block';
   if(wrap.classList.contains('collapsed')) return;
-  loadKakaoSdk().then(ok=>{
+  loadKakaoSdk().then(async ok=>{
     if(ok){
-      ttxGeocodeCenter().then(center=>{
-        if(center&&ttxRealMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
-        delete _rmaps['ttxSitMapBody'];
-        const svg=ttxSitMapSVG(ttxSitMapData());
-        if(svg) body.innerHTML=svg; else wrap.style.display='none';
-      });
-    }else{
-      const svg=ttxSitMapSVG(data);
-      if(svg) body.innerHTML=svg; else wrap.style.display='none';
+      const center=await ttxGeocodeCenter();
+      if(center&&ttxRealMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
     }
+    // OSM 폴백 (키 불필요) — 온라인이면 실지도 유지
+    if(navigator.onLine){
+      const center=await ttxGeocodeOsm();
+      if(center&&ttxOsmMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
+    }
+    delete _rmaps['ttxSitMapBody'];
+    const svg=ttxSitMapSVG(ttxSitMapData());
+    if(svg) body.innerHTML=svg; else wrap.style.display='none';
   });
 }
 
@@ -3234,9 +3333,13 @@ function ttxOpenSitMapModal(data){
   const body=document.getElementById('sitMapModalBody');
   modal.classList.add('open');
   loadKakaoSdk().then(ok=>{
+    const h=Math.round(window.innerHeight*0.68);
     if(ok&&data.mapCenter){
       body.innerHTML=''; delete _rmaps['sitMapModalBody'];
-      setTimeout(()=>ttxRealMapRender('sitMapModalBody', data, data.mapCenter, Math.round(window.innerHeight*0.68)),60);
+      setTimeout(()=>ttxRealMapRender('sitMapModalBody', data, data.mapCenter, h),60);
+    }else if(navigator.onLine&&data.mapCenter){
+      body.innerHTML='';
+      setTimeout(()=>ttxOsmMapRender('sitMapModalBody', data, data.mapCenter, h),60);
     }else{
       body.innerHTML=ttxSitMapSVG(data)||'<div style="padding:30px;color:var(--muted)">상황도 데이터가 없습니다.</div>';
     }
