@@ -2532,6 +2532,8 @@ const TTX_STATUS_EFFECT = {'대기중':0,'출동중':.4,'현장투입':1,'완료
 // 근거(초기값): 홍수/태풍 — 재해연보 호우·태풍 사망·실종 비중, 오송 지하차도(사망14/부상16) 상방 반영
 //   지진 — 경주·포항 직접 사망 0 (낮은 평균·넓은 분산) / 산불 — 고성·울진 사망 0~2
 //   화학사고 — 구미 불산(사망5/부상18) / 감염병 — 코로나19 치명률대, 메르스급 상방 꼬리
+// 교차 검증: 2024 진천군 훈련 시나리오(공장화재→염소 누출) 최종 사망3/사상자40 ≈ 7.5%
+//   → 화학 Beta(2,15) 분포(평균 12%, P25≈7%) 범위 내 — 실무 설정과 정합 확인
 // ※ 재해연보 원자료로 정밀 재보정 시 유형별 (평균, 표준편차) → α,β 환산해 교체
 const TTX_FATALITY = {
   '홍수/태풍': {a:2.0, b:23, mean:0.08},
@@ -3411,6 +3413,7 @@ async function ttxGenerateScenario() {
 알고 있는 국내 ${disasterForPrompt} 실제 사례를 참조하여, 아래 조건으로 현실적인 TTX 시나리오를 생성하세요.
 모든 문자열은 표준 한국어(한글)로만 작성하고 한자·중국어·일본어 문자는 절대 사용하지 마세요.
 sitmap은 훈련구역 도식 상황도입니다: 좌표는 가로 0~1000, 세로 0~600. 지역 특성을 반영해 요소 6~10개를 배치하고 origin(재난 발생 지점)은 반드시 1개 포함하세요.
+stage_issue_titles는 실제 훈련의 상황판단회의 안건 수준으로: 예) 상황접수·보고전파, 주민대피 의사결정(취약계층), 유언비어·언론 혼란 대응, 교통혼잡으로 긴급차량 근접 불가, 재난관리자원 동원, 지휘권 이양·수습복구 대책.
 
 [훈련 조건]
 - 기관: ${orgName}
@@ -3922,12 +3925,16 @@ async function ttxLoadOptions() {
     if(prevStage>0){
       (ttxState.stageSnapshots=ttxState.stageSnapshots||{})[prevStage]={
         casualties:ttxState.variables.casualties, displaced:ttxState.variables.displaced,
-        infra:ttxState.variables.infrastructure_damage, t:ttxState.simTick||0,
+        infra:ttxState.variables.infrastructure_damage, dead:ttxState.variables.dead||0,
+        t:ttxState.simTick||0,
       };
     }
     ttxState._lastEnvStage=stage;
     const e=(ttxState.scenario.env_track||[])[stage-1];
     if(e&&prevStage>0) ttxLogSituation('🌐','red',`${TTX_STAGE_NAMES[stage-1]} 국면 진입 — ${e.weather||''} / ${e.hazard||''} / 교통 ${e.traffic||''}`,'system');
+    // 수습·안정화 진입 = 긴급구조 종료 시점: 지휘권 이양 (재난 대응 표준 절차)
+    if(stage===3&&prevStage>0&&prevStage<3)
+      ttxLogSituation('🏛️','blue','지휘권 이양 — 긴급구조통제단(소방) → 재난현장통합지원본부(부단체장)','system');
   }
   ttxRenderEnvTrack();
   ttxRenderSitMap();
@@ -4580,8 +4587,8 @@ function ttxDownloadMasterDoc(){
   const snaps=ttxState.stageSnapshots||{};
   const init=(ttxState.damageHistory&&ttxState.damageHistory[0])||{};
   const dmg=st=>{
-    const sn=st===3?{casualties:v.casualties,displaced:v.displaced,infra:v.infrastructure_damage}:(snaps[st]||null);
-    return sn?`인명 ${sn.casualties??'-'}명 · 이재민 ${sn.displaced??'-'}명 · 시설 ${sn.infra??'-'}건`:'(국면 미도달)';
+    const sn=st===3?{casualties:v.casualties,displaced:v.displaced,infra:v.infrastructure_damage,dead:v.dead||0}:(snaps[st]||null);
+    return sn?`사상자 ${sn.casualties??'-'}명 (사망 ${sn.dead??0}명) · 이재민 ${sn.displaced??'-'}명 · 시설 ${sn.infra??'-'}건`:'(국면 미도달)';
   };
   const issues=st=>((sc.stage_issue_titles||{})['stage'+st]||[]).map(t=>`· ${t}`).join('<br>')||'-';
   const stageRow=(label,fn)=>`<tr><th style="width:110px">${label}</th>${[1,2,3].map(st=>`<td>${fn(st)}</td>`).join('')}</tr>`;
