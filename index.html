@@ -565,22 +565,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     </button>
     <div id="guideBody" style="padding:20px 22px;background:#fff;display:block">
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
         <div style="background:#f0faf8;border-radius:10px;padding:14px 16px;border-left:4px solid var(--teal)">
           <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px">🎯 이 훈련은 무엇인가요?</div>
           <div style="font-size:12px;line-height:1.8;color:var(--text)">
-            <b>TTX(테이블탑 시뮬레이션, Tabletop Exercise)</b>는 실제 재난 발생을 가정하고 의사결정 절차를 토론·연습하는 상황판단회의입니다.<br>
-            TTX AI가 실전 시나리오를 생성하고, 강도별 <b>3~6라운드</b>의 의사결정을 거쳐 대응 역량을 평가받습니다. 대응 성과에 따라 라운드가 줄거나(조기 안정화) 늘어날 수(위기 라운드) 있습니다.
+            실제 <b>통합훈련(상황판단회의 TTX)</b>을 재현한 시뮬레이션입니다. AI가 우리 지역 특성의 시나리오·상황도를 생성하고,
+            강도별 <b>3~6라운드</b>의 회의를 거치며 대응 역량을 평가받습니다. 대응 성과에 따라 라운드가 줄거나(조기 안정화) 늘어납니다(위기 라운드).
           </div>
         </div>
         <div style="background:#fff5e0;border-radius:10px;padding:14px 16px;border-left:4px solid var(--amber)">
-          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px">⏱️ 소요 시간</div>
+          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px">⏱️ 소요 시간 · 방식</div>
           <div style="font-size:12px;line-height:1.8;color:var(--text)">
-            · 시나리오 생성: <b>약 30초</b><br>
-            · 라운드 의사결정: <b>라운드당 3~8분</b> (초급 3 / 중급 4~5 / 고급 6라운드)<br>
-            · 최종 보고서: <b>약 1분</b><br>
-            <span style="color:var(--amber);font-weight:600">총 20~50분 소요</span>
+            · <b>통합훈련 모드</b> (기본): 상황 메시지 처리 + 핵심 결정 · <b>40~60분</b><br>
+            · <b>신속 모드</b>: 핵심 결정만 · 15~25분 (개인 학습용)<br>
+            · 단체 훈련: 통제관 1명 + 기관 담당자들이 <b>세션 코드</b>로 참여
           </div>
+        </div>
+      </div>
+
+      <div style="background:#eef2ff;border-radius:10px;padding:12px 16px;border-left:4px solid #4f46e5;margin-bottom:18px">
+        <div style="font-size:12px;font-weight:700;color:#4f46e5;margin-bottom:6px">👥 역할 안내 (라이브 훈련)</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--text)">
+          · <b>통제관(지금 이 화면)</b>: 훈련을 만들고 운영합니다. 시나리오 생성 시 상단에 <b>세션 코드 6자리</b>가 표시됩니다.<br>
+          · <b>협업기관 담당자</b>: 로그인 화면 하단 "협업기관 담당자로 참여"에서 코드+기관 선택 → 같은 상황판을 보며
+          자기 기관의 SOP 조치·조치록을 직접 기록합니다. <b>참여한 기관은 자동 조치가 꺼지므로</b> 담당자가 움직여야 합니다.
         </div>
       </div>
 
@@ -588,15 +596,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
         <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
           <span style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">1단계</span>
-          <div style="font-size:12px;line-height:1.7"><b>훈련 조건 입력</b> — 기관명, 재난유형, 지역(+특성 태그), 훈련강도, 참여인원을 입력하고 시나리오를 생성합니다. 사전/사후 비교 훈련을 하려면 <b>시뮬레이션 시드</b>에 같은 숫자를 입력하세요.</div>
+          <div style="font-size:12px;line-height:1.7"><b>훈련 조건 입력</b> — 기관명, 재난유형, 지역(+특성 태그), 훈련 방식·강도, 참여인원.
+          사전/사후 비교 훈련은 <b>시뮬레이션 시드</b>에 같은 숫자를 입력하면 피해·돌발이 동일 재현됩니다.</div>
         </div>
         <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
           <span style="background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">2단계</span>
-          <div style="font-size:12px;line-height:1.7"><b>라운드 상황판단회의</b> — 돌발상황마다 A·B·C 중 대응안을 선택합니다. <span style="color:var(--red);font-weight:600">실시간 30초마다 재난시간 10분이 흘러 피해가 자동 증가</span>하므로, <span style="color:var(--amber);font-weight:600">기관 카드를 클릭해 현장투입</span>해야 피해 곡선이 꺾입니다. 60초 내 결정 시 신속성 만점.</div>
+          <div style="font-size:12px;line-height:1.7"><b>라운드 상황판단회의</b> — <span style="color:var(--red);font-weight:600">실시간 30초마다 재난시간 10분이 흘러 피해가 자동 증가</span>합니다.
+          📨 상황부여 메시지를 처리하고(90초 내 적시 처리), <span style="color:var(--amber);font-weight:600">기관 카드를 클릭해 현장투입</span>해야 피해 곡선이 꺾입니다.
+          중앙 상단 🗺️ <b>상황도</b>(실지도)에서 위험구역 확산·기관 위치를, 헤더의 🚨 <b>위기경보</b>(경계→심각→하향)로 국면을 확인하세요. 핵심 결정(A/B/C)은 60초 내 결정 시 신속성 만점.</div>
         </div>
         <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
           <span style="background:var(--amber);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">3단계</span>
-          <div style="font-size:12px;line-height:1.7"><b>AI 결과 분석</b> — 라운드 점수(규칙 60% + AI 40%)와 협업기관 운영 결과를 종합한 훈련 분석·RTO 산출·AI 보고서를 받습니다.</div>
+          <div style="font-size:12px;line-height:1.7"><b>결과 분석</b> — 라운드 점수(규칙 60%+AI 40%), 훈련 분석 차트, RTO 산출과 함께
+          <b>2026 평가지표 2-1 토론기반 훈련 평가점검표</b>(15점)가 자동 생성됩니다.</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#f9f8f5;border-radius:8px">
+          <span style="background:#4f46e5;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;flex-shrink:0;margin-top:1px">산출물</span>
+          <div style="font-size:12px;line-height:1.7"><b>📄 통합시나리오 총괄표 다운로드</b> — 훈련 기록(환경 전개·위기경보·피해 누계·회의 기록·기관 조치·평가점검표)이
+          실무 양식 문서로 자동 정리됩니다. 차년도 훈련 계획 초안으로 활용하세요. AI 종합 보고서 인쇄도 지원합니다.</div>
         </div>
       </div>
 
@@ -609,13 +626,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       </div>
 
       <div style="background:#fff0f0;border-radius:8px;padding:12px 15px;border-left:4px solid var(--red)">
-        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ 주의 사항</div>
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ 알아두세요</div>
         <div style="font-size:12px;line-height:1.8;color:var(--text)">
-          · 시나리오 생성 시 인터넷 연결이 필요합니다 (AI API 호출)<br>
-          · 브라우저 뒤로가기 사용 시 진행 상황이 초기화될 수 있습니다<br>
-          · 훈련 결과는 자동 저장되며 마지막 세션이 복원됩니다<br>
-          · 훈련 강도 <b>고급</b>은 피해 규모가 1.6배 증폭되고 라운드가 6회로 늘어납니다<br>
-          · 화면을 켜둔 채 방치하면 피해가 계속 진행됩니다 — 고민은 짧게, 기관 투입은 빠르게
+          · 현황판의 "인명피해"는 <b>사상자 총계</b>(사망+실종+중상+경상)입니다 — 사망자는 과거 사고 데이터 기반 확률 모델로 산출되며 훈련 참여인원과 무관합니다<br>
+          · 화면을 켜둔 채 방치하면 피해가 계속 진행됩니다 — 고민은 짧게, 기관 투입은 빠르게<br>
+          · 시나리오 생성에는 인터넷 연결이 필요하며, 새로고침 시 진행 상태는 복원됩니다<br>
+          · 훈련 강도 <b>고급</b>은 피해 1.6배·6라운드·메시지 4건으로 난도가 높습니다
         </div>
       </div>
 
