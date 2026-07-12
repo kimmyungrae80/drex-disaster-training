@@ -712,6 +712,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-hd-right">
       <span class="sev-badge sev-red" id="ttxSevBadge">🔴 위급</span>
       <span class="ttx-phase-badge" id="ttxPhaseBadge">초기대응 · 라운드 1</span>
+      <span class="ttx-phase-badge" id="ttxAlertBadge" style="display:none"></span>
       <span class="ttx-phase-badge" id="ttxLiveCodeBadge" style="display:none;background:var(--teal)"></span>
       <span class="ttx-timer" id="ttxTimerDisplay">00:00:00</span>
     </div>
@@ -1549,7 +1550,8 @@ function liveRenderAgencyView(sn){
   if(sn.env){
     const e=document.getElementById('agEnv');
     e.style.display='block';
-    e.innerHTML=`☔ ${sn.env.weather||'-'} &nbsp;·&nbsp; ⚠️ ${sn.env.hazard||'-'} &nbsp;·&nbsp; 🚗 ${sn.env.traffic||'-'}`;
+    const agStage=ttxStageNameToIdx(sn.stageName);
+    e.innerHTML=`🚨 위기경보 <b style="color:${TTX_ALERT_COLOR[ttxAlertLevel(agStage)]}">${ttxAlertLabel(agStage)}</b> &nbsp;·&nbsp; ☔ ${sn.env.weather||'-'} &nbsp;·&nbsp; ⚠️ ${sn.env.hazard||'-'} &nbsp;·&nbsp; 🚗 ${sn.env.traffic||'-'}`;
   }
   // 공유 상황일지 렌더 + 내 기관 관련 신규 항목 알림
   const myName=(TTX_AGENCIES.find(a=>a.id===liveAgencyId)||{}).name||'';
@@ -1985,6 +1987,12 @@ function ttxStageOfRound(r) {
   return Math.min(3, Math.ceil(r / (N/3)));
 }
 function ttxStageName() { return TTX_STAGE_NAMES[ttxStageOfRound(ttxState.phase)-1]; }
+// 위기경보 단계 (관심→주의→경계→심각) — 국면과 연동된 표준 축
+// 근거: 영동군·괴산군 통합시나리오의 위기경보단계 행 (징후 관심 → 초기 주의·경계 → 비상 심각 → 수습 하향)
+const TTX_ALERT_BY_STAGE={1:'경계',2:'심각',3:'경계'};
+const TTX_ALERT_COLOR={'관심':'#3b82f6','주의':'#ca8a04','경계':'#ea580c','심각':'#dc2626'};
+function ttxAlertLevel(stage){ return TTX_ALERT_BY_STAGE[stage]||'주의'; }
+function ttxAlertLabel(stage){ return ttxAlertLevel(stage)+(stage===3?' (하향)':''); }
 function ttxBadgeText() {
   return `${ttxStageName()} · 라운드 ${ttxState.phase}/${ttxState.totalRounds||3}`;
 }
@@ -3230,9 +3238,13 @@ function ttxRenderEnvTrack(){
   const stage=ttxStageOfRound(ttxState.phase);
   const e=et[Math.min(stage,et.length)-1]||{};
   wrap.style.display='block';
+  const lvl=ttxAlertLevel(stage);
   document.getElementById('ttxEnvStage').textContent=`🌐 환경 전개 — ${TTX_STAGE_NAMES[stage-1]} 국면`;
   document.getElementById('ttxEnvBody').innerHTML=
+    `🚨 위기경보 <b style="color:${TTX_ALERT_COLOR[lvl]}">${ttxAlertLabel(stage)}</b><br>`+
     `☔ ${e.weather||'-'}<br>⚠️ ${e.hazard||'-'}<br>🚗 교통 ${TTX_TRAFFIC_ICON[e.traffic]||''} ${e.traffic||'-'}${e.note?`<br><span style="opacity:.7">※ ${e.note}</span>`:''}`;
+  const ab=document.getElementById('ttxAlertBadge');
+  if(ab){ab.style.display='';ab.textContent='위기경보 '+ttxAlertLabel(stage);ab.style.background=TTX_ALERT_COLOR[lvl];}
 }
 
 function ttxRenderTrend() {
@@ -3413,7 +3425,7 @@ async function ttxGenerateScenario() {
 알고 있는 국내 ${disasterForPrompt} 실제 사례를 참조하여, 아래 조건으로 현실적인 TTX 시나리오를 생성하세요.
 모든 문자열은 표준 한국어(한글)로만 작성하고 한자·중국어·일본어 문자는 절대 사용하지 마세요.
 sitmap은 훈련구역 도식 상황도입니다: 좌표는 가로 0~1000, 세로 0~600. 지역 특성을 반영해 요소 6~10개를 배치하고 origin(재난 발생 지점)은 반드시 1개 포함하세요.
-stage_issue_titles는 실제 훈련의 상황판단회의 안건 수준으로: 예) 상황접수·보고전파, 주민대피 의사결정(취약계층), 유언비어·언론 혼란 대응, 교통혼잡으로 긴급차량 근접 불가, 재난관리자원 동원, 지휘권 이양·수습복구 대책.
+stage_issue_titles는 실제 훈련의 상황판단회의 안건 수준으로: 예) 상황접수·보고전파, 위기경보 단계 상향·하향 결정, 주민대피 의사결정(취약계층), 유언비어·언론 혼란 대응, 교통혼잡으로 긴급차량 근접 불가, 재난관리자원 동원, 지휘권 이양·수습복구 대책.
 
 [훈련 조건]
 - 기관: ${orgName}
@@ -3932,6 +3944,9 @@ async function ttxLoadOptions() {
     ttxState._lastEnvStage=stage;
     const e=(ttxState.scenario.env_track||[])[stage-1];
     if(e&&prevStage>0) ttxLogSituation('🌐','red',`${TTX_STAGE_NAMES[stage-1]} 국면 진입 — ${e.weather||''} / ${e.hazard||''} / 교통 ${e.traffic||''}`,'system');
+    // 위기경보 변동 (상황판단회의 의사결정 사항)
+    if(prevStage>0&&ttxAlertLevel(stage)!==ttxAlertLevel(prevStage))
+      ttxLogSituation('🚨','red',`위기경보 ${ttxAlertLevel(prevStage)} → ${ttxAlertLabel(stage)} ${stage>prevStage&&ttxAlertLevel(stage)==='심각'?'상향':'조정'}`,'system');
     // 수습·안정화 진입 = 긴급구조 종료 시점: 지휘권 이양 (재난 대응 표준 절차)
     if(stage===3&&prevStage>0&&prevStage<3)
       ttxLogSituation('🏛️','blue','지휘권 이양 — 긴급구조통제단(소방) → 재난현장통합지원본부(부단체장)','system');
@@ -4638,6 +4653,14 @@ ${(sc.sitmap&&sc.sitmap.features)?`<h2>Ⅰ-0. 훈련구역 상황도 (훈련 종
 <h2>Ⅰ. 통합훈련 시나리오 총괄</h2>
 <table>
  <tr><th style="width:110px">구분</th><th>초기대응</th><th>확산·대응</th><th>수습·안정화</th></tr>
+ ${stageRow('위기경보',st=>ttxAlertLabel(st))}
+ ${stageRow('타임라인',st=>{
+   const t0=st===1?0:(snaps[st-1]?snaps[st-1].t:null);
+   const t1=st===3?(ttxState.simTick||0):(snaps[st]?snaps[st].t:null);
+   if(t0==null||t1==null) return '-';
+   const f=t=>'H+'+String(Math.floor(t*TTX_TICK_SIM_MIN/60)).padStart(2,'0')+':'+String((t*TTX_TICK_SIM_MIN)%60).padStart(2,'0');
+   return f(t0)+' ~ '+f(t1);
+ })}
  ${stageRow('전개 개요',st=>((sc.stage_arcs||{})['stage'+st])||'-')}
  ${stageRow('기상',st=>(et[st-1]||{}).weather||'-')}
  ${stageRow('위험지표',st=>(et[st-1]||{}).hazard||'-')}
