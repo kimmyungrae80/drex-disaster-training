@@ -2526,6 +2526,56 @@ const TTX_TICK_SIM_MIN  = 10;
 // 기관별 피해 억제 기여도 (실무 보정 대상 — docs/UPGRADE-PLAN.md 4장)
 const TTX_AGENCY_SUPPRESS = {fire:.20,police:.10,army:.12,health:.15,edu:.05,env:.06,mlit:.08,mois:.08,kepco:.06,kt:.05,gas:.06,vol:.05,corp:.05};
 const TTX_STATUS_EFFECT = {'대기중':0,'출동중':.4,'현장투입':1,'완료':.6};
+// ─── 치명률 모델 (T7) — Beta-Binomial 2단계 몬테카를로 ──
+// 1단계: 사건 치명률 p ~ Beta(α,β)  — 유형별 국내 사고 데이터 기반 보정 (아래 근거)
+// 2단계: 사망자 ~ Binomial(인명피해 N, p) — 피해자 개인 단위 확률 추출
+// 근거(초기값): 홍수/태풍 — 재해연보 호우·태풍 사망·실종 비중, 오송 지하차도(사망14/부상16) 상방 반영
+//   지진 — 경주·포항 직접 사망 0 (낮은 평균·넓은 분산) / 산불 — 고성·울진 사망 0~2
+//   화학사고 — 구미 불산(사망5/부상18) / 감염병 — 코로나19 치명률대, 메르스급 상방 꼬리
+// ※ 재해연보 원자료로 정밀 재보정 시 유형별 (평균, 표준편차) → α,β 환산해 교체
+const TTX_FATALITY = {
+  '홍수/태풍': {a:2.0, b:23, mean:0.08},
+  '지진':      {a:1.5, b:28, mean:0.05},
+  '산불':      {a:1.2, b:39, mean:0.03},
+  '화학사고':  {a:2.0, b:15, mean:0.12},
+  '감염병':    {a:1.2, b:60, mean:0.02},
+  '복합재난':  {a:2.0, b:18, mean:0.10},
+};
+
+function ttxGammaSample(shape, rng){ // Marsaglia-Tsang
+  if(shape<1){
+    const u=Math.max(rng(),1e-12);
+    return ttxGammaSample(shape+1,rng)*Math.pow(u,1/shape);
+  }
+  const d=shape-1/3, c=1/Math.sqrt(9*d);
+  for(let iter=0;iter<200;iter++){
+    let x,v;
+    do{
+      const u1=Math.max(rng(),1e-12),u2=rng();
+      x=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      v=1+c*x;
+    }while(v<=0);
+    v=v*v*v;
+    const u=Math.max(rng(),1e-12);
+    if(Math.log(u)<0.5*x*x+d-d*v+d*Math.log(v)) return d*v;
+  }
+  return shape; // 수렴 실패 시 평균 근사
+}
+function ttxBetaSample(a,b,rng){
+  const x=ttxGammaSample(a,rng), y=ttxGammaSample(b,rng);
+  return (x+y)>0?x/(x+y):a/(a+b);
+}
+function ttxBinomial(n,p,rng){
+  n=Math.max(0,Math.floor(n)); let k=0;
+  for(let i=0;i<n;i++) if(rng()<p) k++;
+  return k;
+}
+// 사건 치명률 추출 (시나리오 시작 시 1회, 시드 재현)
+function ttxSampleFatality(disasterType){
+  const f=TTX_FATALITY[disasterType]||TTX_FATALITY['복합재난'];
+  return Math.min(0.6, ttxBetaSample(f.a, f.b, ttxRandom));
+}
+
 // 재난유형별 틱당 기본 증가율·진행 곡선
 const TTX_PROGRESS = {
   '홍수/태풍': {curve:'linear',     casualties:.030, displaced:.050, infra:.040},
@@ -2572,10 +2622,15 @@ function ttxSimTick() {
   const dI = grow(v.infrastructure_damage||0,  cfg.infra,      'i');
   if (dC > 0) {
     v.casualties = (v.casualties||0) + dC;
-    v.serious = (v.serious||0) + Math.ceil(dC*0.4);
-    v.minor   = (v.minor||0)   + Math.floor(dC*0.4);
-    v.dead    = (v.dead||0)    + Math.floor(dC*0.15);
-    v.missing = (v.missing||0) + Math.floor(dC*0.05);
+    // 신규 피해자 배분 — 사건 치명률의 절반 (대응 실패의 누적은 유지하되 완만하게)
+    const pT=(ttxState.fatalityP||((TTX_FATALITY[ttxState.disasterType]||TTX_FATALITY['복합재난']).mean))*0.5;
+    const dDead=ttxBinomial(dC, pT, ttxTickRandom);
+    let dRem=dC-dDead;
+    const dMiss=ttxBinomial(dRem, 0.05, ttxTickRandom);
+    dRem-=dMiss;
+    const dSer=Math.round(dRem*0.5);
+    v.dead=(v.dead||0)+dDead; v.missing=(v.missing||0)+dMiss;
+    v.serious=(v.serious||0)+dSer; v.minor=(v.minor||0)+(dRem-dSer);
   }
   v.displaced = (v.displaced||0) + dD;
   v.infrastructure_damage = (v.infrastructure_damage||0) + dI;
@@ -3451,10 +3506,21 @@ JSON으로만 응답 (마크다운 없이):
     ttxState.realCaseRef=sc.real_case_reference||'';
     ttxState.variables={...sc.key_variables};
     // Initialize sub-variables with sensible defaults from MC sample
-    ttxState.variables.dead = Math.floor((ttxState.variables.casualties||0)*0.2);
-    ttxState.variables.missing = Math.floor((ttxState.variables.casualties||0)*0.1);
-    ttxState.variables.serious = Math.floor((ttxState.variables.casualties||0)*0.4);
-    ttxState.variables.minor = Math.floor((ttxState.variables.casualties||0)*0.3);
+    // 사망자 배분 — Beta-Binomial (T7): 고정 20% 폐기, 사건 치명률을 과거 사고 분포에서 추출
+    {
+      const N=ttxState.variables.casualties||0;
+      const pFat=ttxSampleFatality(disaster);
+      ttxState.fatalityP=+pFat.toFixed(4);
+      const dead=ttxBinomial(N, pFat, ttxRandom);
+      let rem=N-dead;
+      const missing=ttxBinomial(rem, 0.05, ttxRandom);
+      rem-=missing;
+      const serious=Math.round(rem*0.45);
+      ttxState.variables.dead=dead;
+      ttxState.variables.missing=missing;
+      ttxState.variables.serious=serious;
+      ttxState.variables.minor=rem-serious; // 합계 = 인명피해 총계 (정합 보장)
+    }
     // infra and resource sub-fields default to 0 (user or Claude updates them)
     ttxState.phase=1;
     // 강도별 총 라운드 (중급은 PRNG로 4~5 가변)
@@ -3493,6 +3559,7 @@ JSON으로만 응답 (마크다운 없이):
         `<b>불확실성 계수:</b> [${mc.uncertaintyFactors.join(', ')}]<br>`+
         `<b>실제 사례 참조:</b> ${sc.real_case_reference||'없음'}<br>`+
         `<b>초기 피해 (MC):</b> 인명 ${mc.casualties}명 · 이재민 ${mc.displaced}명 · 시설 ${mc.infrastructure_damage}건 · 자원 ${mc.resource_needed}단위<br>`+
+        `<b>표본 치명률:</b> ${((ttxState.fatalityP||0)*100).toFixed(1)}% (Beta-Binomial, 과거 사고 분포 기반) → 초기 사망 ${ttxState.variables.dead||0}명<br>`+
         `<b>시나리오 검증:</b> ${finalIssues.length?'⚠️ 일부 미충족('+finalIssues.length+'건) — 수치는 MC 값으로 보정됨':(regenerated?'✅ 통과 (1회 재생성)':'✅ 통과')}`+
         `<br><b>총 라운드:</b> ${ttxState.totalRounds} (${intensity})`;
       infoCard.style.display='block';
@@ -3597,7 +3664,7 @@ function ttxRenderMetrics() {
   }
 
   panel.innerHTML = `<div class="ttx-met-grid">
-    ${renderGroup('🩺 인명피해', casualtyItems)}
+    ${renderGroup('🩺 인명피해 (사상자 총계)', casualtyItems)}
     ${renderGroup('🏗️ 시설피해', infraItems)}
     ${renderGroup('🚒 투입자원', resourceItems)}
   </div>`;
@@ -4557,6 +4624,7 @@ function ttxDownloadMasterDoc(){
 <div class="meta">
  <b>훈련기관:</b> ${ttxState.orgName} &nbsp;·&nbsp; <b>재난유형:</b> ${ttxState.disasterType} &nbsp;·&nbsp; <b>강도:</b> ${ttxState.intensity} (${ttxState.totalRounds}라운드, ${ttxState.trainingMode==='full'?'통합훈련':'신속'} 모드)<br>
  <b>지역:</b> ${ttxState.region||'-'}${(ttxState.regionTags||[]).length?` (${ttxState.regionTags.join(', ')})`:''} &nbsp;·&nbsp; <b>MC 시드:</b> ${ttxState.monteCarloSeed??'-'} &nbsp;·&nbsp; <b>종합점수:</b> ${ttxState.totalScore}점<br>
+ <b>표본 치명률:</b> ${ttxState.fatalityP!=null?((ttxState.fatalityP*100).toFixed(1)+'% (Beta-Binomial)'):'-'}<br>
  <b>상황 설정:</b> ${sc.initial_report||'-'}
 </div>
 ${(sc.sitmap&&sc.sitmap.features)?`<h2>Ⅰ-0. 훈련구역 상황도 (훈련 종료 시점)</h2><div style="border:1px solid #ddd;border-radius:8px;overflow:hidden">${ttxSitMapSVG(ttxSitMapData())}</div>`:''}
@@ -4806,6 +4874,30 @@ sampled_value = round( max(0, mean + z × std) ) × multiplier
   <div class="box-title">불확실성 팩터</div>
   추가로 3개의 불확실성 팩터 (0.8~1.2 사이 랜덤값)를 생성하여 시나리오 설명에 포함합니다.
   이는 실제 재난의 불확실성을 훈련에 반영하기 위한 메커니즘입니다.
+</div>
+<h3>사망자 산출 — Beta-Binomial 치명률 모델</h3>
+<p>"인명피해"는 <strong>사상자 총계</strong>(사망+실종+중상+경상)이며, 사망자는 고정 비율이 아니라
+과거 사고 데이터 기반의 2단계 몬테카를로로 산출합니다:</p>
+<div class="formula">
+1단계 (사건 수준): 치명률 p ~ Beta(α, β)   ← 유형별 과거 사고 분포로 보정
+2단계 (개인 수준): 사망자 ~ Binomial(인명피해 N, p)
+잔여 배분: 실종 ~ Binomial(잔여, 5%) → 중상 45% → 경상 나머지 (합계 = 총계 보장)
+시간 진행: 신규 피해자에 대해 p×0.5로 사망 추출 — 대응 지연의 누적 대가
+</div>
+<table>
+  <tr><th>유형</th><th>평균 치명률</th><th>Beta(α,β)</th><th>근거 (초기 보정)</th></tr>
+  <tr><td>홍수/태풍</td><td>8%</td><td>(2, 23)</td><td>재해연보 호우·태풍, 오송 지하차도 상방 반영</td></tr>
+  <tr><td>지진</td><td>5%</td><td>(1.5, 28)</td><td>경주·포항 직접 사망 0 — 낮은 평균·넓은 분산</td></tr>
+  <tr><td>산불</td><td>3%</td><td>(1.2, 39)</td><td>고성·울진 등 대형 산불 사망 0~2명</td></tr>
+  <tr><td>화학사고</td><td>12%</td><td>(2, 15)</td><td>구미 불산(사망5/부상18) 등</td></tr>
+  <tr><td>감염병</td><td>2%</td><td>(1.2, 60)</td><td>코로나19 치명률대 + 메르스급 상방 꼬리</td></tr>
+  <tr><td>복합재난</td><td>10%</td><td>(2, 18)</td><td>복합 가중</td></tr>
+</table>
+<div class="box warn">
+  <div class="box-title">해석</div>
+  같은 유형이라도 시드에 따라 "사망 0의 평온한 사건"부터 "상방 꼬리의 참사"까지 나옵니다 —
+  실제 재난의 사건 간 변동을 재현한 것입니다. 추출된 <strong>표본 치명률</strong>은 시나리오 정보 카드와
+  총괄표 문서에 표시되며, 훈련인원(참여 인원)은 피해 수치와 무관합니다.
 </div>
 <h3>시간 진행 피해 모델 (실시간 30초 = 재난시간 10분)</h3>
 <p>훈련 시작 후 실시간 30초마다 1틱이 진행되며, 피해 변수가 재난유형별 곡선을 따라 자동 증가합니다.
