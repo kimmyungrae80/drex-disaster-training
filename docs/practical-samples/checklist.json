@@ -1,0 +1,59 @@
+{
+  "source": "가상 침수훈련 샘플 · 공식 평가기준 아님",
+  "items": [
+    {
+      "id": "C1",
+      "title": "상황 전파 이행 확인",
+      "task": "broadcast",
+      "weight": 15,
+      "deadline": 3,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    },
+    {
+      "id": "C2",
+      "title": "지하차도 진입 통제 이행 확인",
+      "task": "control",
+      "weight": 20,
+      "deadline": 8,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    },
+    {
+      "id": "C3",
+      "title": "전력 차단·안전 확인 이행 확인",
+      "task": "power",
+      "weight": 15,
+      "deadline": 9,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    },
+    {
+      "id": "C4",
+      "title": "고립자 구조 이행 확인",
+      "task": "rescue",
+      "weight": 20,
+      "deadline": 16,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    },
+    {
+      "id": "C5",
+      "title": "부상자 인계·이송 이행 확인",
+      "task": "medical",
+      "weight": 15,
+      "deadline": 22,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    },
+    {
+      "id": "C6",
+      "title": "대피소 개방·수용 확인 이행 확인",
+      "task": "shelter",
+      "weight": 15,
+      "deadline": 12,
+      "criterion": "요청·접수·완료 기록과 완료 근거를 확인합니다. 기한 내 완료 시 충족, 지연 또는 진행 중은 부분 충족.",
+      "partial": 0.5
+    }
+  ]
+}

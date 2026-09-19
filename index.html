@@ -413,7 +413,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .sop-act-eff{font-size:10px;color:var(--teal);font-weight:600;flex-shrink:0;margin-left:8px}
 .slog-item{padding:6px 9px;border-radius:5px;margin-bottom:4px;font-size:11.5px;line-height:1.65}
 </style>
-</head>
+<style>
+.ttx-grid{grid-template-columns:200px minmax(0,1fr) 250px}.ttx-center-wrap{min-width:0}
+#ttxSitMapWrap.command-expanded{position:fixed;inset:16px;z-index:9000;background:white;padding:14px;box-shadow:0 0 0 30px #122b46aa;border-radius:12px}
+#ttxSitMapWrap.command-expanded iframe{height:calc(100vh - 120px)!important}
+@media(max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr}.ttx-center-wrap{grid-column:1/-1;grid-row:1}}
+@media(max-width:767px){.ttx-grid{grid-template-columns:1fr}.ttx-center-wrap{grid-column:1}.ttx-agencies-wrap,.ttx-met-wrap{grid-column:1;grid-row:auto}}
+</style></head>
 <body>
 
 <!-- LOGIN MODAL -->
@@ -549,6 +555,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <!-- TTX SIMULATOR PANEL                            -->
 <!-- ═══════════════════════════════════════════════ -->
 <div id="ttxMainPanel" style="display:block">
+<div style="padding:20px;background:#eaf4f5;border:1px solid #aacbd0;border-radius:12px;margin:16px 0;color:#183e58">
+  <b style="font-size:20px">훈련 방식을 선택하세요</b>
+  <p>현재 화면은 <b>연습훈련 · A/B/C 선택형</b>입니다. 기관 행동과 협조 요청을 직접 기록하려면 실무훈련으로 이동하세요.</p>
+  <a href="/practical/" style="display:inline-block;background:#126b70;color:white;padding:12px 18px;border-radius:7px;text-decoration:none;font-weight:700">실무훈련 시작 → 기관 조치 · 점검표 · 결과보고서</a>
+</div>
+
 
 <!-- TTX STEP 1: 시나리오 생성 -->
 <div class="ttx-panel active" id="ttxStep1">
@@ -679,8 +691,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="fg">
       <label class="fl">훈련 방식 <span style="color:var(--red)">*</span></label>
       <div class="rg" id="ttxModeGroup">
-        <button class="rb sel" data-v="full" onclick="ttxSelectMode(this)">통합훈련 모드 (권장)<br><small style="font-weight:400;font-size:11px">상황 메시지 처리 + 핵심 의사결정 · 40~60분</small></button>
-        <button class="rb" data-v="quick" onclick="ttxSelectMode(this)">신속 모드<br><small style="font-weight:400;font-size:11px">핵심 의사결정만 · 15~25분</small></button>
+        <button class="rb sel" data-v="full" onclick="ttxSelectMode(this)">연습훈련 · 상황 메시지 포함<br><small style="font-weight:400;font-size:11px">상황 메시지 처리 + 핵심 의사결정 · 40~60분</small></button>
+        <button class="rb" data-v="quick" onclick="ttxSelectMode(this)">연습훈련 · 핵심 결정만<br><small style="font-weight:400;font-size:11px">핵심 의사결정만 · 15~25분</small></button>
       </div>
       <div class="hint">통합훈련 모드는 실제 통합시나리오처럼 라운드마다 상황부여 메시지(강도별 2~4건)를 처리합니다</div>
     </div>
@@ -768,14 +780,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <div class="ttx-center-wrap">
       <div id="ttxSitMapWrap" style="display:none;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-          <span style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">🗺️ 훈련구역 상황도</span>
+          <span style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">🗺️ 훈련 통합지휘 상황판</span>
           <span style="display:flex;gap:8px">
-            <button class="log-fbtn" onclick="ttxOpenSitMapModal()">🔍 확대</button>
+            <button class="log-fbtn" id="commandExpand" onclick="ttxCommandExpand()">지도 확대</button>
             <button class="log-fbtn" id="ttxSitMapToggle" onclick="ttxToggleSitMap()">접기 ▲</button>
           </span>
         </div>
-        <div id="ttxSitMapBody" class="sitmap-compact"></div>
-        <div style="font-size:10.5px;color:var(--muted);margin-top:3px">⚠️ 위험구역(국면·피해 연동 확산) · 🚒 투입 기관 · [🔍 확대]로 크게 보기</div>
+        <div id="ttxSitMapBody"></div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:3px">실제 지도 · 기관 상태 연동 · 배치와 위험구역은 사용자 입력 · CCTV 실시간 미연결</div>
       </div>
       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📋 현재 상황</div>
       <div class="ttx-situation-box" id="ttxSituationText">상황 로딩 중...</div>
@@ -3297,28 +3309,40 @@ function ttxSitMapData(){ // 통제관 측 데이터
   };
 }
 
+// Command map owns geographic placements; original exercise state remains authoritative.
 function ttxRenderSitMap(){
   const wrap=document.getElementById('ttxSitMapWrap');
-  const body=document.getElementById('ttxSitMapBody');
-  if(!wrap||!body) return;
-  const data=ttxSitMapData();
-  if(!data.sitmap&&!ttxState.scenario){wrap.style.display='none';return;}
+  if(!ttxState.scenario){wrap.style.display='none';return;}
   wrap.style.display='block';
-  if(wrap.classList.contains('collapsed')) return;
-  loadKakaoSdk().then(async ok=>{
-    if(ok){
-      const center=await ttxGeocodeCenter();
-      if(center&&ttxRealMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
-    }
-    // OSM 폴백 (키 불필요) — 온라인이면 실지도 유지
-    if(navigator.onLine){
-      const center=await ttxGeocodeOsm();
-      if(center&&ttxOsmMapRender('ttxSitMapBody', ttxSitMapData(), center, 185)) return;
-    }
-    delete _rmaps['ttxSitMapBody'];
-    const svg=ttxSitMapSVG(ttxSitMapData());
-    if(svg) body.innerHTML=svg; else wrap.style.display='none';
-  });
+  if(!ttxState.commandMapId){ttxState.commandMapId=crypto.randomUUID();ttxSaveState();}
+  let frame=document.getElementById('ttxCommandFrame');
+  if(!frame){
+    frame=document.createElement('iframe');frame.id='ttxCommandFrame';frame.title='훈련 통합지휘 상황판';
+    frame.src='/command-map.html?embedded=1';frame.style.cssText='width:100%;height:760px;border:0;border-radius:10px';
+    frame.onload=ttxSyncCommandMap;
+    document.getElementById('ttxSitMapBody').replaceChildren(frame);
+  }
+  ttxSyncCommandMap();
+}
+function ttxSyncCommandMap(){
+  const frame=document.getElementById('ttxCommandFrame');if(!frame||!ttxState.scenario)return;
+  frame.contentWindow.postMessage({type:'drex:context',id:ttxState.commandMapId,
+    org:ttxState.orgName,region:ttxState.region,phase:ttxState.phase,
+    center:ttxState.mapCenter||null,snapshot:ttxState.commandMapSnapshot||null,
+    agencies:TTX_AGENCIES.map(a=>({id:a.id,name:a.name,role:a.role,status:ttxState.agencyStatuses[a.id]||'대기중'}))},location.origin);
+}
+window.addEventListener('message',e=>{
+  const frame=document.getElementById('ttxCommandFrame');
+  if(!frame||e.source!==frame.contentWindow||e.origin!==location.origin)return;
+  if(e.data?.type==='drex:ready'){ttxSyncCommandMap();return;}
+  if(e.data?.type==='drex:snapshot'&&e.data.id===ttxState.commandMapId&&e.data.snapshot&&JSON.stringify(e.data.snapshot).length<250000){
+    ttxState.commandMapSnapshot=e.data.snapshot;ttxSaveState();
+  }
+});
+setInterval(ttxSyncCommandMap,2000);
+function ttxCommandExpand(){
+  const wrap=document.getElementById('ttxSitMapWrap');wrap.classList.toggle('command-expanded');
+  document.getElementById('commandExpand').textContent=wrap.classList.contains('command-expanded')?'축소':'지도 확대';
 }
 
 function ttxToggleSitMap(){
@@ -3510,7 +3534,7 @@ async function ttxGenerateScenario() {
   ttxState.orgName=orgName; ttxState.disasterType=disaster;
   ttxState.region=region; ttxState.regionTags=regionTags;
   ttxState.intensity=intensity; ttxState.participants=participants;
-  ttxState.sessionId=null; ttxState.unexpectedEventsCount=0;
+  ttxState.sessionId=null; ttxState.commandMapId=crypto.randomUUID(); ttxState.commandMapSnapshot=null; ttxState.mapCenter=null; ttxState.unexpectedEventsCount=0;
 
   const genBtn=document.getElementById('ttxGenBtn');
   const loadEl=document.getElementById('ttxGenLoading');
@@ -4760,6 +4784,12 @@ function ttxDownloadMasterDoc(){
  td{padding:6px 9px;border:1px solid #ddd;vertical-align:top}
  .meta{background:#f5f3ee;border-radius:8px;padding:12px 16px;font-size:12.5px}
  @media print{body{padding:0}}
+</style><style>
+.ttx-grid{grid-template-columns:200px minmax(0,1fr) 250px}.ttx-center-wrap{min-width:0}
+#ttxSitMapWrap.command-expanded{position:fixed;inset:16px;z-index:9000;background:white;padding:14px;box-shadow:0 0 0 30px #122b46aa;border-radius:12px}
+#ttxSitMapWrap.command-expanded iframe{height:calc(100vh - 120px)!important}
+@media(max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr}.ttx-center-wrap{grid-column:1/-1;grid-row:1}}
+@media(max-width:767px){.ttx-grid{grid-template-columns:1fr}.ttx-center-wrap{grid-column:1}.ttx-agencies-wrap,.ttx-met-wrap{grid-column:1;grid-row:auto}}
 </style></head><body>
 <h1>재난대응 안전한국훈련 통합시나리오 총괄표 <span style="font-size:12px;color:#888;font-weight:400">(DREX 훈련 기록 기반 자동 생성)</span></h1>
 <div class="meta">
@@ -4869,7 +4899,13 @@ function drexDownloadManual() {
   @media(max-width:640px){.agency-grid,.domain-grid{grid-template-columns:1fr}.body{padding:24px 20px}.cover{padding:36px 20px 28px}.toc{padding:20px}}
   @media print{.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}.box.dark{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
-</head>
+<style>
+.ttx-grid{grid-template-columns:200px minmax(0,1fr) 250px}.ttx-center-wrap{min-width:0}
+#ttxSitMapWrap.command-expanded{position:fixed;inset:16px;z-index:9000;background:white;padding:14px;box-shadow:0 0 0 30px #122b46aa;border-radius:12px}
+#ttxSitMapWrap.command-expanded iframe{height:calc(100vh - 120px)!important}
+@media(max-width:1199px){.ttx-grid{grid-template-columns:1fr 1fr}.ttx-center-wrap{grid-column:1/-1;grid-row:1}}
+@media(max-width:767px){.ttx-grid{grid-template-columns:1fr}.ttx-center-wrap{grid-column:1}.ttx-agencies-wrap,.ttx-met-wrap{grid-column:1;grid-row:auto}}
+</style></head>
 <body>
 
 <!-- COVER -->
