@@ -16,6 +16,7 @@ function render(){
  $('guideContent').innerHTML=`<h3>${control?'훈련통제':ROLES[role]}의 연습 포인트</h3><ol>${(GUIDES[role]||['기관별 보고 공유와 지원 요청 진행을 확인하세요.','시간을 1분 또는 5분씩 진행하고 결과 보고가 도착하는 것을 확인하세요.','훈련 종료 후 기록에서 의사결정과 현장 결과를 연결해 보세요.']).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
  $('reportCount').textContent=v.reports.length+'건';
  $('reports').innerHTML=v.reports.length?v.reports.slice().reverse().map(r=>`<article class="report"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.role]} ${r.shared?'<span class="shared">· 공동 전파</span>':'· 기관 수신'}</div><p>${esc(r.text)}</p>${r.role===role&&!r.shared?`<button data-share="${r.id}" ${state.ended?'disabled':''}>공동 전파</button>`:''}</article>`).join(''):'<p class="empty">아직 공유된 보고가 없습니다. 기관별 역할에서 보고를 확인하세요.</p>';
+ renderCoach();
  renderOperational(v);
  $('resources').innerHTML=v.resources.map(r=>`<div class="resource"><strong>${r.name}</strong><div class="bar ${r.job?'active':''}"></div><small>${r.job?`${TASKS[r.job.task].name} · ${r.job.phase==='travel'?'이동':'작업'} ${r.job.remaining}분 남음`:'가용 · 새 임무 수락 가능'}</small></div>`).join('')||'<p class="empty">기관 역할을 선택해 가용 자원을 확인하세요.</p>';
  $('pendingCount').textContent=v.requests.filter(r=>r.status==='pending').length+'건 대기';
@@ -24,6 +25,24 @@ function render(){
  document.querySelectorAll('#control button,#orderForm button').forEach(b=>b.disabled=state.ended);
  if(tab==='board')mapUI?.resize();
  renderAAR();
+}
+
+
+function setRole(next){role=next;$('role').value=role;render();}
+function renderCoach(){
+ const box=$('nextAction');box.hidden=state.mode!=='practice'||tab!=='board';if(box.hidden)return;
+ let step=1,title='',text='',evidence='',label='',fn;const first=state.requests.find(r=>r.status!=='declined')||state.requests[0];
+ const report=state.reports.find(r=>r.id==='R2');
+ if(state.ended){step=5;title='훈련이 끝났습니다. 판단과 결과를 돌아보세요.';text='사후강평에서 어떤 정보를 바탕으로 결정했는지 확인할 수 있습니다.';label='사후강평 열기';fn=()=>{tab='aar';render();};}
+ else if(!report.shared){title='소방의 고립 신고를 확인하고 공유하세요.';text='첫 연습은 상황보고를 읽는 것부터 시작합니다. 한 기기에서 기관 역할을 바꾸며 진행합니다.';evidence='연습용 안내: '+report.text;label=role==='fire'?'이 보고를 다른 기관에 공유':'소방 역할로 이동해 보고 확인';fn=()=>role==='fire'?send({type:'share',id:'R2'}):setRole('fire');}
+ else if(!first){step=2;title='어떤 지원이 필요한지 요청하세요.';text='상황총괄 역할에서 오른쪽 ‘대응조치’의 임무를 선택하고 이유를 적은 뒤 ‘지원 요청 보내기’를 누르세요.';evidence='예: 고립 인원 구조를 먼저 요청하고, 대피 차량 배정은 소방과 협의합니다.';label=role==='hq'?'요청 작성란으로 이동':'상황총괄 역할로 이동';fn=()=>{if(role!=='hq')setRole('hq');$('reason').focus();$('orderForm').scrollIntoView({block:'center',behavior:'smooth'});};}
+ else if(first.status==='pending'){step=3;title=ROLES[first.owner]+'에서 요청을 검토하고 수락하세요.';text='요청을 보낸 것만으로 출동하지 않습니다. 담당 기관이 자원을 확인하고 수락해야 실행됩니다.';evidence='받은 요청: '+TASKS[first.task].name+' / '+first.reason;label=role===first.owner?'요청 수락하고 출동':'담당 '+ROLES[first.owner]+' 역할로 이동';fn=()=>role===first.owner?send({type:'accept',id:first.id}):setRole(first.owner);}
+ else if(first.status==='active'){step=4;const res=state.resources.find(r=>r.job?.request===first.id);title='출동했습니다. 시간을 진행해 결과를 확인하세요.';text='이 검증판의 시간은 자동으로 흐르지 않습니다. 아래 버튼을 누르면 통제 역할로 전환해 훈련시간을 5분 진행합니다.';evidence=res?res.name+' · '+(res.job.phase==='travel'?'현장 이동 중':'현장 작업 중')+' · 현재 단계 '+res.job.remaining+'분 남음':'';label='훈련시간 5분 진행';fn=()=>{setRole('control');send({type:'advance',minutes:5});};}
+ else if(first.status==='done'){step=5;const result=state.reports.find(r=>r.role===first.owner&&r.time===first.completed&&r.text.startsWith(TASKS[first.task].name+' 완료'));title=result?.shared?'결과를 확인하고 다음 판단을 내려보세요.':'완료 보고를 확인하고 다른 기관에 공유하세요.';text=result?.shared?'첫 협업 과정을 마쳤습니다. 다른 임무를 요청하며 계속 연습하거나 훈련을 종료해 강평을 확인하세요.':'현장 작업이 끝나도 보고가 공유되지 않으면 다른 기관은 결과를 모릅니다.';evidence=result?.text||'결과 보고를 확인하세요.';label=result?.shared?'훈련 종료하고 강평 보기':role===first.owner?'완료 보고 공유':ROLES[first.owner]+' 역할로 결과 확인';fn=()=>{if(result?.shared){if(confirm('현재 훈련을 종료하고 강평을 확인할까요?')){setRole('control');send({type:'end'});tab='aar';render();}}else if(role!==first.owner)setRole(first.owner);else if(result)send({type:'share',id:result.id});};}
+ else{step=2;title='지원 불가 사유를 읽고 대안을 요청하세요.';text='다른 임무를 선택하거나 기관과 우선순위를 조정할 수 있습니다.';evidence=first.reply||'';label='새 요청 작성';fn=()=>{setRole('hq');$('reason').focus();};}
+ $('coachProgress').textContent='연습 '+step+' / 5';$('coachTitle').textContent=title;$('coachText').textContent=text;$('coachEvidence').textContent=evidence;$('coachNext').textContent=label;$('coachNext').onclick=fn;
+ $('coachExample').hidden=step!==2||role!=='hq';$('coachExample').onclick=()=>{$('reason').value='고립 신고 인원의 구조·이송을 요청합니다. 요양시설 대피와 자원 중복을 확인해 가능한 출동 시점을 회신해 주세요.';$('reason').focus();toast('예시를 넣었습니다. 내용을 검토한 뒤 지원 요청을 보내세요.');};
+ document.querySelectorAll('.coachSteps li').forEach((li,i)=>{li.classList.toggle('current',i+1===step);li.classList.toggle('complete',i+1<step);});
 }
 
 function chooseSite(id){selectedSite=id;$('task').value=SITES[id].task;mapUI?.focus(id);render();}

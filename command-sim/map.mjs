@@ -48,7 +48,7 @@ export function setupMap({select,notify}){
    incident.clearLayers();resources.clearLayers();areas.clearLayers();
    for(const [id,s]of Object.entries(SITES)){
     const r=v.reports.filter(r=>r.place===id).at(-1),known=!!r;
-    L.marker(s.coord,{icon:L.divIcon({className:'incidentMarker',html:`<button class="mapPin ${id==='hospital'?'pinLeft':''} ${selected===id?'selected':''}" style="--pin:${s.color}" aria-label="${safe(s.name)}"><span class="pinLetter">${s.label}</span><span class="pinText"><strong>${safe(s.name)}</strong><small>${known?`${r.time}分`.replace('分','분')+' 보고 확인':'정보 확인 필요'} <em>훈련 가정</em></small></span></button>`,iconSize:[190,48],iconAnchor:[id==='hospital'?(window.innerWidth<480?137:175):15,24]})}).addTo(incident).on('click',()=>select(id));
+    L.marker(s.coord,{icon:L.divIcon({className:'incidentMarker',html:`<button class="mapPin ${id==='hospital'?'pinLeft':''} ${selected===id?'selected':''}" style="--pin:${s.color}" aria-label="${safe(s.name)}"><span class="pinLetter">${s.label}</span><span class="pinText"><strong>${safe(s.name)}</strong><small>${known?`${r.time}分`.replace('分','분')+' 보고 확인':'정보 확인 필요'} <em>훈련 가정</em></small></span></button>`,iconSize:[236,60],iconAnchor:[id==='hospital'?(window.innerWidth<800?185:221):17,30]})}).addTo(incident).on('click',()=>select(id));
     if(known)L.circle(s.coord,{radius:id==='hospital'?100:180,color:s.color,fillColor:s.color,fillOpacity:.13,weight:1,dashArray:'5 5'}).bindTooltip('훈련 가정 위험반경 · 실제 침수 예측 아님').addTo(areas);
    }
    for(const r of v.requests.filter(r=>r.status==='active')){
