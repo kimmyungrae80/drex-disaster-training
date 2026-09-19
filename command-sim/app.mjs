@@ -1,6 +1,7 @@
 import {VERSION,ROLES,PLACES,TASKS,GUIDES,create,act,view,visibleReports,restore,replay,summary} from './engine.mjs';
+import {SITES,setupMap} from './map.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const KEY='drex-cpx-0.1';let state=create(),role='hq',tab='board',archives=[];let storageOK=true;
+const KEY='drex-cpx-0.1';let state=create(),role='hq',tab='board',archives=[];let storageOK=true;let selectedSite='underpass',mapUI;
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),5000);}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({state,archives}));}catch{storageOK=false;toast('자동 저장이 불가능합니다. 기록 저장 버튼으로 파일을 내려받으세요.');}}
 function archive(){if(state.commands.length){archives.push({label:`${state.mode==='practice'?'연습':'실제'} ${state.time}분 · ${new Date().toLocaleString('ko-KR')}`,data:{version:VERSION,mode:state.mode,commands:state.commands}});}}
@@ -9,26 +10,38 @@ function download(name,content,type='application/json'){const a=document.createE
 const statusText={pending:'수락 대기',active:'실행 중',done:'완료',declined:'지원 불가'};
 function render(){
  const v=view(state,role),control=role==='control';
- $('clock').textContent=String(state.time).padStart(2,'0')+':00';$('runState').textContent=state.ended?'훈련 종료':'통제자 수동 진행 · 분:초';$('modeBadge').textContent=state.mode==='practice'?'연습훈련 · 가이드 ON':'실제훈련 · 독립 판단';
+ $('clock').textContent=String(state.time).padStart(2,'0')+':00';$('runState').textContent=state.ended?'훈련 종료':'통제자 수동 진행 · 분:초';$('modeBadge').textContent=state.mode==='practice'?'연습훈련 · 안내 지원':'실제훈련 · 독립 판단';
  $('board').hidden=tab!=='board';$('aar').hidden=tab!=='aar';$('boardTab').classList.toggle('active',tab==='board');$('aarTab').classList.toggle('active',tab==='aar');
  $('guide').hidden=state.mode!=='practice';$('board').classList.toggle('withGuide',state.mode==='practice');
  $('guideContent').innerHTML=`<h3>${control?'훈련통제':ROLES[role]}의 연습 포인트</h3><ol>${(GUIDES[role]||['기관별 보고 공유와 지원 요청 진행을 확인하세요.','시간을 1분 또는 5분씩 진행하고 결과 보고가 도착하는 것을 확인하세요.','훈련 종료 후 기록에서 의사결정과 현장 결과를 연결해 보세요.']).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
  $('reportCount').textContent=v.reports.length+'건';
- $('reports').innerHTML=v.reports.length?v.reports.slice().reverse().map(r=>`<article class="report"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.role]} ${r.shared?'<span class="shared">· 공동 공유</span>':'· 기관 수신'}</div><p>${esc(r.text)}</p>${r.role===role&&!r.shared?`<button data-share="${r.id}" ${state.ended?'disabled':''}>공동 공유</button>`:''}</article>`).join(''):'<p class="empty">아직 공유된 보고가 없습니다. 기관별 역할에서 보고를 확인하세요.</p>';
- const coords={underpass:[330,190],care:[220,100],road:[540,195],hospital:[220,315]};
- $('markers').innerHTML=Object.entries(PLACES).map(([id,name])=>{const rs=v.reports.filter(r=>r.place===id),r=rs.at(-1),[x,y]=coords[id];return `<g><circle cx="${x}" cy="${y}" r="12" fill="${r?'#177d80':'#fff'}" stroke="#38677d" stroke-width="3"/><rect x="${x-80}" y="${y+20}" width="160" height="44" rx="7" fill="white" stroke="#d1dfe6"/><text x="${x}" y="${y+38}" text-anchor="middle" fill="#183e53">${name}</text><text x="${x}" y="${y+55}" text-anchor="middle" fill="#627e8a" style="font-size:10px">${r?`${r.time}분 보고 · ${r.shared?'공유':'기관 수신'}`:'보고 확인 필요'}</text></g>`;}).join('');
+ $('reports').innerHTML=v.reports.length?v.reports.slice().reverse().map(r=>`<article class="report"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.role]} ${r.shared?'<span class="shared">· 공동 전파</span>':'· 기관 수신'}</div><p>${esc(r.text)}</p>${r.role===role&&!r.shared?`<button data-share="${r.id}" ${state.ended?'disabled':''}>공동 전파</button>`:''}</article>`).join(''):'<p class="empty">아직 공유된 보고가 없습니다. 기관별 역할에서 보고를 확인하세요.</p>';
+ renderOperational(v);
  $('resources').innerHTML=v.resources.map(r=>`<div class="resource"><strong>${r.name}</strong><div class="bar ${r.job?'active':''}"></div><small>${r.job?`${TASKS[r.job.task].name} · ${r.job.phase==='travel'?'이동':'작업'} ${r.job.remaining}분 남음`:'가용 · 새 임무 수락 가능'}</small></div>`).join('')||'<p class="empty">기관 역할을 선택해 가용 자원을 확인하세요.</p>';
  $('pendingCount').textContent=v.requests.filter(r=>r.status==='pending').length+'건 대기';
- $('requests').innerHTML=v.requests.slice().reverse().map(r=>`<article class="request"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.from]} → ${ROLES[r.owner]}</div><strong>${TASKS[r.task].name}</strong><p>${esc(r.reason)}</p><span class="chip">${statusText[r.status]}</span>${r.reply?`<p>회신: ${esc(r.reply)}</p>`:''}${r.status==='pending'&&r.owner===role&&!state.ended?`<div class="actions"><button class="primary" data-accept="${r.id}">수락·출동</button><button data-decline="${r.id}">지원 불가·대안</button></div>`:''}</article>`).join('')||'<p class="empty">접수된 임무 요청이 없습니다.</p>';
+ $('requests').innerHTML=v.requests.slice().reverse().map(r=>`<article class="request"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.from]} → ${ROLES[r.owner]}</div><strong>${TASKS[r.task].name}</strong><p>${esc(r.reason)}</p><span class="chip">${statusText[r.status]}</span>${r.reply?`<p>회신: ${esc(r.reply)}</p>`:''}${r.status==='pending'&&r.owner===role&&!state.ended?`<div class="actions"><button class="primary" data-accept="${r.id}">임무 수락</button><button data-decline="${r.id}">조정 회신</button></div>`:''}</article>`).join('')||'<p class="empty">접수된 임무 요청이 없습니다.</p>';
  $('control').hidden=!control;$('orderForm').hidden=control;$('truth').textContent=`통제자 모의 상태: 고립 ${state.world.trapped}명 / 대피 잔류 ${state.world.evacuees}명 / 진입 ${state.world.closed?'통제':'미통제'} / 도로 ${state.world.blocked?'단절':'통행 가능'}`;
  document.querySelectorAll('#control button,#orderForm button').forEach(b=>b.disabled=state.ended);
+ if(tab==='board')mapUI?.resize();
  renderAAR();
 }
+
+function chooseSite(id){selectedSite=id;$('task').value=SITES[id].task;mapUI?.focus(id);render();}
+function renderOperational(v){
+ $('knownMetric').textContent=v.reports.length+'건';$('sharedMetric').textContent=v.reports.filter(r=>r.shared).length+'건';$('requestMetric').textContent=v.requests.filter(r=>r.status==='pending').length+'건';$('activeMetric').textContent=v.requests.filter(r=>r.status==='active').length+'건';
+ $('incidentList').innerHTML=Object.entries(SITES).map(([id,p])=>{const r=v.reports.filter(x=>x.place===id).at(-1);return `<button class="incidentButton ${id===selectedSite?'active':''}" data-site="${id}"><span class="incidentLetter" style="--incident:${p.color}">${p.label}</span><span><strong>${p.name}</strong><small>${r?r.time+'분 보고 · '+ROLES[r.role]:'정보 확인 필요'}</small></span><span class="incidentArrow">›</span></button>`;}).join('');
+ const site=SITES[selectedSite],last=v.reports.filter(r=>r.place===selectedSite).at(-1);
+ $('incidentDetail').innerHTML=`<div class="detailTop"><div><span class="detailCaption">${site.type} · 훈련 가정 위치</span><h3>${site.name}</h3></div><button id="selectMission">관련 임무 선택</button></div><p>${last?esc(last.text):'현재 기관에 확인된 보고가 없습니다. 관계기관에 정보를 요청하고 공동 전파된 상황을 확인하세요.'}</p><span class="detailCaption">${last?'출처 '+ROLES[last.role]+' · 보고 시각 '+last.time+'분':'지점은 시나리오에 지정된 가정 위치입니다.'}</span>`;
+ $('selectMission').onclick=()=>{$('task').value=site.task;if(role==='control'){toast('기관 역할을 선택한 뒤 대응조치를 요청하세요.');return;}$('reason').focus();};
+ $('agencyStrip').innerHTML=Object.entries(ROLES).map(([id,name])=>{const qs=v.requests.filter(r=>r.owner===id),active=qs.filter(r=>r.status==='active').length,waiting=qs.filter(r=>r.status==='pending').length;return `<div><strong>${name}</strong><small>${active?'수행 '+active+'건':waiting?'협조 대기 '+waiting+'건':qs.some(r=>r.status==='done')?'완료 보고 있음':'확인된 임무 없음'}</small></div>`;}).join('');
+ mapUI?.render(v,selectedSite,TASKS);
+}
+
 function reviewHTML(){const m=summary(state);return `<div class="reviewBox"><strong>규칙 기반 강평 초안 · AI 평가 미연결</strong><ul><li>공유된 보고 ${m.shared}/${m.total}건. 핵심 정보가 판단 전에 전달됐는지 아래 시각을 비교하세요.</li><li>미처리 지원 요청 ${m.unresolved}건. 담당 기관의 자원 제약과 회신 여부를 확인하세요.</li><li>구조 ${m.rescued}명, 안전지점 대피 ${m.evacuated}명. 의료 수용 준비 ${state.world.medicalReady?'완료':'미완료'}. 의료 인계·치료 결과는 이 모델에서 계산하지 않습니다.</li><li>20분 이후 잔류 노출 누적 ${m.exposure}인·분. 교육용 비교 지표이며 사상자 수가 아닙니다.</li></ul><p><strong>강평 질문</strong> 당시 어떤 정보를 알고 있었습니까? 구조와 대피의 우선순위를 어떻게 합의했습니까? 다시 한다면 어떤 보고나 결정을 먼저 하겠습니까?</p><p>개선과제 작성: 담당 기관 / 개선 행동 / 완료 기한 / 다음 훈련에서 확인할 증거</p></div>`;}
 function renderAAR(){
  const reveal=state.ended||role==='control',m=summary(state);
  $('aarNotice').textContent=reveal?'전체 모의 상태와 당시 보고를 함께 검토합니다. 자동 점수·합격 판정은 하지 않습니다.':'훈련 중에는 공동 판단·공유 기록만 표시합니다. 전체 결과는 종료 후 공개됩니다.';
- $('metrics').innerHTML=reveal?[[m.rescued+'명','구조 완료'],[m.evacuated+'명','안전지점 대피'],[m.shared+'건','공동 공유 보고'],[m.unresolved+'건','미처리 요청']].map(([n,l])=>`<div class="metric"><strong>${n}</strong><span>${l}</span></div>`).join(''):'';
+ $('metrics').innerHTML=reveal?[[m.rescued+'명','구조 완료'],[m.evacuated+'명','안전지점 대피'],[m.shared+'건','공동 전파 보고'],[m.unresolved+'건','미처리 요청']].map(([n,l])=>`<div class="metric"><strong>${n}</strong><span>${l}</span></div>`).join(''):'';
  $('review').innerHTML=reveal?reviewHTML():'';
  const logs=reveal?state.log:state.log.filter(l=>['decision','shared'].includes(l.kind));
  $('timeline').innerHTML=logs.map(l=>`<div class="timelineRow"><time>${l.time}분</time><div>${esc(l.text)}</div></div>`).join('');
@@ -43,13 +56,14 @@ const roleOptions=Object.entries(ROLES).map(([id,name])=>`<option value="${id}">
  $('roleHelp').innerHTML='<p>상황총괄: 정보 종합·우선순위 협의 / 소방: 구조·이송 / 경찰: 통제·도로 보고 / 보건: 의료 수용 준비 / 시설·대피지원: 대피 수요·도로 정비</p>';
  $('role').onchange=()=>{role=$('role').value;render();};$('boardTab').onclick=()=>{tab='board';render();};$('aarTab').onclick=()=>{tab='aar';render();};$('help').onclick=()=>$('helpDialog').showModal();$('closeHelp').onclick=()=>$('helpDialog').close();
  $('new').onclick=()=>$('setup').showModal();$('start').onclick=e=>{e.preventDefault();archive();state=create(document.querySelector('[name="mode"]:checked').value);role='hq';$('role').value=role;tab='board';save();render();$('setup').close();};
- $('orderForm').onsubmit=e=>{e.preventDefault();if(send({type:'request',task:$('task').value,reason:$('reason').value})){$('reason').value='';toast('요청했습니다. 담당 기관 역할에서 수락·출동을 진행하세요.');}};
+ $('orderForm').onsubmit=e=>{e.preventDefault();if(send({type:'request',task:$('task').value,reason:$('reason').value})){$('reason').value='';toast('요청했습니다. 담당 기관 역할에서 임무 수락을 진행하세요.');}};
  $('decision').onclick=()=>{if(send({type:'decision',reason:$('reason').value}))$('reason').value='';};
- document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.share)send({type:'share',id:b.dataset.share});if(b.dataset.accept)send({type:'accept',id:b.dataset.accept});if(b.dataset.decline){const reason=prompt('지원 불가 사유와 대안을 입력하세요.');if(reason)send({type:'decline',id:b.dataset.decline,reason});}if(b.dataset.minutes)send({type:'advance',minutes:Number(b.dataset.minutes)});if(b.dataset.archive!==undefined){const a=archives[Number(b.dataset.archive)];download('DREX_CPX_archive.json',JSON.stringify(a.data,null,2));}});
+ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.site)chooseSite(b.dataset.site);if(b.dataset.share)send({type:'share',id:b.dataset.share});if(b.dataset.accept)send({type:'accept',id:b.dataset.accept});if(b.dataset.decline){const reason=prompt('지원 불가 사유와 대안을 입력하세요.');if(reason)send({type:'decline',id:b.dataset.decline,reason});}if(b.dataset.minutes)send({type:'advance',minutes:Number(b.dataset.minutes)});if(b.dataset.archive!==undefined){const a=archives[Number(b.dataset.archive)];download('DREX_CPX_archive.json',JSON.stringify(a.data,null,2));}});
  $('inject').onclick=()=>{if(send({type:'inject',target:$('target').value,reason:$('injectText').value}))$('injectText').value='';};$('end').onclick=()=>{if(confirm('현재 시점에서 종료하고 사후강평을 진행할까요?')){send({type:'end'});tab='aar';render();}};
  $('export').onclick=()=>download('DREX_CPX_record.json',JSON.stringify({version:VERSION,mode:state.mode,commands:state.commands},null,2));
  $('import').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>3000000)throw Error('3MB 이하 기록만 불러올 수 있습니다.');const loaded=restore(JSON.parse(await f.text()));archive();state=loaded;save();render();toast('기록을 재실행해 복원했습니다.');}catch(err){toast('불러오기 실패: '+err.message);}e.target.value='';};
  $('fork').onclick=()=>{const n=Number($('branchPoint').value);if(confirm('현재 실행을 보관하고 선택 지점 직전부터 다시 훈련할까요?')){const next=replay(state.mode,state.commands.slice(0,n));archive();state=next;tab='board';save();render();toast('분기 재훈련을 시작했습니다. 이전 기록은 사후강평에서 내려받을 수 있습니다.');}};
  $('reportDownload').onclick=()=>download('DREX_CPX_AAR.html',reportDocument(),'text/html');
+ mapUI=setupMap({select:chooseSite,notify:toast});
  try{const raw=localStorage.getItem(KEY);if(raw){const parsed=JSON.parse(raw);state=restore(parsed.state);archives=Array.isArray(parsed.archives)?parsed.archives:[];}else $('setup').showModal();}catch{storageOK=false;$('setup').showModal();toast('저장 기록을 읽지 못했습니다. 새 훈련으로 시작합니다.');}
  render();

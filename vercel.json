@@ -37,8 +37,12 @@
       "dest": "/command-sim/index.html"
     },
     {
-      "src": "/command-sim/(index.html|app.mjs|engine.mjs|style.css|preview.html)",
+      "src": "/command-sim/(index.html|app.mjs|engine.mjs|map.mjs|style.css|preview.html)",
       "dest": "/command-sim/$1"
+    },
+    {
+      "src": "/command-sim/vendor/(leaflet.js|leaflet.css|LICENSE)",
+      "dest": "/command-sim/vendor/$1"
     },
     {
       "src": "/(.*)",
