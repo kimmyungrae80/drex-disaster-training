@@ -1,10 +1,15 @@
 import {makeHandler} from '../server/practical-service.mjs';
 export const config={runtime:'edge'};
 export default async function handler(req){
- const url=(process.env.SUPABASE_URL||'').trim().replace(/\/+$/,''),key=(process.env.SUPABASE_SERVICE_ROLE_KEY||'').trim();
+ // This is the same established project used by the existing DREX client.
+ const defaultUrl='https://jouasqnsbxbikvjrrfnd.supabase.co';
+ const clean=(value,name)=>String(value||'').trim().replace(new RegExp('^'+name+'\\s*=\\s*'),'').replace(/^(['"])([\s\S]*)\1$/,'$2').trim();
+ const supplied=clean(process.env.SUPABASE_URL,'SUPABASE_URL').replace(/\/+$/,'');
+ let url=defaultUrl;
+ try{const u=new URL(supplied);if(u.protocol==='https:'&&u.pathname==='/'&&!u.search&&!u.hash&&!u.username&&!u.password)url=u.origin;}catch{}
+ const key=clean(process.env.SUPABASE_SERVICE_ROLE_KEY,'SUPABASE_SERVICE_ROLE_KEY');
  const unavailable=message=>new Response(JSON.stringify({error:message}),{status:503,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
- if(!url||!key)return unavailable('공동훈련 서버 설정이 필요합니다. SUPABASE_URL·SUPABASE_SERVICE_ROLE_KEY와 practical_sessions 테이블을 확인하세요.');
- try{const u=new URL(url);if(u.protocol!=='https:'||u.pathname!=='/'||u.search||u.hash)throw Error();}catch{return unavailable('SUPABASE_URL에는 프로젝트 API 기본 주소만 입력하세요. 예: https://프로젝트번호.supabase.co');}
+ if(!key)return unavailable('공동훈련 서버 설정이 필요합니다. SUPABASE_URL·SUPABASE_SERVICE_ROLE_KEY와 practical_sessions 테이블을 확인하세요.');
  async function rest(path,options={}){
   const res=await fetch(url+'/rest/v1/practical_sessions'+path,{...options,headers:{apikey:key,...(key.startsWith('eyJ')?{Authorization:'Bearer '+key}:{}),'Content-Type':'application/json',Prefer:'return=representation',...options.headers}});
   const fail=message=>Object.assign(new Error(message),{status:503});
