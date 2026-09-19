@@ -33,6 +33,14 @@
       "dest": "/practical/$1"
     },
     {
+      "src": "/command-sim/?",
+      "dest": "/command-sim/index.html"
+    },
+    {
+      "src": "/command-sim/(index.html|app.mjs|engine.mjs|style.css|preview.html)",
+      "dest": "/command-sim/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

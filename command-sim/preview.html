@@ -1,0 +1,162 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DREX | 지휘소 의사결정 훈련</title><style>*{box-sizing:border-box}body{margin:0;color:#183046;background:#edf1f5;font:15px/1.65 system-ui,-apple-system,"Noto Sans KR",sans-serif}button,input,select,textarea{font:inherit}button,.fileButton{background:#fff;border:1px solid #c6d2db;border-radius:8px;color:#244259;padding:8px 13px;cursor:pointer}button:hover,.fileButton:hover{background:#e9f1f7}button:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #da9b24;outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#136e78;border-color:#136e78;color:white}.primary:hover{background:#0e5760}.brand{text-decoration:none;color:white;font-size:28px;font-weight:850;letter-spacing:.06em}.brand span{display:block;font-size:10px;letter-spacing:.15em;font-weight:500;color:#b8ceda}header{background:#152f46;color:white;padding:18px 32px;display:flex;align-items:center;gap:24px;justify-content:space-between}.chip{display:inline-block;font-size:11px;border:1px solid #92aab6;border-radius:5px;padding:3px 8px;margin:2px 5px 2px 0}main{max-width:1920px;margin:auto;padding:26px 28px}.title{display:flex;justify-content:space-between;align-items:center}.eyebrow{font-size:11px;letter-spacing:.13em;color:#167880;font-weight:750;margin:0 0 6px}h1{font-size:28px;margin:0}h2{font-size:16px;margin:0}h3{font-size:16px;margin-top:25px}p{margin:8px 0}.title p:not(.eyebrow),.sub{color:#607587;font-size:13px}.clock{text-align:right}.clock span,.clock small{display:block;font-size:11px;color:#607587}.clock strong{font-size:32px;font-variant-numeric:tabular-nums}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:23px 0 12px}.toolbar label{display:flex;align-items:center;gap:9px}.tabs{display:flex;gap:4px;flex:1}.tabs .active{background:#173b56;color:white;border-color:#173b56}select,textarea{border:1px solid #c9d6df;border-radius:7px;padding:8px;background:white;color:#183046;max-width:100%}textarea{width:100%;min-height:82px;resize:vertical}.notice{background:#e1eaf1;color:#435f73;font-size:12px;padding:10px 14px;border-radius:6px;margin-bottom:18px}.layout{display:grid;grid-template-columns:minmax(220px,1fr) minmax(370px,1.8fr) minmax(230px,1fr);gap:16px;align-items:start}.layout.withGuide{grid-template-columns:minmax(205px,1fr) minmax(335px,1.65fr) minmax(220px,1fr) minmax(230px,1fr)}.panel{background:white;border:1px solid #d7e1e8;border-radius:12px;padding:18px;min-width:0;box-shadow:0 3px 12px #213f5405}.panelHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.panelHead>span{font-size:11px;color:#657e8e}.center{display:grid;gap:16px}.scroll{max-height:650px;overflow:auto;padding-right:3px}.report,.request,.resource{padding:13px 0;border-bottom:1px solid #e6edf2}.report p,.request p{font-size:13px;overflow-wrap:anywhere}.meta{font-size:11px;color:#6a7f8e}.report button,.request button{font-size:12px;padding:5px 9px}.shared{color:#117c73}.mapPanel{padding-bottom:12px}svg{width:100%;display:block;border-radius:8px;margin:14px 0 6px}svg text{font-family:inherit;font-size:13px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:#627b89}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}form label,#control label{display:block;font-size:12px;margin:9px 0}form label select,#control label select{width:100%;display:block}.guide{background:#f4faf9;border-color:#b6d7d2;border-top:4px solid #137e79;position:sticky;top:16px}.guide ol{padding-left:22px;font-size:13px}.guide li{margin:9px 0}details{border-top:1px solid #dbe5e8;padding:12px 0;font-size:13px}summary{cursor:pointer;font-weight:650}small{display:block;color:#657e8e;font-size:11px}.empty{padding:25px 5px;color:#778c9a;font-size:13px}.resource strong{font-size:13px}.bar{height:5px;background:#dce8ed;border-radius:10px;margin:8px 0}.bar.active{background:#d89b35}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.metric{background:#f0f5f7;border-radius:8px;padding:16px}.metric strong{display:block;font-size:27px}.metric span{font-size:12px;color:#5f7888}.timelineRow{display:grid;grid-template-columns:65px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid #e4edf2;font-size:13px}.timelineRow time{font-variant-numeric:tabular-nums;color:#157780}.reviewBox{padding:16px;background:#f7f8ed;border-left:3px solid #b2a555;font-size:14px}footer{color:#738793;font-size:11px;margin-top:26px}dialog{border:1px solid #c6d6df;border-radius:16px;padding:30px;max-width:620px;width:calc(100% - 30px);color:#183046}dialog::backdrop{background:#102e42aa}.modeOptions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modeOptions label{padding:18px;border:1px solid #c8d9df;border-radius:10px;cursor:pointer}.modeOptions label:has(input:checked){background:#eaf6f2;border:2px solid #178279}.modeOptions strong,.modeOptions span{display:block}.modeOptions span{font-size:13px;color:#577181;margin-top:10px}#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16384d;color:white;border-radius:9px;padding:12px 20px;max-width:90%;z-index:10;display:none}#toast.show{display:block}.fileButton{font-size:13px}.fileButton input{display:none}[hidden]{display:none!important}#truth{padding:12px;background:#f7efdf;font-size:13px;margin:14px 0}#branchPoint{flex:1;min-width:180px}#review ul{padding-left:20px}#archives button{margin:5px}#orderForm>label:first-child{margin-top:0}@media(max-width:1150px){.layout.withGuide{grid-template-columns:240px minmax(330px,1.6fr) minmax(245px,1fr)}.withGuide .guide{grid-column:1/-1;position:static}.withGuide .guide ol{columns:2}}@media(max-width:1050px){.layout,.layout.withGuide{grid-template-columns:1fr 1.5fr}.layout>aside:nth-of-type(2){grid-column:1/-1}.toolbar .tabs{flex:unset}.guide{position:static}}@media(max-width:700px){header{padding:14px 16px;gap:8px}header>div{display:none}main{padding:20px 12px}.title{gap:10px}h1{font-size:22px}.title p:not(.eyebrow){font-size:12px}.clock strong{font-size:26px}.layout,.layout.withGuide{display:flex;flex-direction:column}.layout>*,.center{width:100%}.center{order:0}.layout>aside{order:1}.layout>.guide{order:-1}.withGuide .guide ol{columns:1}.scroll{max-height:350px}.metrics{grid-template-columns:1fr 1fr}.modeOptions{grid-template-columns:1fr}button{font-size:13px}.panel{padding:14px}.toolbar{gap:7px}.panelHead{align-items:flex-start}.clock{min-width:65px}}
+</style></head><body>
+<header><a class="brand" href="../">DREX<span>COMMAND EXERCISE · 0.1</span></a><div><span class="chip">가상 호우 시나리오</span><span id="modeBadge" class="chip"></span></div><button id="new">새 훈련</button></header>
+<main><div class="title"><div><p class="eyebrow">판단하고 · 협업하고 · 결과를 확인하다</p><h1>훈련 통합지휘 상황판</h1><p id="context">기관별 보고를 연결하고, 한정된 자원의 우선순위를 결정하세요.</p></div><div class="clock"><span>훈련 경과</span><strong id="clock">00:00</strong><small id="runState">진행 대기</small></div></div>
+<div class="toolbar"><label>현재 역할 <select id="role"></select></label><div class="tabs" role="tablist" aria-label="훈련 화면"><button class="active" id="boardTab">상황판</button><button id="aarTab">기록·사후강평</button></div><button id="help">사용법·역할 안내</button><button id="export">기록 저장</button><label class="fileButton">기록 불러오기<input id="import" type="file" accept=".json"></label></div>
+<p class="notice">첫 검증판 · 한 기기에서 역할을 바꾸는 훈련입니다. 실제훈련 모드는 정답 힌트 없이 진행하는 모의훈련이며, 원격 다기관 접속은 아직 연결되지 않았습니다.</p>
+<section id="board" class="layout">
+<aside class="panel"><div class="panelHead"><h2>기관별 상황 보고</h2><span id="reportCount"></span></div><p class="sub">자기 기관 수신 + 공동 공유된 정보</p><div id="reports" class="scroll"></div></aside>
+<div class="center"><section class="panel mapPanel"><div class="panelHead"><h2>공동상황도</h2><span class="chip">훈련용 가상 지역</span></div><p class="sub">표식은 현재 역할이 확인할 수 있는 최신 보고 기준입니다.</p><svg id="map" viewBox="0 0 720 410" role="img" aria-label="가상 훈련 지역: 지하차도, 요양시설, 연결도로, 의료거점"><defs><pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#d8e1e5" stroke-width=".7"/></pattern></defs><rect width="720" height="410" fill="#eef3ef"/><rect width="720" height="410" fill="url(#grid)"/><path d="M350 -40C430 80 270 130 360 230S410 380 360 460" fill="none" stroke="#a8cee0" stroke-width="65"/><g fill="#d6e0d4"><rect x="70" y="60" width="110" height="65" rx="8"/><rect x="500" y="40" width="120" height="70" rx="8"/><rect x="80" y="280" width="100" height="80" rx="8"/><rect x="510" y="280" width="135" height="80" rx="8"/></g><path d="M0 200H720M220 0V410M540 0V410" fill="none" stroke="white" stroke-width="20"/><path d="M0 200H720M220 0V410M540 0V410" fill="none" stroke="#b7c1c7" stroke-width="2" stroke-dasharray="8 8"/><text x="405" y="350" fill="#46677b">가상 하천</text><g id="markers"></g></svg><div class="legend"><span>● 수신·공유 보고 있음</span><span>○ 확인된 보고 없음</span><span>실제 지도·실시간 관측 아님</span></div></section>
+<section class="panel"><div class="panelHead"><h2>임무 요청·공동 판단</h2></div><form id="orderForm"><label>임무 <select id="task"></select></label><label>판단 근거·요청 목적<textarea id="reason" maxlength="1000" required placeholder="현재 알고 있는 상황, 우선순위, 협업이 필요한 이유를 입력하세요."></textarea></label><div class="actions"><button class="primary" type="submit">담당 기관에 요청</button><button id="decision" type="button">공동 판단 기록</button></div></form><div id="control" hidden><p class="sub">통제자만 전체 모의 상태를 확인합니다. 시간은 자동으로 흐르지 않습니다.</p><div class="actions"><button data-minutes="1">1분 진행</button><button data-minutes="5" class="primary">5분 진행</button><button id="end">훈련 종료</button></div><div id="truth"></div><label>상황 부여 대상<select id="target"></select></label><label>추가 보고 내용<textarea id="injectText" placeholder="특정 기관에 전달할 모의 신고·질의"></textarea></label><button id="inject">추가 상황 부여</button><small>추가 보고는 정보만 전달합니다. 모의 현장 수치를 임의로 바꾸지 않습니다.</small></div></section></div>
+<aside class="panel"><div class="panelHead"><h2>자원·기관 협업</h2><span id="pendingCount"></span></div><p class="sub">자원 현황은 해당 기관 역할에서 확인하세요.</p><div id="resources"></div><div id="requests" class="scroll"></div></aside>
+<aside id="guide" class="panel guide"><p class="eyebrow">PRACTICE GUIDE</p><h2>세부 가이드</h2><p class="sub">훈련 중 언제든 참고할 수 있습니다.</p><div id="guideContent"></div><details open><summary>훈련 진행 순서</summary><ol><li>기관별 보고를 읽고 필요한 정보를 공유합니다.</li><li>임무와 판단 근거를 작성합니다.</li><li>담당 기관 역할에서 수락 또는 대안을 회신합니다.</li><li>훈련통제로 전환해 시간을 진행합니다.</li><li>결과 보고를 공유하고 다음 판단을 기록합니다.</li></ol></details><details><summary>요청 문장 예시</summary><p>고립 신고 6명을 우선 확인하고 구조·이송을 요청합니다. 요양시설 대피 수요와 자원 중복을 확인해 가능한 출동 시점을 회신해 주세요.</p></details><details><summary>모델의 가정</summary><p>이송팀은 1대, 한 번에 최대 6명입니다. 12분에 도로가 단절되며 우회는 5분 추가됩니다. 통제 전 5분마다 고립 2명이 추가됩니다. 현업 검증 전의 교육용 가정입니다.</p></details></aside>
+</section>
+<section id="aar" class="panel" hidden><div class="panelHead"><div><p class="eyebrow">AFTER ACTION REVIEW</p><h2>판단의 근거와 결과를 함께 확인합니다</h2></div><button id="reportDownload">강평 보고서 저장</button></div><p id="aarNotice"></p><div id="metrics" class="metrics"></div><div id="review"></div><h3>결정 시점과 인과 기록</h3><div id="timeline"></div><h3>분기 재훈련</h3><p class="sub">선택한 행동 직전으로 돌아갑니다. 현재 기록은 별도 보관되며, 복귀 후 다른 판단을 시도할 수 있습니다.</p><div class="actions"><select id="branchPoint" aria-label="분기할 행동"></select><button id="fork">이 지점부터 다시 훈련</button></div><details><summary>보관한 이전 실행</summary><div id="archives"></div></details></section>
+<footer>모델 CPX-0.1 · 규칙 기반 모의 / AI 평가 미연결 · 실제 피해 예측이나 기관 공식 평가에 사용하지 않습니다.</footer></main>
+<dialog id="setup"><form method="dialog"><p class="eyebrow">DREX · NEW EXERCISE</p><h2>어떤 방식으로 훈련할까요?</h2><p>가상 지역 호우 · 5개 기관 역할 · 훈련시간 최대 60분</p><div class="modeOptions"><label><input type="radio" name="mode" value="practice" checked><strong>연습훈련</strong><span>기관별 세부 가이드·요청 예시·모델 가정을 보면서 반복 연습합니다.</span></label><label><input type="radio" name="mode" value="exercise"><strong>실제훈련</strong><span>세부 대응 힌트 없이 보고·판단·협업으로 진행합니다. 사용법과 역할 안내는 항상 확인할 수 있습니다.</span></label></div><p class="sub">모드는 한 실행 동안 유지됩니다. 새 훈련을 시작하면 이전 기록을 보관합니다.</p><div class="actions"><button id="start" value="start" class="primary">훈련 시작</button><button value="cancel">취소</button></div></form></dialog>
+<dialog id="helpDialog"><h2>사용법·역할 안내</h2><p>한 기기에서 역할을 바꾸며 기관 간 판단 과정을 시험하는 버전입니다.</p><ol><li>현재 역할을 선택하고 보고를 읽습니다.</li><li>보고의 ‘공동 공유’를 누르면 다른 역할에서도 확인됩니다.</li><li>임무를 요청한 뒤 담당 기관으로 역할을 바꿔 수락합니다.</li><li>훈련통제 역할에서 시간을 진행하면 이동·작업이 실행됩니다.</li><li>종료 후 기록·사후강평에서 결과와 당시 보고를 확인합니다.</li></ol><div id="roleHelp"></div><p>실제훈련 중에는 세부 대응 가이드가 나타나지 않습니다. 종료 후 강평 자료를 확인할 수 있습니다.</p><button id="closeHelp" class="primary">확인</button></dialog>
+<div id="toast" role="status" aria-live="polite"></div><script type="module">// DREX CPX reference model 0.1. Deterministic, deliberately coarse training rules.
+const VERSION='CPX-0.1';
+const ROLES={hq:'상황총괄',fire:'소방',police:'경찰',health:'보건',works:'시설·대피지원'};
+const PLACES={underpass:'하천변 지하차도',care:'강변 요양시설',road:'동측 연결도로',hospital:'지역 의료거점'};
+const TASKS={
+ rescue:{name:'고립 인원 구조·이송',owner:'fire',place:'underpass',resource:'ambulance',travel:5,work:5},
+ evacuate:{name:'이동약자 대피·이송',owner:'fire',place:'care',resource:'ambulance',travel:5,work:10},
+ close:{name:'지하차도 진입 통제',owner:'police',place:'underpass',resource:'patrol',travel:3,work:2},
+ clear:{name:'연결도로 장애물 제거',owner:'works',place:'road',resource:'crew',travel:4,work:6},
+ receive:{name:'의료거점 수용 준비',owner:'health',place:'hospital',resource:'medical',travel:0,work:5}
+};
+const GUIDES={
+ hq:['기관별 초기 보고를 모으세요.','보고 시각과 미확인 내용을 구분하고 공동 우선순위를 기록하세요.','소방 차량은 한 대입니다. 구조와 이동약자 대피를 동시에 수행할 수 없습니다.','소방에 임무를 요청한 뒤 소방 역할에서 수락하고 실행 결과를 공유하세요.'],
+ fire:['고립 신고의 인원과 위치를 확인하세요.','가용 이송팀을 확인하고 구조·대피 중 우선 임무를 판단하세요.','수락하면 이동과 작업에 시간이 소요됩니다. 지원이 어려우면 사유와 대안을 남기세요.','완료 보고를 상황총괄과 공유하고 다음 임무를 수락하세요.'],
+ police:['진입로 상태 보고를 확인하세요.','통제 임무를 요청·수락하면 순찰팀이 출동합니다.','통제 완료 전에는 추가 차량 유입이 발생할 수 있습니다.','통제 완료와 도로 단절 정보를 기관에 공유하세요.'],
+ health:['의료거점 수용 여력을 확인하세요.','수용 준비를 실행하고 이송 예정 인원과 시점을 협의하세요.','병상 제약과 준비 상태를 공동상황판에 공유하세요.','구조·대피 완료가 의료 인계 완료와 같은 의미는 아닙니다.'],
+ works:['요양시설 이동약자 보고를 공유하세요.','소방에 대피·이송을 요청하고 수송 가능 시점을 확인하세요.','연결도로가 단절되면 정비팀의 복구 임무를 실행하세요.','접근로 변화가 이동 중인 다른 자원에 미치는 영향을 확인하세요.']
+};
+const clone=x=>structuredClone(x);
+function log(s,text,kind='event'){s.log.push({id:s.log.length+1,time:s.time,kind,text});}
+function report(s,role,text,place=null){s.reports.push({id:'R'+(s.reports.length+1),time:s.time,role,text,place,shared:false});}
+function create(mode='practice'){
+ if(!['practice','exercise'].includes(mode))throw Error('훈련 모드가 올바르지 않습니다.');
+ const s={version:VERSION,mode,time:0,ended:false,world:{trapped:6,evacuees:12,rescued:0,evacuated:0,closed:false,blocked:false,medicalReady:false,exposure:0},resources:[{id:'ambulance',name:'구조·이송팀 1대',owner:'fire',job:null},{id:'patrol',name:'순찰팀 1개',owner:'police',job:null},{id:'crew',name:'도로 정비팀 1개',owner:'works',job:null},{id:'medical',name:'의료지원팀 1개',owner:'health',job:null}],requests:[],reports:[],log:[],commands:[]};
+ report(s,'hq','호우경보 가정. 기관별 현장 정보 확인과 공동 우선순위 결정이 필요합니다.');
+ report(s,'fire','지하차도 고립 6명 신고. 현장 미확인. 구조·이송팀 1대 가용.','underpass');
+ report(s,'police','지하차도 진입 통제 미실시. 동측 연결도로 통행 가능.','road');
+ report(s,'works','요양시설 이동약자 12명 대피 필요. 자체 수송수단 없음.','care');
+ report(s,'health','의료거점 지원팀 1개 가용. 수용 준비에 5분 필요.','hospital');
+ log(s,'훈련 시작 — 가상 지역 호우, 기관별 초기 보고 배포');return s;
+}
+function visibleReports(s,role){return s.reports.filter(r=>r.shared||r.role===role);}
+function view(s,role){return {time:s.time,reports:visibleReports(s,role),requests:s.requests.filter(r=>r.from===role||r.owner===role||role==='hq'),resources:s.resources.filter(r=>r.owner===role),decisions:s.log.filter(l=>l.kind==='decision')};}
+function step(s){
+ s.time++;
+ if(s.time===12){s.world.blocked=true;report(s,'police','동측 연결도로 토사 유입으로 단절 확인. 현장 출동팀 우회 필요.','road');log(s,'동측 연결도로 단절. 이동 중인 팀은 우회 경로 적용.');}
+ if(s.time===20)report(s,'works','요양시설 주변 수위 상승. 잔류 인원 신속 확인 필요.','care');
+ if(s.time%5===0&&!s.world.closed){s.world.trapped+=2;report(s,'fire',`추가 고립 신고. 현재 미구조 인원 ${s.world.trapped}명. 인원 재확인 필요.`,'underpass');log(s,'진입 통제 미완료 → 추가 고립 2명');}
+ for(const res of s.resources){
+  if(!res.job)continue;const j=res.job,t=TASKS[j.task];
+  if(j.phase==='travel'){
+   // A single route change adds 5 simulated minutes; road crew has independent access.
+   if(s.world.blocked&&!j.detoured&&j.task!=='clear'){j.remaining+=5;j.detoured=true;report(s,res.owner,`${t.name}: 연결도로 단절로 우회, 이동 5분 추가.`,t.place);log(s,`${res.name} 우회 → 이동 5분 추가`);}
+   j.remaining--;if(j.remaining<=0){j.phase='work';j.remaining=t.work;report(s,res.owner,`${t.name}: 현장 도착, 작업 시작.`,t.place);}continue;
+  }
+  j.remaining--;if(j.remaining>0)continue;
+  if(j.task==='rescue'){const n=Math.min(6,s.world.trapped);s.world.trapped-=n;s.world.rescued+=n;log(s,`구조·이송팀 작업 완료 → 고립 인원 ${n}명 구조`);}
+  if(j.task==='evacuate'){const n=Math.min(6,s.world.evacuees);s.world.evacuees-=n;s.world.evacuated+=n;log(s,`이동약자 ${n}명 안전지점 대피 완료`);}
+  if(j.task==='close')s.world.closed=true;
+  if(j.task==='clear')s.world.blocked=false;
+  if(j.task==='receive')s.world.medicalReady=true;
+  const req=s.requests.find(r=>r.id===j.request);req.status='done';req.completed=s.time;
+  report(s,res.owner,`${t.name} 완료. ${j.task==='rescue'?'남은 고립 인원 '+s.world.trapped+'명.':j.task==='evacuate'?'남은 대피 대상 '+s.world.evacuees+'명.':''}`,t.place);
+  log(s,`${res.name}: ${t.name} 완료, 재배정 가능`);res.job=null;
+ }
+ if(s.time>=20)s.world.exposure+=s.world.trapped+s.world.evacuees;
+ if(s.time>=60){s.ended=true;log(s,'60분 훈련 종료 — 기록을 바탕으로 사후강평 진행');}
+}
+function act(state,command){
+ const s=clone(state),c=clone(command);if(s.version!==VERSION)throw Error('모델 버전 불일치');
+ if(s.ended)throw Error('종료된 훈련입니다. 새 훈련 또는 분기 재훈련을 시작하세요.');
+ if(!ROLES[c.role]&&c.role!=='control')throw Error('역할을 확인하세요.');
+ if(c.type==='advance'){
+  if(c.role!=='control')throw Error('훈련통제 역할에서 시간을 진행하세요.');
+  if(!Number.isInteger(c.minutes)||c.minutes<1||c.minutes>10)throw Error('1~10분만 진행 가능합니다.');
+  for(let i=0;i<c.minutes&&!s.ended;i++)step(s);
+ }else if(c.type==='share'){
+  const r=s.reports.find(r=>r.id===c.id);if(!r||r.role!==c.role||r.shared)throw Error('자기 기관의 미공유 보고를 선택하세요.');r.shared=true;log(s,`${ROLES[c.role]} 보고 공유: ${r.text}`,'shared');
+ }else if(c.type==='request'){
+  const t=TASKS[c.task];if(!t||!ROLES[c.role])throw Error('임무와 기관을 확인하세요.');
+  if(!c.reason?.trim())throw Error('판단 근거와 요청 목적을 입력하세요.');
+  s.requests.push({id:'Q'+(s.requests.length+1),task:c.task,from:c.role,owner:t.owner,reason:c.reason.trim().slice(0,1000),time:s.time,status:'pending',known:visibleReports(s,c.role).map(r=>r.id)});log(s,`${ROLES[c.role]} → ${ROLES[t.owner]}: ${t.name} 요청 / ${c.reason.trim().slice(0,1000)}`,'decision');
+ }else if(c.type==='accept'||c.type==='decline'){
+  const r=s.requests.find(r=>r.id===c.id);if(!r||r.owner!==c.role||r.status!=='pending')throw Error('담당 기관의 대기 요청만 처리할 수 있습니다.');
+  if(c.type==='decline'){if(!c.reason?.trim())throw Error('지원 불가 사유와 대안을 입력하세요.');r.status='declined';r.reply=c.reason.trim().slice(0,1000);log(s,`${ROLES[c.role]} 지원 불가: ${r.reply}`,'decision');}
+  else {const t=TASKS[r.task],res=s.resources.find(x=>x.id===t.resource);if(res.job)throw Error('가용 자원이 없습니다. 현재 임무 완료 후 수락하거나 대안을 회신하세요.');
+   if((r.task==='rescue'&&!s.world.trapped)||(r.task==='evacuate'&&!s.world.evacuees)||(r.task==='close'&&s.world.closed)||(r.task==='receive'&&s.world.medicalReady)||(r.task==='clear'&&!s.world.blocked))throw Error('현장 확인 결과 현재 해당 작업 대상이 없습니다.');
+   r.status='active';r.accepted=s.time;res.job={request:r.id,task:r.task,phase:t.travel?'travel':'work',remaining:t.travel||t.work,detoured:false};log(s,`${ROLES[c.role]} 수락 → ${res.name} ${t.name} 시작`,'decision');}
+ }else if(c.type==='decision'){
+  if(!ROLES[c.role]||!c.reason?.trim())throw Error('판단과 협의 내용을 입력하세요.');log(s,`${ROLES[c.role]} 공동 판단: ${c.reason.trim().slice(0,1000)}`,'decision');
+ }else if(c.type==='inject'){
+  if(c.role!=='control'||!ROLES[c.target]||!c.reason?.trim())throw Error('통제 역할에서 수신 기관과 부여 내용을 입력하세요.');report(s,c.target,`[통제 부여] ${c.reason.trim().slice(0,1000)}`);log(s,`통제 부여 → ${ROLES[c.target]}: ${c.reason.trim().slice(0,1000)}`);
+ }else if(c.type==='end'){if(c.role!=='control')throw Error('통제 역할만 종료할 수 있습니다.');s.ended=true;log(s,'통제자 조기 종료');}
+ else throw Error('지원하지 않는 행동입니다.');
+ s.commands.push({...c,at:state.time});return s;
+}
+function replay(mode,commands){let s=create(mode);for(const c of commands)s=act(s,c);return s;}
+function restore(raw){if(raw?.version!==VERSION||!Array.isArray(raw.commands)||raw.commands.length>5000)throw Error('지원하는 훈련 기록이 아닙니다.');return replay(raw.mode,raw.commands);}
+function summary(s){return {minutes:s.time,rescued:s.world.rescued,evacuated:s.world.evacuated,trapped:s.world.trapped,remaining:s.world.evacuees,exposure:s.world.exposure,shared:s.reports.filter(r=>r.shared).length,total:s.reports.length,unresolved:s.requests.filter(r=>r.status==='pending').length,decisions:s.log.filter(l=>l.kind==='decision').length};}
+
+const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='drex-cpx-0.1';let state=create(),role='hq',tab='board',archives=[];let storageOK=true;
+function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),5000);}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({state,archives}));}catch{storageOK=false;toast('자동 저장이 불가능합니다. 기록 저장 버튼으로 파일을 내려받으세요.');}}
+function archive(){if(state.commands.length){archives.push({label:`${state.mode==='practice'?'연습':'실제'} ${state.time}분 · ${new Date().toLocaleString('ko-KR')}`,data:{version:VERSION,mode:state.mode,commands:state.commands}});}}
+function send(c){try{state=act(state,{role,...c});save();render();return true;}catch(e){toast(e.message);return false;}}
+function download(name,content,type='application/json'){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+const statusText={pending:'수락 대기',active:'실행 중',done:'완료',declined:'지원 불가'};
+function render(){
+ const v=view(state,role),control=role==='control';
+ $('clock').textContent=String(state.time).padStart(2,'0')+':00';$('runState').textContent=state.ended?'훈련 종료':'통제자 수동 진행 · 분:초';$('modeBadge').textContent=state.mode==='practice'?'연습훈련 · 가이드 ON':'실제훈련 · 독립 판단';
+ $('board').hidden=tab!=='board';$('aar').hidden=tab!=='aar';$('boardTab').classList.toggle('active',tab==='board');$('aarTab').classList.toggle('active',tab==='aar');
+ $('guide').hidden=state.mode!=='practice';$('board').classList.toggle('withGuide',state.mode==='practice');
+ $('guideContent').innerHTML=`<h3>${control?'훈련통제':ROLES[role]}의 연습 포인트</h3><ol>${(GUIDES[role]||['기관별 보고 공유와 지원 요청 진행을 확인하세요.','시간을 1분 또는 5분씩 진행하고 결과 보고가 도착하는 것을 확인하세요.','훈련 종료 후 기록에서 의사결정과 현장 결과를 연결해 보세요.']).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
+ $('reportCount').textContent=v.reports.length+'건';
+ $('reports').innerHTML=v.reports.length?v.reports.slice().reverse().map(r=>`<article class="report"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.role]} ${r.shared?'<span class="shared">· 공동 공유</span>':'· 기관 수신'}</div><p>${esc(r.text)}</p>${r.role===role&&!r.shared?`<button data-share="${r.id}" ${state.ended?'disabled':''}>공동 공유</button>`:''}</article>`).join(''):'<p class="empty">아직 공유된 보고가 없습니다. 기관별 역할에서 보고를 확인하세요.</p>';
+ const coords={underpass:[330,190],care:[220,100],road:[540,195],hospital:[220,315]};
+ $('markers').innerHTML=Object.entries(PLACES).map(([id,name])=>{const rs=v.reports.filter(r=>r.place===id),r=rs.at(-1),[x,y]=coords[id];return `<g><circle cx="${x}" cy="${y}" r="12" fill="${r?'#177d80':'#fff'}" stroke="#38677d" stroke-width="3"/><rect x="${x-80}" y="${y+20}" width="160" height="44" rx="7" fill="white" stroke="#d1dfe6"/><text x="${x}" y="${y+38}" text-anchor="middle" fill="#183e53">${name}</text><text x="${x}" y="${y+55}" text-anchor="middle" fill="#627e8a" style="font-size:10px">${r?`${r.time}분 보고 · ${r.shared?'공유':'기관 수신'}`:'보고 확인 필요'}</text></g>`;}).join('');
+ $('resources').innerHTML=v.resources.map(r=>`<div class="resource"><strong>${r.name}</strong><div class="bar ${r.job?'active':''}"></div><small>${r.job?`${TASKS[r.job.task].name} · ${r.job.phase==='travel'?'이동':'작업'} ${r.job.remaining}분 남음`:'가용 · 새 임무 수락 가능'}</small></div>`).join('')||'<p class="empty">기관 역할을 선택해 가용 자원을 확인하세요.</p>';
+ $('pendingCount').textContent=v.requests.filter(r=>r.status==='pending').length+'건 대기';
+ $('requests').innerHTML=v.requests.slice().reverse().map(r=>`<article class="request"><div class="meta">${r.id} · ${r.time}분 · ${ROLES[r.from]} → ${ROLES[r.owner]}</div><strong>${TASKS[r.task].name}</strong><p>${esc(r.reason)}</p><span class="chip">${statusText[r.status]}</span>${r.reply?`<p>회신: ${esc(r.reply)}</p>`:''}${r.status==='pending'&&r.owner===role&&!state.ended?`<div class="actions"><button class="primary" data-accept="${r.id}">수락·출동</button><button data-decline="${r.id}">지원 불가·대안</button></div>`:''}</article>`).join('')||'<p class="empty">접수된 임무 요청이 없습니다.</p>';
+ $('control').hidden=!control;$('orderForm').hidden=control;$('truth').textContent=`통제자 모의 상태: 고립 ${state.world.trapped}명 / 대피 잔류 ${state.world.evacuees}명 / 진입 ${state.world.closed?'통제':'미통제'} / 도로 ${state.world.blocked?'단절':'통행 가능'}`;
+ document.querySelectorAll('#control button,#orderForm button').forEach(b=>b.disabled=state.ended);
+ renderAAR();
+}
+function reviewHTML(){const m=summary(state);return `<div class="reviewBox"><strong>규칙 기반 강평 초안 · AI 평가 미연결</strong><ul><li>공유된 보고 ${m.shared}/${m.total}건. 핵심 정보가 판단 전에 전달됐는지 아래 시각을 비교하세요.</li><li>미처리 지원 요청 ${m.unresolved}건. 담당 기관의 자원 제약과 회신 여부를 확인하세요.</li><li>구조 ${m.rescued}명, 안전지점 대피 ${m.evacuated}명. 의료 수용 준비 ${state.world.medicalReady?'완료':'미완료'}. 의료 인계·치료 결과는 이 모델에서 계산하지 않습니다.</li><li>20분 이후 잔류 노출 누적 ${m.exposure}인·분. 교육용 비교 지표이며 사상자 수가 아닙니다.</li></ul><p><strong>강평 질문</strong> 당시 어떤 정보를 알고 있었습니까? 구조와 대피의 우선순위를 어떻게 합의했습니까? 다시 한다면 어떤 보고나 결정을 먼저 하겠습니까?</p><p>개선과제 작성: 담당 기관 / 개선 행동 / 완료 기한 / 다음 훈련에서 확인할 증거</p></div>`;}
+function renderAAR(){
+ const reveal=state.ended||role==='control',m=summary(state);
+ $('aarNotice').textContent=reveal?'전체 모의 상태와 당시 보고를 함께 검토합니다. 자동 점수·합격 판정은 하지 않습니다.':'훈련 중에는 공동 판단·공유 기록만 표시합니다. 전체 결과는 종료 후 공개됩니다.';
+ $('metrics').innerHTML=reveal?[[m.rescued+'명','구조 완료'],[m.evacuated+'명','안전지점 대피'],[m.shared+'건','공동 공유 보고'],[m.unresolved+'건','미처리 요청']].map(([n,l])=>`<div class="metric"><strong>${n}</strong><span>${l}</span></div>`).join(''):'';
+ $('review').innerHTML=reveal?reviewHTML():'';
+ const logs=reveal?state.log:state.log.filter(l=>['decision','shared'].includes(l.kind));
+ $('timeline').innerHTML=logs.map(l=>`<div class="timelineRow"><time>${l.time}분</time><div>${esc(l.text)}</div></div>`).join('');
+ if(reveal)$('timeline').innerHTML+=state.requests.map(r=>`<details><summary>${r.id} ${TASKS[r.task].name} · 요청 당시 근거 보고 ${r.known.length}건</summary>${r.known.map(id=>{const x=state.reports.find(z=>z.id===id);return `<p>${id} · ${x.time}분 · ${esc(x.text)}</p>`;}).join('')}</details>`).join('');
+ $('branchPoint').innerHTML=state.commands.map((c,i)=>`<option value="${i}">${c.at}분 · ${i+1}번째 행동 직전 · ${ROLES[c.role]||'훈련통제'} · ${esc(({request:'임무 요청',accept:'수락',decline:'지원 불가',share:'보고 공유',advance:'시간 진행',decision:'판단 기록',inject:'상황 부여',end:'종료'})[c.type])}</option>`).join('');
+ $('fork').disabled=!reveal||!state.commands.length;$('reportDownload').disabled=!reveal;
+ $('archives').innerHTML=archives.map((a,i)=>`<button data-archive="${i}">${esc(a.label)} · 기록 내려받기</button>`).join('')||'보관한 실행 없음';
+}
+function reportDocument(){const m=summary(state);return `<!doctype html><html lang="ko"><meta charset="utf-8"><title>DREX 사후강평</title><style>body{max-width:900px;margin:40px auto;padding:20px;font:16px/1.8 system-ui;color:#183046}td,th{border:1px solid #ccd8dd;padding:8px}table{border-collapse:collapse;width:100%}h1{color:#136e78}</style><h1>DREX 지휘소훈련 사후강평</h1><p>${VERSION} · ${state.mode==='practice'?'연습훈련':'실제훈련'} · ${state.time}분 ${state.ended?'종료':'중간 기록'}</p><p>가상 지역 호우. 규칙 기반 초안이며 공식 평가 또는 실제 피해 예측이 아닙니다.</p>${reviewHTML()}<h2>결정·현장 변화 기록</h2><table><tr><th>훈련 시각</th><th>기록</th></tr>${state.log.map(l=>`<tr><td>${l.time}분</td><td>${esc(l.text)}</td></tr>`).join('')}</table><h2>요청 시점에 알고 있던 정보</h2>${state.requests.map(r=>`<h3>${r.id} · ${TASKS[r.task].name}</h3><p>${esc(r.reason)}</p><ul>${r.known.map(id=>`<li>${id}: ${esc(state.reports.find(x=>x.id===id).text)}</li>`).join('')}</ul>`).join('')}<h2>실무자 검토·개선계획</h2><table><tr><th>개선사항</th><th>담당 기관</th><th>기한</th><th>재훈련 확인 방법</th></tr><tr><td>검토 후 작성</td><td></td><td></td><td></td></tr></table><p>모델 가정: 구조·대피 1회 최대 6명, 공유 이송팀 1대. 12분 도로 단절, 우회 5분. 통제 전 5분마다 고립 2명 추가. 완료 후 자원 즉시 재배정 가정. 복귀 이동·정밀 수리계산·사상자 예측 미구현.</p></html>`;}
+const roleOptions=Object.entries(ROLES).map(([id,name])=>`<option value="${id}">${name}</option>`).join('');$('role').innerHTML=roleOptions+'<option value="control">훈련통제</option>';$('target').innerHTML=roleOptions;
+ $('task').innerHTML=Object.entries(TASKS).map(([id,t])=>`<option value="${id}">${t.name} → ${ROLES[t.owner]}</option>`).join('');
+ $('roleHelp').innerHTML='<p>상황총괄: 정보 종합·우선순위 협의 / 소방: 구조·이송 / 경찰: 통제·도로 보고 / 보건: 의료 수용 준비 / 시설·대피지원: 대피 수요·도로 정비</p>';
+ $('role').onchange=()=>{role=$('role').value;render();};$('boardTab').onclick=()=>{tab='board';render();};$('aarTab').onclick=()=>{tab='aar';render();};$('help').onclick=()=>$('helpDialog').showModal();$('closeHelp').onclick=()=>$('helpDialog').close();
+ $('new').onclick=()=>$('setup').showModal();$('start').onclick=e=>{e.preventDefault();archive();state=create(document.querySelector('[name="mode"]:checked').value);role='hq';$('role').value=role;tab='board';save();render();$('setup').close();};
+ $('orderForm').onsubmit=e=>{e.preventDefault();if(send({type:'request',task:$('task').value,reason:$('reason').value})){$('reason').value='';toast('요청했습니다. 담당 기관 역할에서 수락·출동을 진행하세요.');}};
+ $('decision').onclick=()=>{if(send({type:'decision',reason:$('reason').value}))$('reason').value='';};
+ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.share)send({type:'share',id:b.dataset.share});if(b.dataset.accept)send({type:'accept',id:b.dataset.accept});if(b.dataset.decline){const reason=prompt('지원 불가 사유와 대안을 입력하세요.');if(reason)send({type:'decline',id:b.dataset.decline,reason});}if(b.dataset.minutes)send({type:'advance',minutes:Number(b.dataset.minutes)});if(b.dataset.archive!==undefined){const a=archives[Number(b.dataset.archive)];download('DREX_CPX_archive.json',JSON.stringify(a.data,null,2));}});
+ $('inject').onclick=()=>{if(send({type:'inject',target:$('target').value,reason:$('injectText').value}))$('injectText').value='';};$('end').onclick=()=>{if(confirm('현재 시점에서 종료하고 사후강평을 진행할까요?')){send({type:'end'});tab='aar';render();}};
+ $('export').onclick=()=>download('DREX_CPX_record.json',JSON.stringify({version:VERSION,mode:state.mode,commands:state.commands},null,2));
+ $('import').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>3000000)throw Error('3MB 이하 기록만 불러올 수 있습니다.');const loaded=restore(JSON.parse(await f.text()));archive();state=loaded;save();render();toast('기록을 재실행해 복원했습니다.');}catch(err){toast('불러오기 실패: '+err.message);}e.target.value='';};
+ $('fork').onclick=()=>{const n=Number($('branchPoint').value);if(confirm('현재 실행을 보관하고 선택 지점 직전부터 다시 훈련할까요?')){const next=replay(state.mode,state.commands.slice(0,n));archive();state=next;tab='board';save();render();toast('분기 재훈련을 시작했습니다. 이전 기록은 사후강평에서 내려받을 수 있습니다.');}};
+ $('reportDownload').onclick=()=>download('DREX_CPX_AAR.html',reportDocument(),'text/html');
+ try{const raw=localStorage.getItem(KEY);if(raw){const parsed=JSON.parse(raw);state=restore(parsed.state);archives=Array.isArray(parsed.archives)?parsed.archives:[];}else $('setup').showModal();}catch{storageOK=false;$('setup').showModal();toast('저장 기록을 읽지 못했습니다. 새 훈련으로 시작합니다.');}
+ render();
+</script></body></html>
