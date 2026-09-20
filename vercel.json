@@ -34,7 +34,7 @@
     },
     {
       "src": "/command-sim/?",
-      "dest": "/command-sim/index.html"
+      "dest": "/command-room/index.html"
     },
     {
       "src": "/command-sim/(index.html|app.mjs|engine.mjs|map.mjs|style.css|preview.html)",
@@ -43,6 +43,14 @@
     {
       "src": "/command-sim/vendor/(leaflet.js|leaflet.css|LICENSE)",
       "dest": "/command-sim/vendor/$1"
+    },
+    {
+      "src": "/command-room/?",
+      "dest": "/command-room/index.html"
+    },
+    {
+      "src": "/command-room/(index.html|model.mjs|room-app.mjs|local-runtime.mjs|room.css|preview.html)",
+      "dest": "/command-room/$1"
     },
     {
       "src": "/(.*)",
