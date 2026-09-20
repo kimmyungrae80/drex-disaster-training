@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {create,act,visibleReports,replay,restore} from '../command-sim/engine.mjs';
+const tick=(s,n)=>{while(n){let k=Math.min(n,10);s=act(s,{type:'advance',role:'control',minutes:k});n-=k;}return s;};
+const request=(s,task,role='hq')=>act(s,{type:'request',role,task,reason:'훈련 우선순위 판단'});
+const accept=(s,id,role)=>act(s,{type:'accept',role,id});
+test('각 기관은 자기 보고와 공유된 보고만 확인한다',()=>{let s=create();assert.equal(visibleReports(s,'hq').length,1);s=act(s,{type:'share',role:'fire',id:'R2'});assert.equal(visibleReports(s,'hq').length,2);assert.throws(()=>act(s,{type:'share',role:'hq',id:'R4'}));});
+test('소방 자원은 구조와 대피에 중복 배정되지 않는다',()=>{let s=request(create(),'rescue');s=request(s,'evacuate');s=accept(s,'Q1','fire');assert.throws(()=>accept(s,'Q2','fire'),/가용 자원/);s=tick(s,10);s=accept(s,'Q2','fire');assert.equal(s.resources[0].job.task,'evacuate');});
+test('통제 지연은 고립 증가를 발생시키고 조기 통제는 이를 줄인다',()=>{const late=tick(create(),10);let early=request(create(),'close');early=accept(early,'Q1','police');early=tick(early,10);assert.ok(early.world.trapped<late.world.trapped);assert.equal(early.world.closed,true);});
+test('도로 단절은 이동 중인 자원의 도착을 지연시킨다',()=>{let s=tick(create(),10);s=request(s,'evacuate');s=accept(s,'Q1','fire');s=tick(s,15);assert.equal(s.world.evacuated,0);assert.ok(s.log.some(l=>l.text.includes('우회')));s=tick(s,5);assert.equal(s.world.evacuated,6);});
+test('요청 당시 보유 정보는 이후 공유에 의해 바뀌지 않는다',()=>{let s=request(create(),'rescue');assert.deepEqual(s.requests[0].known,['R1']);s=act(s,{type:'share',role:'fire',id:'R2'});assert.deepEqual(s.requests[0].known,['R1']);});
+test('기록 재생은 같은 결과를 만들고 분기는 원본을 보존한다',()=>{let s=request(create('exercise'),'rescue');s=accept(s,'Q1','fire');s=tick(s,20);assert.deepEqual(replay(s.mode,s.commands),s);assert.deepEqual(restore(JSON.parse(JSON.stringify(s))),s);const fork=replay(s.mode,s.commands.slice(0,1));assert.equal(fork.time,0);assert.equal(s.time,20);});
+test('통제 권한·종료 상태·명령 검증',()=>{assert.throws(()=>act(create(),{type:'advance',role:'fire',minutes:5}));assert.throws(()=>act(create(),{type:'advance',role:'control',minutes:Infinity}));let s=tick(create(),60);assert.equal(s.ended,true);assert.throws(()=>request(s,'rescue'));assert.throws(()=>restore({version:'unknown',commands:[]}));});
+test('두 모드는 동일한 상황 모의 결과를 사용한다',()=>{let a=tick(create('practice'),20),b=tick(create('exercise'),20);assert.deepEqual(a.world,b.world);});
