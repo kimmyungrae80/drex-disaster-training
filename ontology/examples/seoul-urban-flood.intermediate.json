@@ -1,0 +1,763 @@
+{
+  "schemaVersion": "0.1",
+  "id": "seoul-urban-flood-v1-intermediate-1636965367",
+  "title": "서울 도심 지하공간 침수·정전·교통마비 복합재난",
+  "publicName": "재난협업훈련",
+  "location": "서울 도심 A구역",
+  "trainingMode": "TTX",
+  "level": "intermediate",
+  "durationMinutes": 30,
+  "deterministicSeed": 1636965367,
+  "status": "교육용 시나리오 초안 · 훈련책임자 검토 필요",
+  "trainingObjectives": [
+    "기관별 차등정보를 요청·회신으로 결합한다",
+    "요청 수락과 실제 조치 완료를 구분해 기록한다",
+    "침수·감전·인파 위험의 우선순위를 공동 결정한다",
+    "확인된 사실과 미확인 정보를 구분해 시민에게 안내한다"
+  ],
+  "disasterTypes": [
+    {
+      "id": "dtx:heavyRain",
+      "label": "집중호우"
+    },
+    {
+      "id": "dtx:urbanFlood",
+      "label": "도심침수"
+    },
+    {
+      "id": "dtx:urbanCompoundDisaster",
+      "label": "도심 복합재난"
+    }
+  ],
+  "regionFeatures": [
+    {
+      "id": "dtx:undergroundSpace",
+      "label": "지하공간"
+    },
+    {
+      "id": "dtx:transportHub",
+      "label": "교통거점"
+    },
+    {
+      "id": "dtx:densePopulation",
+      "label": "인구밀집"
+    },
+    {
+      "id": "dtx:criticalInfrastructure",
+      "label": "기반시설밀집"
+    },
+    {
+      "id": "dtx:vulnerablePopulation",
+      "label": "취약계층"
+    }
+  ],
+  "participants": [
+    {
+      "id": "dtx:seoulCity",
+      "label": "서울시 재난안전대책본부"
+    },
+    {
+      "id": "dtx:fireService",
+      "label": "소방"
+    },
+    {
+      "id": "dtx:police",
+      "label": "경찰"
+    },
+    {
+      "id": "dtx:metro",
+      "label": "서울교통공사"
+    }
+  ],
+  "supportOrganizations": [
+    {
+      "id": "dtx:districtOffice",
+      "label": "관할 구청"
+    },
+    {
+      "id": "dtx:powerUtility",
+      "label": "전력 지원기관"
+    },
+    {
+      "id": "dtx:medical",
+      "label": "의료기관"
+    }
+  ],
+  "roleBriefs": [
+    {
+      "organizationId": "dtx:seoulCity",
+      "organization": "서울시 재난안전대책본부",
+      "mission": [
+        "coordination",
+        "publicWarning"
+      ],
+      "privateInformation": [
+        {
+          "eventId": "dtx:metroSuspension",
+          "label": "지하철 운행 중단"
+        },
+        {
+          "eventId": "dtx:informationDisorder",
+          "label": "미확인 정보 확산"
+        }
+      ],
+      "assignedTasks": [
+        {
+          "taskId": "dtx:situationShare",
+          "task": "상황 전파",
+          "dependsOn": [],
+          "deadlineMinutes": 3,
+          "evidence": [
+            "최초 전파시각",
+            "수신기관 확인"
+          ]
+        },
+        {
+          "taskId": "dtx:publicMessage",
+          "task": "시민 행동요령 공지",
+          "dependsOn": [
+            {
+              "taskId": "dtx:passengerCount",
+              "task": "승객·체류인원 현황 공유"
+            },
+            {
+              "taskId": "dtx:accessControl",
+              "task": "위험구역 출입 통제"
+            }
+          ],
+          "deadlineMinutes": 18,
+          "evidence": [
+            "승인주체",
+            "공지시각",
+            "공지내용"
+          ]
+        }
+      ]
+    },
+    {
+      "organizationId": "dtx:fireService",
+      "organization": "소방",
+      "mission": [
+        "rescue",
+        "hazardControl"
+      ],
+      "privateInformation": [
+        {
+          "eventId": "dtx:undergroundInflow",
+          "label": "지하공간 유입"
+        },
+        {
+          "eventId": "dtx:powerFailure",
+          "label": "부분 정전"
+        },
+        {
+          "eventId": "dtx:vulnerablePersonTrapped",
+          "label": "이동약자 고립"
+        },
+        {
+          "eventId": "dtx:roadCongestion",
+          "label": "구조 진입로 정체"
+        }
+      ],
+      "assignedTasks": [
+        {
+          "taskId": "dtx:trappedPersonRescue",
+          "task": "고립자 구조",
+          "dependsOn": [
+            {
+              "taskId": "dtx:rescueRoute",
+              "task": "구조차량 진입로 확보"
+            },
+            {
+              "taskId": "dtx:powerIsolation",
+              "task": "역사·지하상가 전력 차단 확인"
+            }
+          ],
+          "deadlineMinutes": 16,
+          "evidence": [
+            "구조대 투입시각",
+            "구조인원",
+            "인계기록"
+          ]
+        }
+      ]
+    },
+    {
+      "organizationId": "dtx:police",
+      "organization": "경찰",
+      "mission": [
+        "trafficControl",
+        "crowdControl"
+      ],
+      "privateInformation": [
+        {
+          "eventId": "dtx:crowdConcentration",
+          "label": "지상 인파 집중"
+        },
+        {
+          "eventId": "dtx:informationDisorder",
+          "label": "미확인 정보 확산"
+        },
+        {
+          "eventId": "dtx:roadCongestion",
+          "label": "구조 진입로 정체"
+        }
+      ],
+      "assignedTasks": [
+        {
+          "taskId": "dtx:accessControl",
+          "task": "위험구역 출입 통제",
+          "dependsOn": [
+            {
+              "taskId": "dtx:situationShare",
+              "task": "상황 전파"
+            }
+          ],
+          "deadlineMinutes": 8,
+          "evidence": [
+            "통제구역",
+            "통제개시시각"
+          ]
+        },
+        {
+          "taskId": "dtx:rescueRoute",
+          "task": "구조차량 진입로 확보",
+          "dependsOn": [
+            {
+              "taskId": "dtx:accessControl",
+              "task": "위험구역 출입 통제"
+            }
+          ],
+          "deadlineMinutes": 10,
+          "evidence": [
+            "요청시각",
+            "수락시각",
+            "진입로 확보시각"
+          ]
+        }
+      ]
+    },
+    {
+      "organizationId": "dtx:metro",
+      "organization": "서울교통공사",
+      "mission": [
+        "railControl",
+        "passengerEvacuation"
+      ],
+      "privateInformation": [
+        {
+          "eventId": "dtx:undergroundInflow",
+          "label": "지하공간 유입"
+        },
+        {
+          "eventId": "dtx:pumpFailure",
+          "label": "배수펌프 기능저하"
+        },
+        {
+          "eventId": "dtx:powerFailure",
+          "label": "부분 정전"
+        },
+        {
+          "eventId": "dtx:metroSuspension",
+          "label": "지하철 운행 중단"
+        },
+        {
+          "eventId": "dtx:vulnerablePersonTrapped",
+          "label": "이동약자 고립"
+        }
+      ],
+      "assignedTasks": [
+        {
+          "taskId": "dtx:passengerCount",
+          "task": "승객·체류인원 현황 공유",
+          "dependsOn": [],
+          "deadlineMinutes": 6,
+          "evidence": [
+            "확인시각",
+            "구역별 인원",
+            "정보신뢰도"
+          ]
+        },
+        {
+          "taskId": "dtx:powerIsolation",
+          "task": "역사·지하상가 전력 차단 확인",
+          "dependsOn": [
+            {
+              "taskId": "dtx:situationShare",
+              "task": "상황 전파"
+            }
+          ],
+          "deadlineMinutes": 9,
+          "evidence": [
+            "차단범위",
+            "차단완료시각",
+            "안전확인"
+          ]
+        },
+        {
+          "taskId": "dtx:stationEvacuation",
+          "task": "역사 승객 대피",
+          "dependsOn": [
+            {
+              "taskId": "dtx:passengerCount",
+              "task": "승객·체류인원 현황 공유"
+            },
+            {
+              "taskId": "dtx:powerIsolation",
+              "task": "역사·지하상가 전력 차단 확인"
+            }
+          ],
+          "deadlineMinutes": 14,
+          "evidence": [
+            "대피인원",
+            "사용출구",
+            "미확인인원"
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "dtx:situationShare",
+      "label": "상황 전파",
+      "owner": "dtx:seoulCity",
+      "dependsOn": [],
+      "deadlineMinutes": 3,
+      "evidence": [
+        "최초 전파시각",
+        "수신기관 확인"
+      ],
+      "criteria": [
+        "dtx:criterionSituation",
+        "dtx:criterionCommunication"
+      ]
+    },
+    {
+      "id": "dtx:passengerCount",
+      "label": "승객·체류인원 현황 공유",
+      "owner": "dtx:metro",
+      "dependsOn": [],
+      "deadlineMinutes": 6,
+      "evidence": [
+        "확인시각",
+        "구역별 인원",
+        "정보신뢰도"
+      ],
+      "criteria": [
+        "dtx:criterionSituation",
+        "dtx:criterionCommunication"
+      ]
+    },
+    {
+      "id": "dtx:accessControl",
+      "label": "위험구역 출입 통제",
+      "owner": "dtx:police",
+      "dependsOn": [
+        "dtx:situationShare"
+      ],
+      "deadlineMinutes": 8,
+      "evidence": [
+        "통제구역",
+        "통제개시시각"
+      ],
+      "criteria": [
+        "dtx:criterionCollaboration",
+        "dtx:criterionLifeSafety"
+      ]
+    },
+    {
+      "id": "dtx:rescueRoute",
+      "label": "구조차량 진입로 확보",
+      "owner": "dtx:police",
+      "dependsOn": [
+        "dtx:accessControl"
+      ],
+      "deadlineMinutes": 10,
+      "evidence": [
+        "요청시각",
+        "수락시각",
+        "진입로 확보시각"
+      ],
+      "criteria": [
+        "dtx:criterionCollaboration"
+      ]
+    },
+    {
+      "id": "dtx:powerIsolation",
+      "label": "역사·지하상가 전력 차단 확인",
+      "owner": "dtx:metro",
+      "dependsOn": [
+        "dtx:situationShare"
+      ],
+      "deadlineMinutes": 9,
+      "evidence": [
+        "차단범위",
+        "차단완료시각",
+        "안전확인"
+      ],
+      "criteria": [
+        "dtx:criterionSOP",
+        "dtx:criterionLifeSafety"
+      ]
+    },
+    {
+      "id": "dtx:stationEvacuation",
+      "label": "역사 승객 대피",
+      "owner": "dtx:metro",
+      "dependsOn": [
+        "dtx:passengerCount",
+        "dtx:powerIsolation"
+      ],
+      "deadlineMinutes": 14,
+      "evidence": [
+        "대피인원",
+        "사용출구",
+        "미확인인원"
+      ],
+      "criteria": [
+        "dtx:criterionLifeSafety"
+      ]
+    },
+    {
+      "id": "dtx:trappedPersonRescue",
+      "label": "고립자 구조",
+      "owner": "dtx:fireService",
+      "dependsOn": [
+        "dtx:rescueRoute",
+        "dtx:powerIsolation"
+      ],
+      "deadlineMinutes": 16,
+      "evidence": [
+        "구조대 투입시각",
+        "구조인원",
+        "인계기록"
+      ],
+      "criteria": [
+        "dtx:criterionLifeSafety",
+        "dtx:criterionResource"
+      ]
+    },
+    {
+      "id": "dtx:publicMessage",
+      "label": "시민 행동요령 공지",
+      "owner": "dtx:seoulCity",
+      "dependsOn": [
+        "dtx:passengerCount",
+        "dtx:accessControl"
+      ],
+      "deadlineMinutes": 18,
+      "evidence": [
+        "승인주체",
+        "공지시각",
+        "공지내용"
+      ],
+      "criteria": [
+        "dtx:criterionCommunication"
+      ]
+    }
+  ],
+  "injects": [
+    {
+      "id": "I01",
+      "atMinute": 2,
+      "phase": "초기대응",
+      "eventId": "dtx:undergroundInflow",
+      "title": "지하공간 유입",
+      "situation": "서울 도심 A구역 지하공간으로 빗물이 유입되고 있으나 유입량과 고립인원은 기관별로 다르게 파악되고 있다.",
+      "visibleTo": [
+        "dtx:metro",
+        "dtx:fireService"
+      ],
+      "expectedTasks": [
+        "dtx:situationShare",
+        "dtx:passengerCount"
+      ],
+      "decisionOptions": [
+        "추가 정보를 확인한 뒤 통제한다",
+        "출입을 즉시 통제한다",
+        "부분 통제와 현장확인을 병행한다"
+      ],
+      "informationQuality": "부분 확인"
+    },
+    {
+      "id": "I02",
+      "atMinute": 5,
+      "phase": "확산·대응",
+      "eventId": "dtx:pumpFailure",
+      "title": "배수펌프 기능저하",
+      "situation": "배수펌프 일부가 기능저하 상태를 보이면서 침수속도가 빨라질 가능성이 있다.",
+      "visibleTo": [
+        "dtx:metro"
+      ],
+      "expectedTasks": [
+        "dtx:situationShare",
+        "dtx:stationEvacuation"
+      ],
+      "decisionOptions": [
+        "대피를 우선하고 배수는 병행한다",
+        "현재 설비 복구를 우선한다",
+        "대체 배수자원을 요청한다"
+      ],
+      "informationQuality": "부분 확인"
+    },
+    {
+      "id": "I03",
+      "atMinute": 8,
+      "phase": "확산·대응",
+      "eventId": "dtx:powerFailure",
+      "title": "부분 정전",
+      "situation": "지하상가와 역사 일부에서 정전이 발생하고 감전·화재 위험 여부가 확인되지 않았다.",
+      "visibleTo": [
+        "dtx:metro",
+        "dtx:fireService"
+      ],
+      "expectedTasks": [
+        "dtx:powerIsolation"
+      ],
+      "decisionOptions": [
+        "대피 완료 후 전력을 차단한다",
+        "구역별 선택 차단을 실시한다",
+        "위험구역 전력을 즉시 차단한다"
+      ],
+      "informationQuality": "정보 충돌"
+    },
+    {
+      "id": "I04",
+      "atMinute": 11,
+      "phase": "공동대응",
+      "eventId": "dtx:metroSuspension",
+      "title": "지하철 운행 중단",
+      "situation": "역사 안전확인을 위해 열차 운행조정이 필요하고 지상으로 이동하는 시민이 늘고 있다.",
+      "visibleTo": [
+        "dtx:metro",
+        "dtx:seoulCity"
+      ],
+      "expectedTasks": [
+        "dtx:passengerCount",
+        "dtx:stationEvacuation"
+      ],
+      "decisionOptions": [
+        "전면 운행중단",
+        "해당 역사 무정차 통과",
+        "일부 출입구만 폐쇄하고 운행 유지"
+      ],
+      "informationQuality": "정보 충돌"
+    },
+    {
+      "id": "I05",
+      "atMinute": 14,
+      "phase": "수습·안정화",
+      "eventId": "dtx:vulnerablePersonTrapped",
+      "title": "이동약자 고립",
+      "situation": "이동지원이 필요한 시민이 지하공간에 남아 있다는 신고가 접수됐으나 정확한 위치는 확인되지 않았다.",
+      "visibleTo": [
+        "dtx:fireService",
+        "dtx:metro"
+      ],
+      "expectedTasks": [
+        "dtx:trappedPersonRescue"
+      ],
+      "decisionOptions": [
+        "대피 가능한 인원을 먼저 이동시킨다",
+        "구역별 위험도 순으로 구조한다",
+        "이동약자를 최우선 구조한다"
+      ],
+      "informationQuality": "정보 충돌"
+    },
+    {
+      "id": "I06",
+      "atMinute": 17,
+      "phase": "수습·안정화",
+      "eventId": "dtx:crowdConcentration",
+      "title": "지상 인파 집중",
+      "situation": "폐쇄된 출입구 주변과 광장에 인파가 집중되어 대피동선과 구조동선이 충돌하고 있다.",
+      "visibleTo": [
+        "dtx:police"
+      ],
+      "expectedTasks": [
+        "dtx:accessControl",
+        "dtx:publicMessage"
+      ],
+      "decisionOptions": [
+        "시민안내를 먼저 시행한다",
+        "교통통제를 우선한다",
+        "광장 분산과 출입통제를 동시에 실시한다"
+      ],
+      "informationQuality": "정보 충돌"
+    },
+    {
+      "id": "I07",
+      "atMinute": 20,
+      "phase": "수습·안정화",
+      "eventId": "dtx:informationDisorder",
+      "title": "미확인 정보 확산",
+      "situation": "온라인에서 확인되지 않은 시설 붕괴설이 확산되며 시민 이동이 한쪽 출구로 몰리고 있다.",
+      "visibleTo": [
+        "dtx:seoulCity",
+        "dtx:police"
+      ],
+      "expectedTasks": [
+        "dtx:publicMessage"
+      ],
+      "decisionOptions": [
+        "확인된 사실만 즉시 공지한다",
+        "모든 사실 확인 후 일괄 공지한다",
+        "유언비어 대응과 현장안내를 분리한다"
+      ],
+      "informationQuality": "정보 충돌"
+    },
+    {
+      "id": "I08",
+      "atMinute": 23,
+      "phase": "수습·안정화",
+      "eventId": "dtx:roadCongestion",
+      "title": "구조 진입로 정체",
+      "situation": "도심 교통정체로 구조차량 진입이 지연되고 우회동선 확보가 필요하다.",
+      "visibleTo": [
+        "dtx:police",
+        "dtx:fireService"
+      ],
+      "expectedTasks": [
+        "dtx:rescueRoute"
+      ],
+      "decisionOptions": [
+        "구조차량 전용 진입로를 확보한다",
+        "우회 진입로를 새로 지정한다",
+        "기존 도로에서 신호통제로 진입한다"
+      ],
+      "informationQuality": "확인 필요"
+    }
+  ],
+  "evaluationCriteria": [
+    {
+      "id": "dtx:criterionSituation",
+      "label": "상황인지·전파",
+      "description": "다양한 경로로 상황을 인지하고 필요한 기관에 적시에 전파했는가"
+    },
+    {
+      "id": "dtx:criterionCommunication",
+      "label": "정보공유",
+      "description": "확인된 사실과 미확인 정보를 구분해 공유했는가"
+    },
+    {
+      "id": "dtx:criterionCollaboration",
+      "label": "기관 간 협업",
+      "description": "요청·수신확인·수락·완료가 단절 없이 이어졌는가"
+    },
+    {
+      "id": "dtx:criterionLifeSafety",
+      "label": "인명보호",
+      "description": "취약계층과 고립자를 포함해 인명보호를 우선했는가"
+    },
+    {
+      "id": "dtx:criterionSOP",
+      "label": "절차이행",
+      "description": "기관별 임무와 안전절차에 따라 조치했는가"
+    },
+    {
+      "id": "dtx:criterionResource",
+      "label": "자원활용",
+      "description": "필요 자원의 수량과 목적을 확인하고 부족자원을 요청했는가"
+    }
+  ],
+  "guardrails": [
+    "실제 서울시 운영자료나 공식 재난예측 결과로 표현하지 않는다",
+    "기관별 임무와 수치는 교육용 가정임을 명시한다",
+    "참여자는 자기 기관 역할만 수행한다",
+    "미참여 기관은 통제관 또는 AI가 제한적으로 대행한다",
+    "자동점수는 공식 평가가 아니라 사후강평 보조자료로만 사용한다"
+  ],
+  "llmGroundingPackage": {
+    "instruction": "아래 온톨로지 사실만 사용해 상황카드의 문장을 자연스럽게 확장한다. 기관·수치·임무를 임의로 추가하지 않는다.",
+    "facts": [
+      {
+        "event": "지하공간 유입",
+        "visibleTo": [
+          "서울교통공사",
+          "소방"
+        ],
+        "expectedTasks": [
+          "상황 전파",
+          "승객·체류인원 현황 공유"
+        ]
+      },
+      {
+        "event": "배수펌프 기능저하",
+        "visibleTo": [
+          "서울교통공사"
+        ],
+        "expectedTasks": [
+          "상황 전파",
+          "역사 승객 대피"
+        ]
+      },
+      {
+        "event": "부분 정전",
+        "visibleTo": [
+          "서울교통공사",
+          "소방"
+        ],
+        "expectedTasks": [
+          "역사·지하상가 전력 차단 확인"
+        ]
+      },
+      {
+        "event": "지하철 운행 중단",
+        "visibleTo": [
+          "서울교통공사",
+          "서울시 재난안전대책본부"
+        ],
+        "expectedTasks": [
+          "승객·체류인원 현황 공유",
+          "역사 승객 대피"
+        ]
+      },
+      {
+        "event": "이동약자 고립",
+        "visibleTo": [
+          "소방",
+          "서울교통공사"
+        ],
+        "expectedTasks": [
+          "고립자 구조"
+        ]
+      },
+      {
+        "event": "지상 인파 집중",
+        "visibleTo": [
+          "경찰"
+        ],
+        "expectedTasks": [
+          "위험구역 출입 통제",
+          "시민 행동요령 공지"
+        ]
+      },
+      {
+        "event": "미확인 정보 확산",
+        "visibleTo": [
+          "서울시 재난안전대책본부",
+          "경찰"
+        ],
+        "expectedTasks": [
+          "시민 행동요령 공지"
+        ]
+      },
+      {
+        "event": "구조 진입로 정체",
+        "visibleTo": [
+          "경찰",
+          "소방"
+        ],
+        "expectedTasks": [
+          "구조차량 진입로 확보"
+        ]
+      }
+    ],
+    "outputRule": "모든 상황카드는 발신처, 관측사실, 미확인사항, 요구되는 판단을 구분한다."
+  },
+  "validation": {
+    "valid": true,
+    "errors": []
+  }
+}
