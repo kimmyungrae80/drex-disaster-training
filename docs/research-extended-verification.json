@@ -1,0 +1,5737 @@
+{
+  "kind": "extended-controlled-software-verification",
+  "createdAt": "2026-10-13T21:11:59.390Z",
+  "node": "v24.19.0",
+  "sourceRevision": "e95f31ff5ac1a6e2672874c6aa80109c09b5d922",
+  "planSha256": "e9bb5474133b48651380de2691ebcb46b39e370e3e65a8f1db6fe10797efb2a2",
+  "sourceSha256": {
+    "ontology/src/validation.mjs": "fe26f00258e2b96f16572b870460fa5dfe9f44cb4db1943d8914e28efd8a6a3f",
+    "ontology/src/scenario-core.mjs": "130c458c28bc9cf56a6ca6a20856264dcdc36be028b634a89ab2efcdb03cccc3",
+    "ontology/data/core-knowledge.v0.1.jsonld": "bca2f10872f5a771b430659af4310f6d5ed70b79c99524328b264eef0c61399e",
+    "ontology/data/seoul-urban-flood.seed.json": "71a14060c78883976cdff7f2f6490f8585458aed79264db526a6f642c0042ee2",
+    "research/verify-extended.mjs": "cac23416e5f1d60df36ea6551684bca21acb9db4c7c12982b23d2aaae45fc2a6"
+  },
+  "summary": {
+    "controls": 27,
+    "controlsAccepted": 27,
+    "repeatedEqual": 27,
+    "faults": 324,
+    "faultsDetected": 324,
+    "invariants": 54,
+    "invariantsAccepted": 54,
+    "scopeProbes": 9,
+    "scopeProbesAccepted": 9,
+    "exceptions": 0
+  },
+  "controls": [
+    {
+      "id": "beginner/10/0",
+      "level": "beginner",
+      "duration": 10,
+      "randomSeed": 0,
+      "scenarioSha256": "a3a7e9c1b8d496df197760200f65d4739f47e1d01da8807298111e7875d66fb1",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "level": "beginner",
+      "duration": 10,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "2b4bb0bf87cdac87b572bb8e0fec01a3a4e969ab5284fe6f8a7a35f0d28384e6",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "level": "beginner",
+      "duration": 10,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "13823e16366bf7831433a876df1f978f4117057eff096f17a97573c17370d9ad",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/0",
+      "level": "beginner",
+      "duration": 30,
+      "randomSeed": 0,
+      "scenarioSha256": "6a54b06ba6cdeefeae6e1c06a39fbf245d0589625be0987b8630b47fe486a6a9",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "level": "beginner",
+      "duration": 30,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "37ed3ff4f5c3b43215bd5c959507038cee6744c96f8e80b81b3508afcd70c183",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "level": "beginner",
+      "duration": 30,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "bce73254e4236f8c450f7dd1eaddae1ec5226e1839de4c0ee844dd275071a018",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/0",
+      "level": "beginner",
+      "duration": 180,
+      "randomSeed": 0,
+      "scenarioSha256": "84d71671d7a7fbe015ac45ce6199599bb79aeb6f591d2b4865503cd3d6cdd9ac",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "level": "beginner",
+      "duration": 180,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "f258c5217991c10025fa840ea2d14c090d7f8dacfda410303535d8c80467489a",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "level": "beginner",
+      "duration": 180,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "6094f47573342072e124df7b843c8c5ff03bb64a3711bb46b544a758c25d3daa",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/0",
+      "level": "intermediate",
+      "duration": 10,
+      "randomSeed": 0,
+      "scenarioSha256": "8fc44f219d244928859b32f0c1e6c06473c8ef0a644fc4119d9a1e4b039eaf0b",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "level": "intermediate",
+      "duration": 10,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "59af4b0b3feea6979f776dc42d05e42d5d6a68024b1505c887b1b67028a02a02",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "level": "intermediate",
+      "duration": 10,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "42abcdfe63ab308d95c3c88fc099f97cb3a4a704a4a1f04dad23b0ba73254173",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/0",
+      "level": "intermediate",
+      "duration": 30,
+      "randomSeed": 0,
+      "scenarioSha256": "3c6eba23206cfc1b14afa88591fdaa4f4384e8474dfd70d19302efdafaa8cb9f",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "level": "intermediate",
+      "duration": 30,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "f7fb8c6f395617363aa8f37686e6f31213945c81926b1a1fcb2cc6d6303c93c4",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "level": "intermediate",
+      "duration": 30,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "3109973128d86333bd267d97dbe4d46f6002a3755d3df9a2de402b09a5bb5b7c",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/0",
+      "level": "intermediate",
+      "duration": 180,
+      "randomSeed": 0,
+      "scenarioSha256": "a9cb73a6f9dea156a6ab450d7f31bd6ef8343231a5c2877f5ffffa4ece20b0d6",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "level": "intermediate",
+      "duration": 180,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "bfadeba714ce4a96351d0db3e4a2eeda8508d98d050789a7335ed64df4ffd078",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "level": "intermediate",
+      "duration": 180,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "81d25e9839be694071ab3e8095144e269c743ce9eb4c669d40f14e97f7a3e495",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/0",
+      "level": "advanced",
+      "duration": 10,
+      "randomSeed": 0,
+      "scenarioSha256": "c54f7e8419094784297979dbbf0235c6e33f2d768e822b9800714fc2ee8e2af7",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "level": "advanced",
+      "duration": 10,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "19dbbdee7a63010097c2baddbba99181d2735a6258b868e3d16cd0d26c670067",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "level": "advanced",
+      "duration": 10,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "fa6ff709e8c11b9b7aecd2c5005788f5c87b6175d1cdc55114743805e876dc8d",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/0",
+      "level": "advanced",
+      "duration": 30,
+      "randomSeed": 0,
+      "scenarioSha256": "7ce6803bf7242d12e8ec069ace828cd9259000fa568fb79c8b7e85fce01b67a6",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "level": "advanced",
+      "duration": 30,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "ea18c6f3346700df0ff19ef71145eb21f51321f3f6b01f54d71dd2343498c4b9",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "level": "advanced",
+      "duration": 30,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "817ba893eaaec39230711cf53bfb341de139c5e5a58b4c6f31ca2390a0bd9613",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/0",
+      "level": "advanced",
+      "duration": 180,
+      "randomSeed": 0,
+      "scenarioSha256": "c9d50ae44a3b02924eb574e4bff7cae47795fdcff98effc44ad4f8ab40518265",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "level": "advanced",
+      "duration": 180,
+      "randomSeed": "audit-ko-01",
+      "scenarioSha256": "0203bdc9cf68076b218e4d39fa18376ed359f8f6db8e63ba95c7cba87e44d65c",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "level": "advanced",
+      "duration": 180,
+      "randomSeed": "audit-ko-02",
+      "scenarioSha256": "2a6daa098e7296c7353740f1a44297b7b69dd177d32b95b76ce53163e6356df8",
+      "repeatEqual": true,
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    }
+  ],
+  "mutations": [
+    {
+      "id": "beginner/10/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I06.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/0",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "SELF_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "DEPENDENCY_CYCLE"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare: 선행업무가 순환합니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_CRITERION",
+        "REFERENCE_CRITERION"
+      ],
+      "errors": [
+        "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+        "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_RECIPIENT"
+      ],
+      "errors": [
+        "I01.visibleTo: 없는 수신기관: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "valid": false,
+      "codes": [
+        "TIME_RANGE"
+      ],
+      "errors": [
+        "I09.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "valid": false,
+      "codes": [
+        "TIME_ORDER"
+      ],
+      "errors": [
+        "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "valid": false,
+      "codes": [
+        "DUPLICATE_ID"
+      ],
+      "errors": [
+        "tasks[8].id: 중복 ID입니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "valid": false,
+      "codes": [
+        "REFERENCE_OWNER"
+      ],
+      "errors": [
+        "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+        "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "valid": false,
+      "codes": [
+        "SCHEMA"
+      ],
+      "errors": [
+        "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "valid": false,
+      "codes": [
+        "REFERENCE_DEPENDENCY",
+        "UNKNOWN_DEPENDENCY"
+      ],
+      "errors": [
+        "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+        "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "faultId": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "valid": false,
+      "codes": [
+        "UNKNOWN_TASK"
+      ],
+      "errors": [
+        "I01.expectedTasks: 없는 업무: dtx:missing"
+      ],
+      "exception": null,
+      "detectedExpectedCode": true
+    }
+  ],
+  "invariants": [
+    {
+      "id": "beginner/10/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/10/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/30/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "beginner/180/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/10/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/30/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "intermediate/180/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/10/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/30/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/0",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/0",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-01",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "changeId": "task_array_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "id": "advanced/180/audit-ko-02",
+      "changeId": "relation_set_order",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    }
+  ],
+  "scopeProbes": [
+    {
+      "level": "beginner",
+      "probeId": "contradictory_situation",
+      "label": "동일 시각·장소의 정전과 정상 공급을 동시에 단정",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "beginner",
+      "probeId": "non_evidence_text",
+      "label": "완료근거 필드에 근거가 없다는 문장을 입력",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "beginner",
+      "probeId": "empty_expected_tasks",
+      "label": "모든 상황카드의 기대업무를 빈 목록으로 변경",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "intermediate",
+      "probeId": "contradictory_situation",
+      "label": "동일 시각·장소의 정전과 정상 공급을 동시에 단정",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "intermediate",
+      "probeId": "non_evidence_text",
+      "label": "완료근거 필드에 근거가 없다는 문장을 입력",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "intermediate",
+      "probeId": "empty_expected_tasks",
+      "label": "모든 상황카드의 기대업무를 빈 목록으로 변경",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "advanced",
+      "probeId": "contradictory_situation",
+      "label": "동일 시각·장소의 정전과 정상 공급을 동시에 단정",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "advanced",
+      "probeId": "non_evidence_text",
+      "label": "완료근거 필드에 근거가 없다는 문장을 입력",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    },
+    {
+      "level": "advanced",
+      "probeId": "empty_expected_tasks",
+      "label": "모든 상황카드의 기대업무를 빈 목록으로 변경",
+      "valid": true,
+      "codes": [],
+      "errors": [],
+      "exception": null
+    }
+  ],
+  "limitations": [
+    "동일 도시 침수 사례의 설정 조합이며 독립 재난사례 표본이 아니다.",
+    "12개 결함 유형을 반복 적용했으므로 324개 독립 오류 유형이 아니다.",
+    "범위 탐색 사례의 통과는 내용 타당성을 보증하지 못하는 한계를 드러낸다.",
+    "실제 AI 응답 또는 전문가 점수가 아니다."
+  ]
+}
