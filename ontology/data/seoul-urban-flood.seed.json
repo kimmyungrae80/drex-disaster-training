@@ -1,0 +1,48 @@
+{
+  "id": "seoul-urban-flood-v1",
+  "title": "서울 도심 지하공간 침수·정전·교통마비 복합재난",
+  "publicName": "재난협업훈련",
+  "location": "서울 도심 A구역",
+  "trainingMode": "TTX",
+  "durationMinutes": 30,
+  "disasterTypes": ["dtx:heavyRain", "dtx:urbanFlood", "dtx:urbanCompoundDisaster"],
+  "regionFeatures": ["dtx:undergroundSpace", "dtx:transportHub", "dtx:densePopulation", "dtx:criticalInfrastructure", "dtx:vulnerablePopulation"],
+  "participants": ["dtx:seoulCity", "dtx:fireService", "dtx:police", "dtx:metro"],
+  "supportOrganizations": ["dtx:districtOffice", "dtx:powerUtility", "dtx:medical"],
+  "trainingObjectives": [
+    "기관별 차등정보를 요청·회신으로 결합한다",
+    "요청 수락과 실제 조치 완료를 구분해 기록한다",
+    "침수·감전·인파 위험의 우선순위를 공동 결정한다",
+    "확인된 사실과 미확인 정보를 구분해 시민에게 안내한다"
+  ],
+  "baseEvents": [
+    "dtx:undergroundInflow",
+    "dtx:powerFailure",
+    "dtx:metroSuspension",
+    "dtx:crowdConcentration",
+    "dtx:roadCongestion"
+  ],
+  "amplifiers": [
+    {"id":"pump-failure","event":"dtx:pumpFailure","minimumLevel":"beginner"},
+    {"id":"vulnerable-person","event":"dtx:vulnerablePersonTrapped","minimumLevel":"intermediate"},
+    {"id":"information-disorder","event":"dtx:informationDisorder","minimumLevel":"intermediate"},
+    {"id":"emergency-lighting","event":"dtx:emergencyLightingFailure","minimumLevel":"advanced"}
+  ],
+  "requiredTasks": [
+    "dtx:situationShare",
+    "dtx:passengerCount",
+    "dtx:accessControl",
+    "dtx:rescueRoute",
+    "dtx:powerIsolation",
+    "dtx:stationEvacuation",
+    "dtx:trappedPersonRescue",
+    "dtx:publicMessage"
+  ],
+  "guardrails": [
+    "실제 서울시 운영자료나 공식 재난예측 결과로 표현하지 않는다",
+    "기관별 임무와 수치는 교육용 가정임을 명시한다",
+    "참여자는 자기 기관 역할만 수행한다",
+    "미참여 기관은 통제관 또는 AI가 제한적으로 대행한다",
+    "자동점수는 공식 평가가 아니라 사후강평 보조자료로만 사용한다"
+  ]
+}

@@ -33,6 +33,14 @@
       "dest": "/practical/$1"
     },
     {
+      "src": "/research/?",
+      "dest": "/research/index.html"
+    },
+    {
+      "src": "/research/(index.html|app.mjs|style.css)",
+      "dest": "/research/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

@@ -1,0 +1,110 @@
+{
+  "kind": "finite-software-verification-plan",
+  "createdAt": "2026-10-13T21:11:59.294Z",
+  "sourceRevision": "e95f31ff5ac1a6e2672874c6aa80109c09b5d922",
+  "levels": [
+    "beginner",
+    "intermediate",
+    "advanced"
+  ],
+  "durations": [
+    10,
+    30,
+    180
+  ],
+  "seeds": [
+    0,
+    "audit-ko-01",
+    "audit-ko-02"
+  ],
+  "faultDefinitions": [
+    {
+      "id": "self_dependency",
+      "expectedCode": "SELF_DEPENDENCY",
+      "mutation": "s=>s.tasks[0].dependsOn=[s.tasks[0].id]"
+    },
+    {
+      "id": "dependency_cycle",
+      "expectedCode": "DEPENDENCY_CYCLE",
+      "mutation": "s=>{s.tasks[0].dependsOn=[s.tasks[1].id];s.tasks[1].dependsOn=[s.tasks[0].id];}"
+    },
+    {
+      "id": "unknown_criterion",
+      "expectedCode": "UNKNOWN_CRITERION",
+      "mutation": "s=>s.tasks[0].criteria=['dtx:missing']"
+    },
+    {
+      "id": "unknown_recipient",
+      "expectedCode": "UNKNOWN_RECIPIENT",
+      "mutation": "s=>s.injects[0].visibleTo=['dtx:missing']"
+    },
+    {
+      "id": "time_out_of_range",
+      "expectedCode": "TIME_RANGE",
+      "mutation": "s=>s.injects.at(-1).atMinute=s.durationMinutes+1"
+    },
+    {
+      "id": "time_reversed",
+      "expectedCode": "TIME_ORDER",
+      "mutation": "s=>s.injects[1].atMinute=0"
+    },
+    {
+      "id": "duplicate_task",
+      "expectedCode": "DUPLICATE_ID",
+      "mutation": "s=>s.tasks.push(structuredClone(s.tasks[0]))"
+    },
+    {
+      "id": "wrong_known_owner",
+      "expectedCode": "REFERENCE_OWNER",
+      "mutation": "s=>{const a=s.tasks[0],b=s.tasks.find(t=>t.owner!==a.owner);[a.owner,b.owner]=[b.owner,a.owner];}"
+    },
+    {
+      "id": "missing_dependency",
+      "expectedCode": "REFERENCE_DEPENDENCY",
+      "mutation": "s=>s.tasks.find(t=>t.dependsOn.length).dependsOn=[]"
+    },
+    {
+      "id": "missing_evidence",
+      "expectedCode": "SCHEMA",
+      "mutation": "s=>s.tasks[0].evidence=[]"
+    },
+    {
+      "id": "unknown_dependency",
+      "expectedCode": "UNKNOWN_DEPENDENCY",
+      "mutation": "s=>s.tasks[0].dependsOn=['dtx:missing']"
+    },
+    {
+      "id": "unknown_expected_task",
+      "expectedCode": "UNKNOWN_TASK",
+      "mutation": "s=>s.injects[0].expectedTasks=['dtx:missing']"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "task_array_order",
+      "mutation": "s=>s.tasks.reverse()"
+    },
+    {
+      "id": "relation_set_order",
+      "mutation": "s=>{for(const t of s.tasks){t.dependsOn.reverse();t.criteria.reverse();}}"
+    }
+  ],
+  "probes": [
+    {
+      "id": "contradictory_situation",
+      "label": "동일 시각·장소의 정전과 정상 공급을 동시에 단정",
+      "mutation": "s=>s.injects[0].situation='같은 시각 같은 지하공간의 전력 공급이 완전히 중단되었다. 같은 시각 같은 지하공간의 전력 공급은 중단 없이 정상이다.'"
+    },
+    {
+      "id": "non_evidence_text",
+      "label": "완료근거 필드에 근거가 없다는 문장을 입력",
+      "mutation": "s=>s.tasks[0].evidence=['완료를 확인할 기록이나 증거는 없다.']"
+    },
+    {
+      "id": "empty_expected_tasks",
+      "label": "모든 상황카드의 기대업무를 빈 목록으로 변경",
+      "mutation": "s=>{for(const i of s.injects)i.expectedTasks=[];}"
+    }
+  ],
+  "note": "계획 파일은 검증 호출 전에 저장한다. 내부 실행계획이며 공개 사전등록이나 독립 평가집합이 아니다."
+}

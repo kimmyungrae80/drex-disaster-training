@@ -4,7 +4,7 @@
 
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com)
 [![Supabase](https://img.shields.io/badge/DB-Supabase-3ECF8E)](https://supabase.com)
-[![Claude AI](https://img.shields.io/badge/AI-Claude%20Sonnet-orange)](https://anthropic.com)
+[![Groq](https://img.shields.io/badge/AI-Groq-orange)](https://groq.com)
 
 ---
 
@@ -14,7 +14,7 @@ DREX(Disaster Response EXercise)는 공공기관 및 지방자치단체의 재�
 
 | 모듈 | 기능 |
 |------|------|
-| 01 AI 시나리오 | Claude AI가 행안부 표준 양식(5단계)으로 훈련 시나리오 자동 생성 |
+| 01 AI 시나리오 | Groq API를 통해 5단계 훈련 시나리오 초안 자동 생성 |
 | 02 SOP 실행구조 | 재난현장조치 행동매뉴얼 13개 협업기능 디지털화 |
 | 03 RTO 산출 | BIA-AHP 가중치 기반 복구목표시간 정량 산출 |
 | 04 정량평가 | 2026 안전한국훈련 공식 평가지표(시군구, 20개 지표 100점+가점·감점) 기반 채점 |
@@ -22,6 +22,16 @@ DREX(Disaster Response EXercise)는 공공기관 및 지방자치단체의 재�
 | 06 KPI 대시보드 | Supabase 연동 훈련 결과 누적 관리 |
 
 ---
+
+## 시나리오 생성 연구
+
+`/research/`에서 일반 생성(A), 문장형 근거(B), 온톨로지 구조 근거(C)를 비교할 수 있습니다. 기존 `GROQ_API_KEY`와 선택적 `GROQ_MODEL` 서버 설정을 사용합니다. 키 없이 규칙 기반 골격 확인도 가능합니다.
+
+초안·보정 원문, 실제 응답 모델, 검증 오류와 사용량을 JSON/JSONL로 내려받습니다. 연구 경로는 모델을 자동 대체하지 않습니다. 현재는 서울 도심 침수 한 사례와 내부 교육용 지식만 지원하며, 공식 근거 검토와 실제 AI 비교실험은 별도 수행해야 합니다.
+
+- [실행·설계 범위](ontology/README.md)
+- [논문용 실험 프로토콜](docs/RESEARCH-PROTOCOL.md)
+- [지식 출처·검토 상태](ontology/data/provenance.v0.2.json)
 
 ## 📝 변경 이력
 
@@ -206,7 +216,7 @@ drex-disaster-training/
 | 구분 | 기술 |
 |------|------|
 | Frontend | HTML / CSS / Vanilla JS (단일 파일) |
-| AI | Claude Sonnet API (Anthropic) |
+| AI | Groq API (`GROQ_MODEL`로 모델 지정) |
 | Database | Supabase (PostgreSQL) |
 | 배포 | Vercel (정적 호스팅) |
 | 버전관리 | GitHub |
@@ -262,3 +272,4 @@ drex-disaster-training/
 ## 📄 라이선스
 
 본 프로젝트는 연구 목적으로 개발되었습니다.
+

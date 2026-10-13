@@ -1,0 +1,81 @@
+{
+  "@context": "../schema/disaster-training-context.jsonld",
+  "metadata": {
+    "name": "재난협업훈련 온톨로지 핵심지식 v0.1",
+    "status": "교육용 초안",
+    "createdFrom": [
+      "index.html: ISSUES, EVAL_CRITERIA, COLLAB_MAP, TTX_SOP, MX_DOMAINS",
+      "practical/engine.mjs: AGENCIES, TASKS, DEFAULT_CHECKLIST",
+      "docs/practical-samples/checklist.json",
+      "docs/UPGRADE-PLAN.md"
+    ],
+    "limitations": [
+      "공식 재난대응 기준 또는 실제 피해예측 모델이 아님",
+      "기관 임무·기한·자원은 훈련 설계자가 검토 후 확정해야 함",
+      "docs/training-data.json은 원문이 아닌 메타데이터이며 한글 인코딩 정제가 필요함"
+    ]
+  },
+  "@graph": [
+    {"id":"dtx:heavyRain","type":"DisasterType","label":"집중호우","mayTrigger":["dtx:surfaceFlooding","dtx:undergroundInflow"]},
+    {"id":"dtx:urbanFlood","type":"DisasterType","label":"도심침수","mayTrigger":["dtx:undergroundInflow","dtx:roadCongestion","dtx:powerFailure"]},
+    {"id":"dtx:powerOutage","type":"DisasterType","label":"정전","mayTrigger":["dtx:emergencyLightingFailure","dtx:metroSuspension"]},
+    {"id":"dtx:urbanCompoundDisaster","type":"DisasterType","label":"도심 복합재난","mayTrigger":["dtx:undergroundInflow","dtx:powerFailure","dtx:crowdConcentration","dtx:informationDisorder"]},
+
+    {"id":"dtx:undergroundSpace","type":"RegionFeature","label":"지하공간","description":"침수와 정전 시 대피·접근·방송 제약이 동시에 발생하는 공간"},
+    {"id":"dtx:transportHub","type":"RegionFeature","label":"교통거점","description":"운행 중단이 지상 인파와 도로 혼잡으로 전이될 수 있는 지역"},
+    {"id":"dtx:densePopulation","type":"RegionFeature","label":"인구밀집","description":"대피와 정보전달 지연이 인파 위험으로 증폭되는 지역"},
+    {"id":"dtx:criticalInfrastructure","type":"RegionFeature","label":"기반시설밀집","description":"전력·통신·교통 의존성이 높은 지역"},
+    {"id":"dtx:vulnerablePopulation","type":"RegionFeature","label":"취약계층","description":"이동지원과 개별 확인이 필요한 시민이 포함된 상황"},
+
+    {"id":"dtx:seoulCity","type":"Organization","label":"서울시 재난안전대책본부","hasCapability":["dtx:coordination","dtx:publicWarning"],"hasTask":["dtx:situationShare","dtx:jointDecision","dtx:publicMessage","dtx:shelterCoordination"]},
+    {"id":"dtx:districtOffice","type":"Organization","label":"관할 구청","hasCapability":["dtx:localSupport","dtx:shelterOperation"],"hasTask":["dtx:shelterOpen","dtx:localEvacuationSupport"]},
+    {"id":"dtx:fireService","type":"Organization","label":"소방","hasCapability":["dtx:rescue","dtx:hazardControl"],"hasTask":["dtx:rescueDeployment","dtx:trappedPersonRescue","dtx:hazardAssessment"]},
+    {"id":"dtx:police","type":"Organization","label":"경찰","hasCapability":["dtx:trafficControl","dtx:crowdControl"],"hasTask":["dtx:accessControl","dtx:rescueRoute","dtx:crowdDispersal"]},
+    {"id":"dtx:metro","type":"Organization","label":"서울교통공사","hasCapability":["dtx:railControl","dtx:passengerEvacuation"],"hasTask":["dtx:trainBypass","dtx:passengerCount","dtx:stationEvacuation","dtx:powerIsolation"]},
+    {"id":"dtx:powerUtility","type":"Organization","label":"전력 지원기관","hasCapability":["dtx:powerSafety","dtx:emergencyPower"],"hasTask":["dtx:gridIsolation","dtx:backupPower"]},
+    {"id":"dtx:medical","type":"Organization","label":"의료기관","hasCapability":["dtx:triage","dtx:patientTransport"],"hasTask":["dtx:medicalTransfer"]},
+
+    {"id":"dtx:situationShare","type":"Task","label":"상황 전파","ownedBy":"dtx:seoulCity","dependsOn":[],"delayThresholdMinutes":3,"producesEvidence":["최초 전파시각","수신기관 확인"],"satisfiesCriterion":["dtx:criterionSituation","dtx:criterionCommunication"]},
+    {"id":"dtx:accessControl","type":"Task","label":"위험구역 출입 통제","ownedBy":"dtx:police","dependsOn":["dtx:situationShare"],"delayThresholdMinutes":8,"producesEvidence":["통제구역","통제개시시각"],"satisfiesCriterion":["dtx:criterionCollaboration","dtx:criterionLifeSafety"]},
+    {"id":"dtx:rescueRoute","type":"Task","label":"구조차량 진입로 확보","ownedBy":"dtx:police","dependsOn":["dtx:accessControl"],"delayThresholdMinutes":10,"producesEvidence":["요청시각","수락시각","진입로 확보시각"],"satisfiesCriterion":["dtx:criterionCollaboration"]},
+    {"id":"dtx:powerIsolation","type":"Task","label":"역사·지하상가 전력 차단 확인","ownedBy":"dtx:metro","dependsOn":["dtx:situationShare"],"delayThresholdMinutes":9,"producesEvidence":["차단범위","차단완료시각","안전확인"],"satisfiesCriterion":["dtx:criterionSOP","dtx:criterionLifeSafety"]},
+    {"id":"dtx:stationEvacuation","type":"Task","label":"역사 승객 대피","ownedBy":"dtx:metro","dependsOn":["dtx:passengerCount","dtx:powerIsolation"],"delayThresholdMinutes":14,"producesEvidence":["대피인원","사용출구","미확인인원"],"satisfiesCriterion":["dtx:criterionLifeSafety"]},
+    {"id":"dtx:trappedPersonRescue","type":"Task","label":"고립자 구조","ownedBy":"dtx:fireService","dependsOn":["dtx:rescueRoute","dtx:powerIsolation"],"delayThresholdMinutes":16,"producesEvidence":["구조대 투입시각","구조인원","인계기록"],"satisfiesCriterion":["dtx:criterionLifeSafety","dtx:criterionResource"]},
+    {"id":"dtx:passengerCount","type":"Task","label":"승객·체류인원 현황 공유","ownedBy":"dtx:metro","dependsOn":[],"delayThresholdMinutes":6,"producesEvidence":["확인시각","구역별 인원","정보신뢰도"],"satisfiesCriterion":["dtx:criterionSituation","dtx:criterionCommunication"]},
+    {"id":"dtx:publicMessage","type":"Task","label":"시민 행동요령 공지","ownedBy":"dtx:seoulCity","dependsOn":["dtx:passengerCount","dtx:accessControl"],"delayThresholdMinutes":18,"producesEvidence":["승인주체","공지시각","공지내용"],"satisfiesCriterion":["dtx:criterionCommunication"]},
+    {"id":"dtx:shelterOpen","type":"Task","label":"대피소 개방·수용 확인","ownedBy":"dtx:districtOffice","dependsOn":["dtx:situationShare"],"delayThresholdMinutes":12,"producesEvidence":["대피소 위치","수용가능인원","개방완료시각"],"satisfiesCriterion":["dtx:criterionResource","dtx:criterionLifeSafety"]},
+
+    {"id":"dtx:criterionSituation","type":"EvaluationCriterion","label":"상황인지·전파","description":"다양한 경로로 상황을 인지하고 필요한 기관에 적시에 전파했는가"},
+    {"id":"dtx:criterionDecision","type":"EvaluationCriterion","label":"의사결정","description":"불완전한 정보에서 근거와 책임주체를 명확히 하여 결정했는가"},
+    {"id":"dtx:criterionCollaboration","type":"EvaluationCriterion","label":"기관 간 협업","description":"요청·수신확인·수락·완료가 단절 없이 이어졌는가"},
+    {"id":"dtx:criterionLifeSafety","type":"EvaluationCriterion","label":"인명보호","description":"취약계층과 고립자를 포함해 인명보호를 우선했는가"},
+    {"id":"dtx:criterionResource","type":"EvaluationCriterion","label":"자원활용","description":"필요 자원의 수량과 목적을 확인하고 부족자원을 요청했는가"},
+    {"id":"dtx:criterionSOP","type":"EvaluationCriterion","label":"절차이행","description":"기관별 임무와 안전절차에 따라 조치했는가"},
+    {"id":"dtx:criterionCommunication","type":"EvaluationCriterion","label":"정보공유","description":"확인된 사실과 미확인 정보를 구분해 공유했는가"},
+
+    {"id":"dtx:surfaceFlooding","type":"HazardEvent","label":"도로·광장 침수","visibleTo":["dtx:seoulCity","dtx:police"]},
+    {"id":"dtx:undergroundInflow","type":"HazardEvent","label":"지하공간 유입","visibleTo":["dtx:metro","dtx:fireService"],"amplifiedBy":["dtx:undergroundSpace"]},
+    {"id":"dtx:pumpFailure","type":"HazardEvent","label":"배수펌프 기능저하","visibleTo":["dtx:metro"]},
+    {"id":"dtx:powerFailure","type":"HazardEvent","label":"부분 정전","visibleTo":["dtx:metro","dtx:fireService"],"amplifiedBy":["dtx:criticalInfrastructure"]},
+    {"id":"dtx:emergencyLightingFailure","type":"HazardEvent","label":"비상조명 불안정","visibleTo":["dtx:metro","dtx:fireService"]},
+    {"id":"dtx:metroSuspension","type":"HazardEvent","label":"지하철 운행 중단","visibleTo":["dtx:metro","dtx:seoulCity"]},
+    {"id":"dtx:crowdConcentration","type":"HazardEvent","label":"지상 인파 집중","visibleTo":["dtx:police"],"amplifiedBy":["dtx:densePopulation","dtx:transportHub"]},
+    {"id":"dtx:roadCongestion","type":"HazardEvent","label":"구조 진입로 정체","visibleTo":["dtx:police","dtx:fireService"]},
+    {"id":"dtx:informationDisorder","type":"HazardEvent","label":"미확인 정보 확산","visibleTo":["dtx:seoulCity","dtx:police"]},
+    {"id":"dtx:vulnerablePersonTrapped","type":"HazardEvent","label":"이동약자 고립","visibleTo":["dtx:fireService","dtx:metro"],"amplifiedBy":["dtx:vulnerablePopulation"]},
+
+    {"id":"dtx:ruleRainToInflow","type":"CausalRule","label":"집중호우와 지하공간 유입","conditionAll":["dtx:heavyRain","dtx:undergroundSpace"],"createsEvent":"dtx:undergroundInflow","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:rulePumpToFlood","type":"CausalRule","label":"배수기능 저하와 침수 확대","conditionAll":["dtx:undergroundInflow","dtx:pumpFailure"],"createsEvent":"dtx:surfaceFlooding","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:ruleFloodToPower","type":"CausalRule","label":"침수와 전력장애","conditionAll":["dtx:undergroundInflow","dtx:criticalInfrastructure"],"createsEvent":"dtx:powerFailure","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:rulePowerToRail","type":"CausalRule","label":"정전과 지하철 운행중단","conditionAll":["dtx:powerFailure","dtx:transportHub"],"createsEvent":"dtx:metroSuspension","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:ruleRailToCrowd","type":"CausalRule","label":"운행중단과 지상 인파집중","conditionAll":["dtx:metroSuspension","dtx:densePopulation"],"createsEvent":"dtx:crowdConcentration","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:ruleCrowdToCongestion","type":"CausalRule","label":"인파집중과 구조진입 지연","conditionAll":["dtx:crowdConcentration","dtx:transportHub"],"createsEvent":"dtx:roadCongestion","severityDelta":1,"trainingOnly":true},
+    {"id":"dtx:ruleUncertaintyToRumor","type":"CausalRule","label":"정보공백과 미확인정보 확산","conditionAll":["dtx:informationDisorder","dtx:densePopulation"],"createsEvent":"dtx:crowdConcentration","severityDelta":1,"trainingOnly":true},
+
+    {"id":"dtx:issueCommandDelay","type":"IssuePattern","label":"상황판단회의 지연","description":"상황판단회의가 늦어 현장 지휘와 기관 요청이 지연되는 반복 취약점","source":"index.html ISSUES"},
+    {"id":"dtx:issueShelterCapacity","type":"IssuePattern","label":"대피소 수용기준 미비","description":"대피소별 수용인원과 물자배분 기준이 없어 대피결정이 지연되는 문제","source":"index.html ISSUES"},
+    {"id":"dtx:issueControlLine","type":"IssuePattern","label":"기관별 통제선 혼선","description":"소방과 경찰의 통제구역·진입동선이 분리되지 않아 구조가 지연되는 문제","source":"index.html ISSUES"},
+    {"id":"dtx:issueAlertAuthority","type":"IssuePattern","label":"시민안내 승인주체 불명확","description":"재난정보 발송 주체와 승인기준이 불명확한 문제","source":"index.html ISSUES"},
+    {"id":"dtx:issueScriptedExercise","type":"IssuePattern","label":"대본 낭독형 훈련","description":"시나리오를 읽는 데 그쳐 실제 판단과 협업이 발생하지 않는 문제","source":"index.html ISSUES"}
+  ]
+}

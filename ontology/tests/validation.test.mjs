@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generateScenario,validateScenario} from '../src/scenario-generator.mjs';
+const scenario=()=>generateScenario({level:'intermediate',randomSeed:'regression'});
+const rejects=(name,mutate,code)=>test(name,()=>{const s=scenario();mutate(s);const r=validateScenario(s);assert.equal(r.valid,false);assert.ok(r.diagnostics.some(e=>e.code===code),JSON.stringify(r));});
+rejects('자기 선행업무를 거부한다',s=>s.tasks[0].dependsOn=[s.tasks[0].id],'SELF_DEPENDENCY');
+rejects('서로를 기다리는 업무 순환을 거부한다',s=>{s.tasks[0].dependsOn=[s.tasks[1].id];s.tasks[1].dependsOn=[s.tasks[0].id];},'DEPENDENCY_CYCLE');
+rejects('없는 평가기준을 거부한다',s=>s.tasks[0].criteria=['dtx:missing'],'UNKNOWN_CRITERION');
+rejects('임의 평가기준을 추가해도 통과하지 않는다',s=>{s.evaluationCriteria.push({id:'dtx:fake'});s.tasks[0].criteria=['dtx:fake'];},'UNKNOWN_ENTITY');
+rejects('없는 수신기관을 거부한다',s=>s.injects[0].visibleTo=['dtx:missing'],'UNKNOWN_RECIPIENT');
+rejects('훈련시간 밖 상황을 거부한다',s=>s.injects[0].atMinute=999,'TIME_RANGE');
+rejects('상황 시간 역전을 거부한다',s=>s.injects[1].atMinute=0,'TIME_ORDER');
+rejects('중복 업무 ID를 거부한다',s=>s.tasks.push({...s.tasks[0]}),'DUPLICATE_ID');
+rejects('등록 기관이어도 잘못된 임무 배정을 식별한다',s=>s.tasks[0].owner='dtx:police','REFERENCE_OWNER');
+rejects('필수 선행관계 삭제를 식별한다',s=>s.tasks.find(t=>t.dependsOn.length).dependsOn=[],'REFERENCE_DEPENDENCY');
+test('형식이 깨진 입력은 예외 대신 오류목록을 반환한다',()=>{for(const input of [null,[],{}, {tasks:[null],injects:[{}]}, {...scenario(),tasks:[{id:'dtx:situationShare',dependsOn:'oops'}]}])assert.equal(validateScenario(input).valid,false);});
+test('잘못된 시드 참조를 조용히 삭제하지 않는다',()=>{const seed={participants:['bad'],supportOrganizations:[],requiredTasks:[],baseEvents:[],regionFeatures:[],disasterTypes:[],durationMinutes:30};assert.throws(()=>generateScenario({seedData:seed}),/시드 참조/);});

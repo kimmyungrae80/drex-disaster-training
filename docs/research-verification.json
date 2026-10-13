@@ -1,0 +1,299 @@
+{
+  "kind": "controlled-software-verification",
+  "createdAt": "2026-10-13T15:03:37.056Z",
+  "node": "v24.19.0",
+  "seed": "verification-fixed-01",
+  "baselineSourceSha256": "ec5c63aa3b921ff3f34cb802c7acc0122d6c4e8a4034e211341281416e6284b5",
+  "baseScenarioSha256": "22401395d61b69324c8c3272547904b82731530c7b289ceddd5d36d7df198625",
+  "faults": 12,
+  "baselineDetected": 3,
+  "revisedDetected": 12,
+  "controls": [
+    {
+      "level": "beginner",
+      "injects": 6,
+      "tasks": 8,
+      "criteria": 6,
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      }
+    },
+    {
+      "level": "intermediate",
+      "injects": 8,
+      "tasks": 8,
+      "criteria": 6,
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      }
+    },
+    {
+      "level": "advanced",
+      "injects": 9,
+      "tasks": 8,
+      "criteria": 6,
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "self_dependency",
+      "label": "자기 선행업무",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+          "dtx:situationShare.dependsOn: 자기 자신을 선행업무로 지정할 수 없습니다.",
+          "dtx:situationShare: 선행업무가 순환합니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "dependency_cycle",
+      "label": "두 업무 순환",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+          "dtx:passengerCount.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+          "dtx:situationShare: 선행업무가 순환합니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "unknown_criterion",
+      "label": "없는 평가기준",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.criteria: 없는 평가기준: dtx:missing",
+          "dtx:situationShare.criteria: 내부 지식의 평가기준 연결과 다릅니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "unknown_recipient",
+      "label": "없는 수신기관",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "I01.visibleTo: 없는 수신기관: dtx:missing"
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "time_out_of_range",
+      "label": "훈련시간 초과",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "I08.atMinute: 상황 부여시각이 훈련시간 범위를 벗어났습니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "time_reversed",
+      "label": "상황 시간 역전",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "I02.atMinute: 상황카드의 시간 순서가 역전됐습니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "duplicate_task",
+      "label": "중복 업무 ID",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "tasks[8].id: 중복 ID입니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "wrong_known_owner",
+      "label": "등록기관 간 업무배정 변경",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.owner: 내부 지식에 정의된 수행기관과 다릅니다.",
+          "dtx:passengerCount.owner: 내부 지식에 정의된 수행기관과 다릅니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "missing_dependency",
+      "label": "필수 선행업무 삭제",
+      "baseline": {
+        "detected": false,
+        "valid": true,
+        "errors": [],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:accessControl.dependsOn: 내부 지식의 선행관계와 다릅니다."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "missing_evidence",
+      "label": "완료근거 삭제",
+      "baseline": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "업무 dtx:situationShare의 완료근거가 없음"
+        ],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.evidence: 배열 형식과 필수 항목을 확인하세요."
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "unknown_dependency",
+      "label": "없는 선행업무",
+      "baseline": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "업무 dtx:situationShare의 선행업무 dtx:missing가 없음"
+        ],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "dtx:situationShare.dependsOn: 내부 지식의 선행관계와 다릅니다.",
+          "dtx:situationShare.dependsOn: 없는 선행업무: dtx:missing"
+        ],
+        "threw": false
+      }
+    },
+    {
+      "id": "unknown_expected_task",
+      "label": "없는 기대업무",
+      "baseline": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "상황 I01가 없는 업무 dtx:missing를 참조함"
+        ],
+        "threw": false
+      },
+      "revised": {
+        "detected": true,
+        "valid": false,
+        "errors": [
+          "I01.expectedTasks: 없는 업무: dtx:missing"
+        ],
+        "threw": false
+      }
+    }
+  ],
+  "limitation": "검사 규칙에 맞춰 구성한 제한된 결함 주입 집합이다. 실제 AI 오류 분포, 일반화 탐지율, 전문가 내용 타당성, 학습 효과를 측정하지 않는다."
+}
