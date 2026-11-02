@@ -1,0 +1,10 @@
+{
+  "name": "drex-disaster-training",
+  "private": true,
+  "scripts": {
+    "dev": "node exercise/dev-server.mjs",
+    "test:exercise": "node --test tests/exercise.test.mjs",
+    "check:exercise": "node --check exercise/engine.mjs && node --check exercise/app.mjs && node --check server/exercise-service.mjs"
+  },
+  "engines": {"node": ">=22.13"}
+}

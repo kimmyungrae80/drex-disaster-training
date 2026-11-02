@@ -1,5 +1,10 @@
 # DREX — 재난훈련 시뮬레이션 플랫폼
 
+> **새로운 목표 기반 통합훈련실(시범): `/exercise/`**
+> 기존 프로그램을 보존하면서, 기관별 정보·고정 역할·요청과 결과 확인·근거 기반 강평·변형 재훈련을 별도 구현했습니다.
+> 집중호우 1종을 시험하는 범위이며, 아래 기존 모듈 설명의 모든 기능을 새 버전에서 구현했다는 뜻은 아닙니다.
+> [시작 가이드·구현 범위](docs/DREX_OBJECTIVE_EXERCISES.md) · [검증 결과·남은 확인사항](docs/DREX_EXERCISE_ACCEPTANCE.md)
+
 > AI 기반 재난훈련 시나리오 생성 · SOP 디지털 전환 · RTO 정량평가 · Table-Top 훈련 · KPI 대시보드
 
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com)
