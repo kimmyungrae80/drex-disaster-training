@@ -25,6 +25,18 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/exercise/?",
+      "dest": "/exercise/index.html"
+    },
+    {
+      "src": "/exercise/(index.html|app.mjs|catalog.mjs|style.css)",
+      "dest": "/exercise/$1"
+    },
+    {
+      "src": "/exercise/(.*)",
+      "status": 404
+    },
+    {
       "src": "/practical/?",
       "dest": "/practical/index.html"
     },
