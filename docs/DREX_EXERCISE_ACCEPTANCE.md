@@ -21,6 +21,15 @@
 
 이는 메모리 저장소를 사용하는 서비스/엔진 테스트다. 실제 Vercel·Supabase 연동, 대규모 동시접속, 실제 AI 출력 품질까지 검증한 결과가 아니다.
 
+## GitHub·프리뷰 배포
+
+- [검토 PR #4](https://github.com/kimmyungrae80/drex-disaster-training/pull/4): 별도 개발 브랜치에 기록. `main`에는 병합하지 않음.
+- 코드 커밋: `b6d536793055dcdc1302b0c736c32660ec4ba8ee`.
+- 해당 커밋에 연결된 Vercel `drex-disaster-training`, `drex-v4` 두 프로젝트 모두 **Ready / success** 확인.
+- [통합훈련실 프리뷰](https://drex-disaster-training-git-feat-d9d588-kimmyungrae80s-projects.vercel.app/exercise/).
+- HTTP 점검에서 페이지는 Vercel 로그인으로 이동하고, `/api/exercise`는 **401 Protected by Vercel Authentication**을 반환함. 이는 Supabase 연결 실패의 증거가 아니라 프리뷰 접근 보호임.
+- 따라서 빌드·프리뷰 배포 성공과 앱 내부 공동훈련 동작 확인을 구분한다. 로그인 보호를 변경하거나 우회하지 않았다. 권한 있는 사용자가 로그인 후 확인해야 한다.
+
 ## 화면 검증
 
 브라우저에서 서버 연결, 목표·방식 설정, 지역·기관 편집 화면을 확인했다. OSM 배경지도가 403 정책 안내 이미지를 표시하는 문제를 발견했다. Referrer 정책 확인 후에도 동일하여 새 화면을 Esri 항공영상/참고 일반지도 구성으로 변경했다. 지도 레이어 선택을 항상 표시하고 화면 갱신 시 선택을 유지하도록 했다.
